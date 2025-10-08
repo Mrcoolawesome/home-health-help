@@ -5,7 +5,7 @@ This application is a **physician-hospice referral network platform** that conne
 
 - **Physician profiles**: Doctors can create accounts, specify their medical specialties, and indicate their interest in providing hospice referrals
 - **Provider network**: Hospice home health providers can showcase their services and availability
-- **Secure messaging**: HIPAA-compliant communication system for referral coordination and patient discussions
+- **Contact coordination**: Physicians can include links to their contact information to facilitate direct communication outside the platform (avoiding HIPAA compliance requirements)
 - **Referral workflow**: Streamlined process for physicians to connect patients with appropriate hospice care
 
 ## Technical Overview
