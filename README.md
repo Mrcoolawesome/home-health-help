@@ -1,105 +1,176 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+<h1 align="center">Physician-Hospice Referral Network</h1>
 
 <p align="center">
- The fastest way to build apps with Next.js and Supabase
+ A platform connecting physicians with hospice home health providers to streamline hospice referrals
 </p>
 
 <p align="center">
+  <a href="#overview"><strong>Overview</strong></a> ·
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
+  <a href="#getting-started"><strong>Getting Started</strong></a> ·
+  <a href="#development-workflow"><strong>Development</strong></a> ·
+  <a href="#database-management"><strong>Database</strong></a>
 </p>
 <br/>
 
-## Features
+## Overview
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Password-based authentication block installed via the [Supabase UI Library](https://supabase.com/ui/docs/nextjs/password-based-auth)
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+This application is a **physician-hospice referral network platform** that connects physicians with hospice home health providers to facilitate easier access to hospice care for patients. The platform serves two main user types:
 
-## Demo
+### User Perspectives
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+**Home Health Provider View**: Search-focused interface with filters for county and medical profession to discover physicians accepting hospice referrals.
 
-## Deploy to Vercel
+**Physician/Doctor View**: Dashboard interface for profile management, allowing doctors to update their referral status (e.g., "looking to partner with home health") and maintain their professional information.
 
-Vercel deployment will guide you through creating a Supabase account and project.
+### Key Features
+- **Physician Profiles**: Doctors can create accounts, specify medical specialties, and indicate interest in hospice referrals
+- **Provider Network**: Hospice providers can showcase services and search for physician partners
+- **Contact Coordination**: Physicians include links to contact information for external communication (avoiding HIPAA compliance requirements)
+- **Role-based Access**: Different interfaces optimized for each user type
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+## Technical Features
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+- **Next.js 15** with App Router for modern React development
+- **Supabase** for authentication, database, and real-time features
+- **TypeScript** for type safety and better developer experience
+- **Tailwind CSS** for responsive styling
+- **shadcn/ui** components with "new-york" style
+- **Cookie-based authentication** that works across the entire Next.js stack
+- **Row Level Security (RLS)** for secure data access
+- **Local development** with Supabase CLI and email testing
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+## Getting Started
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Supabase CLI (`npm install -g @supabase/cli`)
 
-## Clone and run locally
+### Local Development Setup
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
-
-2. Create a Next.js app using the Supabase Starter template npx command
-
+1. **Clone the repository**
    ```bash
-   npx create-next-app --example with-supabase with-supabase-app
+   git clone https://github.com/Mrcoolawesome/home-health-help.git
+   cd home-health-help
    ```
 
+2. **Install dependencies**
    ```bash
-   yarn create next-app --example with-supabase with-supabase-app
+   npm install
    ```
 
+3. **Start Supabase locally**
    ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
+   npx supabase start
    ```
+   This will start all Supabase services including:
+   - Database (PostgreSQL)
+   - Auth server
+   - API server 
+   - Studio (GUI) at http://127.0.0.1:54323
+   - Email testing (inbucket) at http://127.0.0.1:54324
 
-3. Use `cd` to change into the app's directory
-
+4. **Set up environment variables**
+   After `supabase start` completes, it will output the local connection details. Create a `.env.local` file:
    ```bash
-   cd with-supabase-app
+   NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=[ANON_KEY_FROM_SUPABASE_START_OUTPUT]
    ```
 
-4. Rename `.env.example` to `.env.local` and update the following:
-
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
-
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://supabase.com/dashboard/project/_?showConnect=true)
-
-5. You can now run the Next.js local development server:
-
+5. **Run the development server**
    ```bash
    npm run dev
    ```
+   The application will be available at [http://localhost:3000](http://localhost:3000)
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+### Database Schema
+The application uses two main tables:
+- `users_doctors` - Doctor profiles with specializations and referral status
+- `users_hh` - Home health provider profiles with company information
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+## Development Workflow
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
+### Key Commands
+```bash
+# Development with Turbopack (faster HMR)
+npm run dev
 
-## Feedback and issues
+# Build for production
+npm run build
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
+# Lint code
+npm run lint
 
-## More Supabase examples
+# Start Supabase services
+npx supabase start
 
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+# Stop Supabase services  
+npx supabase stop
+
+# Reset database (warning: deletes all data)
+npx supabase db reset
+```
+
+### Working with Authentication
+- Email confirmations are **disabled** for local development
+- Test emails are captured by inbucket at http://127.0.0.1:54324
+- Users can sign up as either doctors or home health providers
+- Authentication uses cookie-based sessions that work across Server/Client Components
+
+## Database Management
+
+### Creating Migrations
+When you make schema changes via Supabase Studio GUI, capture them as migrations:
+
+```bash
+# Generate migration from current database state
+npx supabase db diff -f my_migration_name
+
+# Apply migrations to local database
+npx supabase db reset
+
+# Push migrations to remote (production)
+npx supabase db push
+```
+
+### Migration Workflow
+1. Make schema changes in Supabase Studio (http://127.0.0.1:54323)
+2. Generate migration: `npx supababase db diff -f descriptive_name`
+3. Review the generated SQL in `supabase/migrations/`
+4. Apply changes: `npx supabase db reset`
+5. Commit migration files to version control
+
+### Database Tables
+- **users_doctors**: Doctor profiles linked to `auth.users`
+- **users_hh**: Home health provider profiles linked to `auth.users`
+- Both tables have Row Level Security (RLS) enabled
+- Users can only modify their own profiles
+- Cross-user visibility enabled for search functionality
+
+## Project Structure
+
+```
+├── app/                    # Next.js App Router pages
+│   ├── auth/              # Authentication pages
+│   ├── protected/         # Protected routes with navigation
+│   └── page.tsx           # Landing page
+├── components/            # React components
+│   ├── signup-forms/      # Role-specific signup forms
+│   └── ui/               # shadcn/ui components
+├── lib/                  # Utilities and Supabase clients
+│   └── supabase/         # Supabase client configurations
+└── supabase/             # Supabase configuration and migrations
+    ├── migrations/       # Database schema changes
+    └── config.toml       # Local development configuration
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test locally with `npm run dev`
+5. Create a pull request
+
+For database changes, always include migration files generated with `npx supabase db diff -f migration_name`.
