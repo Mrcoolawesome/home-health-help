@@ -8,6 +8,12 @@ This application is a **physician-hospice referral network platform** that conne
 - **Contact coordination**: Physicians can include links to their contact information to facilitate direct communication outside the platform (avoiding HIPAA compliance requirements)
 - **Referral workflow**: Streamlined process for physicians to connect patients with appropriate hospice care
 
+### User Interface Perspectives
+The platform serves two distinct user types with different UI needs:
+
+- **Home Health Provider View**: Search-focused interface with filters for county and medical profession to discover physicians accepting hospice referrals
+- **Physician/Doctor View**: Dashboard interface for profile management, allowing doctors to update their referral status (e.g., "looking to partner with home health") and maintain their professional information
+
 ## Technical Overview
 This is a Next.js 15 + Supabase starter kit using App Router, TypeScript, Tailwind CSS, and shadcn/ui components. The project implements cookie-based authentication that works across the entire Next.js stack (Client/Server Components, Route Handlers, Server Actions, and Middleware).
 
