@@ -46,7 +46,7 @@ export function SignUpFormHomeHealth({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/homehealth-dashboard`,
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
         },
       });
 

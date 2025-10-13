@@ -48,7 +48,7 @@ export function SignUpFormDoctor({
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/doctor-dashboard`,
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
         },
       });
 
