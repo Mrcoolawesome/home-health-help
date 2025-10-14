@@ -5,5 +5,5 @@
  - Setup their personal page.
  - Make a dashboard for them to see view counts and stuff like that.
 
- #### When we get back
-  - Start using the new get-user.ts file to figure out what type of user they are and then make the homepage look different for them depending on what they are.
+#### When we get back
+ - Start using the new get-user.ts file to figure out what type of user they are and then make the homepage look different for them depending on what they are.

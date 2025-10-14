@@ -11,7 +11,8 @@ export default function Navbar() {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const { isAuthed } = await getUser();
+            const { isAuthed, user } = await getUser();
+            console.log(user);
             setIsAuthenticated(isAuthed);
         };
 

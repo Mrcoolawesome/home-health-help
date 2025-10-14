@@ -19,7 +19,7 @@ export async function getUser() {
     }
 
     const user = data?.claims;
-    const isAuthed = user !== undefined; // check if user exists 
+    const isAuthed = user?.aud === "authenticated"; // check if user exists 
 
     // if it doesn't error then return the user type (auth vs anon) and their data
     return { isAuthed, user };

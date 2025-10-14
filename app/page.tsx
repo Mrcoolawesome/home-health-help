@@ -1,5 +1,5 @@
 import DoctorCards from "@/components/cards/doctor-display-cards";
-import { LogoutButton } from "@/components/buttons/logout-button";
+import SearchBar from "@/components/ui/search-bar";
 
 // This decides what their homepage should look like.
 // If they're anonomous, then they see information about the website.
@@ -8,8 +8,8 @@ import { LogoutButton } from "@/components/buttons/logout-button";
 export default function Home() {
   return (
    <div className="flex flex-col">
+      <SearchBar />
       <DoctorCards page={0} />
-      <LogoutButton />
    </div>
   );
 }

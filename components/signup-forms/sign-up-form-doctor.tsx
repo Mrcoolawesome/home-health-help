@@ -29,6 +29,7 @@ export function SignUpFormDoctor({
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [county, setCounty] = useState("");
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -58,7 +59,7 @@ export function SignUpFormDoctor({
 
       // once we have them in the auth table we need to link that to the public table
       const { error: createUserDoctorError } = await supabase.from("users_doctors")
-        .insert({id: userData.user?.id, name, specialization, referral_status: referralStatus});
+        .insert({id: userData.user?.id, name, specialization, referral_status: referralStatus, county});
 
       if (createUserDoctorError) {
         console.error('Error', createUserDoctorError);
@@ -93,7 +94,7 @@ export function SignUpFormDoctor({
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-              <div>
+              <div className="grid gap-2">
                 <Label htmlFor="name">Name</Label>
                 <Input 
                   id="name"
@@ -104,7 +105,7 @@ export function SignUpFormDoctor({
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div>
+              <div className="grid gap-2">
                 <Label htmlFor="specialization">Specialization</Label>
                 <Input 
                   id="specialization"
@@ -115,13 +116,24 @@ export function SignUpFormDoctor({
                   onChange={(e) => setSpecialization(e.target.value)}
                 />
               </div>
-              <div>
+              <div className="grid gap-2">
                 <Label htmlFor="referral_status">Referral status</Label>
                 <Checkbox 
                   id="referral"
                   required
                   checked={referralStatus}
                   onCheckedChange={(checked) => setReferralStatus(checked === true)}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="county">County</Label>
+                <Input 
+                  id="county"
+                  type="county"
+                  placeholder="eg. Cache County"
+                  required
+                  value={county}
+                  onChange={(e) => setCounty(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
