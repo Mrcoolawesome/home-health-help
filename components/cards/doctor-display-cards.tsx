@@ -1,6 +1,7 @@
 "use client"
 
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type DoctorData = {
@@ -57,22 +58,23 @@ export default function DoctorCards({ page }: Props) {
             ) : (
                 <div className="grid gap-4">
                     {doctorDisplayData.map((doctor) => (
-                        <div
-                            key={doctor?.id}
-                            className="bg-white/10 border border-white/20 rounded-lg p-6 hover:bg-white/15 hover:border-white/30 transition"
-                        >
-                            <h3 className="text-xl font-bold text-white mb-2">
-                                {doctor?.name}
-                            </h3>
-                            <p className="text-gray-300 mb-3">
-                                {doctor?.specialization}
-                            </p>
-                            {doctor?.referral_status && (
-                                <div className="inline-block px-3 py-1 bg-green-500/20 border border-green-500/50 text-green-300 rounded-full text-sm font-medium">
-                                    ✓ Looking for referral partners
-                                </div>
-                            )}
-                        </div>
+                        <Link key={doctor?.id} href={`/physician/${doctor?.id}`}>
+                            <div
+                                className="bg-white/10 border border-white/20 rounded-lg p-6 hover:bg-white/15 hover:border-white/30 transition cursor-pointer"
+                            >
+                                <h3 className="text-xl font-bold text-white mb-2">
+                                    {doctor?.name}
+                                </h3>
+                                <p className="text-gray-300 mb-3">
+                                    {doctor?.specialization}
+                                </p>
+                                {doctor?.referral_status && (
+                                    <div className="inline-block px-3 py-1 bg-green-500/20 border border-green-500/50 text-green-300 rounded-full text-sm font-medium">
+                                        ✓ Looking for referral partners
+                                    </div>
+                                )}
+                            </div>
+                        </Link>
                     ))}
                 </div>
             )}
