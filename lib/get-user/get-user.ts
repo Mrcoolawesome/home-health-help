@@ -18,9 +18,23 @@ export async function getUser() {
         return redirect("/auth/login");
     }
 
+    // check if the user is authenticated 
     const user = data?.claims;
-    const isAuthed = user?.aud === "authenticated"; // check if user exists 
+    const isAuthed = user?.aud === "authenticated"; // this might actually just check if they exist
+    // this is because 'authenticated' in this context might just mean they have authenticated their account at one point
+
+    // get the type of user they are and return that 
+    let type = undefined;
+    const { data: isDoctor } = await supabase.from("users_doctors").select("id").eq('id', user?.sub);
+    if (isDoctor) {
+        type = "doctor";
+    }
+
+    const { data: isHomeHealth } = await supabase.from("users_hh").select("id").eq('id', user?.sub);
+    if (isHomeHealth) {
+        type = "homeHealth"
+    }
 
     // if it doesn't error then return the user type (auth vs anon) and their data
-    return { isAuthed, user };
+    return { isAuthed, user, type };
 }
