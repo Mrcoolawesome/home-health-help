@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 
-// Define a type for your post/result object
 type Doctor = {
   id: number;
   name: string;
@@ -15,7 +14,6 @@ export default function SearchBar() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // A simple debounce implementation
     const controller = new AbortController();
     const { signal } = controller;
 
@@ -37,9 +35,8 @@ export default function SearchBar() {
       } else {
         setResults([]);
       }
-    }, 300); // Wait for 300ms after user stops typing
+    }, 300);
 
-    // Cleanup function to cancel the fetch if the query changes
     return () => {
       controller.abort();
       clearTimeout(timeoutId);
@@ -47,23 +44,27 @@ export default function SearchBar() {
   }, [query]);
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto px-4 py-8">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for posts..."
-        className="w-full p-2 border rounded"
+        placeholder="Search physicians by name or specialty..."
+        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 transition"
       />
-      {loading && <p>Loading...</p>}
-      <ul>
-        {results.map((doctor) => (
-          <li key={doctor.id}>
-            <h3>{doctor.name}</h3>
-            <h3>{doctor.referralStatus}</h3>
-          </li>
-        ))}
-      </ul>
+      {loading && <p className="mt-2 text-gray-400">Loading...</p>}
+      {results.length > 0 && (
+        <ul className="mt-4 space-y-2">
+          {results.map((doctor) => (
+            <li key={doctor.id} className="bg-white/10 border border-white/20 rounded-lg p-4 hover:bg-white/20 transition">
+              <h3 className="font-semibold text-white">{doctor.name}</h3>
+              <p className="text-gray-300 text-sm">
+                {doctor.referralStatus ? 'Looking for referral partners' : 'Not accepting referrals'}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
