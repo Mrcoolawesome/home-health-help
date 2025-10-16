@@ -1,6 +1,7 @@
 "use client"
 
 import { createClient } from "@/lib/supabase/client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 type DoctorData = {
@@ -53,9 +54,11 @@ export default function DoctorCards({ page }: Props) {
         <div id="doctor-display-box" className="flex flex-col">
             {doctorDisplayData.map((doctor) => (
                 <div key={doctor?.id}>
-                    <div id="doctor-name">
-                        {doctor?.name}
-                    </div>
+                    <Link href={`/physician/${doctor?.id}`}>
+                        <div id="doctor-name">
+                            {doctor?.name}
+                        </div>
+                    </Link>
                     <div id="doctor-specialization">
                         {doctor?.specialization}
                     </div>
