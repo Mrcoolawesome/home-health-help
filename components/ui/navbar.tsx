@@ -6,19 +6,42 @@ import { LogoutButton } from "../buttons/logout-button";
 import SignupButton from "../buttons/signup-button";
 import LoginButton from "../buttons/login-button";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const supabase = createClient();
+    const router = useRouter();
 
     useEffect(() => {
+
+        // fetch the user on the initial check
         const fetchUser = async () => {
             const { isAuthed, user } = await getUser();
             console.log(user);
             setIsAuthenticated(isAuthed);
         };
-
         fetchUser();
-    }, []);
+
+        // then subscribe to listen to authentication changes
+        // this listener function stays running in the background,
+        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+            // set the authenticated state to be the truthy value of the user session (whether they exist or not)
+            setIsAuthenticated(!!session?.user);
+
+            // refresh data on the current page if they just signed out or in
+            if (_event === "SIGNED_IN" || _event === "SIGNED_OUT") {
+                router.refresh();
+            }
+        });
+
+        // this is the cleanup function for the useEffect function
+        // this gets rid of the background subscription upon changing/leaving the page
+        return () => {
+            listener?.subscription.unsubscribe();
+        };
+    }, [router]); // the router must be a dependency because it is used in the useEffect function
 
     return (
         <nav className="sticky top-0 z-50 bg-black/95 border-b border-white/10 backdrop-blur-md">
