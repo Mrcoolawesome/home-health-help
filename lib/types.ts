@@ -13,3 +13,45 @@
 export type PersonalPageProps = { params: Promise<{ id: string }> };
 
 export type PersonalPageDisplayProps = { id: string };
+
+// Hospice Provider Data Types
+export interface ProviderMeasure {
+  measureCode: string;
+  measureName: string;
+  score: string;
+  footnote: string;
+  measureDateRange: string;
+}
+
+export interface ProviderData {
+  ccn: string;
+  facilityName: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  county: string;
+  phone: string;
+  cmsRegion: string;
+  measures: ProviderMeasure[];
+}
+
+// Type for the raw CMS API response
+export interface RawCMSRecord {
+  "CMS Certification Number (CCN)": string;
+  "Facility Name": string;
+  "Address Line 1": string;
+  "Address Line 2": string;
+  "City/Town": string;
+  "State": string;
+  "ZIP Code": string;
+  "County/Parish": string;
+  "Telephone Number": string;
+  "CMS Region": string;
+  "Measure Code": string;
+  "Measure Name": string;
+  "Score": string;
+  "Footnote": string;
+  "Measure Date Range": string;
+}
