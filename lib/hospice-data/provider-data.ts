@@ -1,7 +1,4 @@
 import { ProviderData, RawCMSRecord } from "@/lib/types";
-import { getNationalData } from "./national-data";
-import { getNationalCahps } from "./national-cahps";
-import { getStateCahps } from "./state-cahps";
 
 /**
  * Transforms raw CMS API data into a structured format
@@ -36,6 +33,10 @@ function transformProviderData(rawData: RawCMSRecord[]): ProviderData | null {
   };
 }
 
+/**
+ * Fetches provider data by CCN
+ * Single responsibility: Fetch and transform provider-specific data
+ */
 export async function getProviderData(ccn: string): Promise<ProviderData | null> {
   try {
     const response = await fetch(`https://data.cms.gov/provider-data/api/1/datastore/sql?query=%5BSELECT%20%2A%20FROM%20098c6cc4-7426-5407-aae1-b361fc2072d6%5D%5BWHERE%20cms_certification_number_ccn%20%3D%20%22${ccn}%22%5D`);
@@ -45,9 +46,6 @@ export async function getProviderData(ccn: string): Promise<ProviderData | null>
       return null;
     }
 
-    //test
-    await getStateCahps('ut');
-
     const rawData: RawCMSRecord[] = await response.json();
     
     // Transform the data into structured format
@@ -55,7 +53,7 @@ export async function getProviderData(ccn: string): Promise<ProviderData | null>
 
   } catch (error) {
     // Handle network errors or other exceptions
-    console.error("Failed to fetch user data:", error);
+    console.error("Failed to fetch provider data:", error);
     return null;
   }
 }

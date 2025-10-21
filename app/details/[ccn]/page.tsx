@@ -1,5 +1,5 @@
-import { getProviderData } from "@/lib/hospice-data/provider-data";
-import type { ProviderData } from "@/lib/types";
+import { getEnrichedProviderData } from "@/lib/hospice-data/get-enriched-provider-data";
+import type { EnrichedProviderData } from "@/lib/types";
 
 interface DetailPageProps {
   params: {
@@ -9,7 +9,7 @@ interface DetailPageProps {
 
 export default async function DetailPage({ params }: DetailPageProps) {
   const { ccn } = await params;
-  const data: ProviderData | null = await getProviderData(ccn);
+  const data: EnrichedProviderData | null = await getEnrichedProviderData(ccn);
   
   if (!data) {
     return <div>Failed to load provider data</div>;
@@ -63,6 +63,8 @@ export default async function DetailPage({ params }: DetailPageProps) {
                   <p>Score: {measure.score}</p>
                   <p>Date Range: {measure.measureDateRange}</p>
                   {measure.footnote && <p>Note: {measure.footnote}</p>}
+                  {measure.stateAverage && <p>State Avg: {measure.stateAverage}</p>}
+                  {measure.nationalAverage && <p>National Avg: {measure.nationalAverage}</p>}
                 </div>
               </article>
             ))}

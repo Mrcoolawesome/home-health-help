@@ -23,6 +23,12 @@ export interface ProviderMeasure {
   measureDateRange: string;
 }
 
+// Enriched measure with comparison data
+export interface EnrichedProviderMeasure extends ProviderMeasure {
+  nationalAverage?: string;
+  stateAverage?: string;
+}
+
 export interface ProviderData {
   ccn: string;
   facilityName: string;
@@ -35,6 +41,11 @@ export interface ProviderData {
   phone: string;
   cmsRegion: string;
   measures: ProviderMeasure[];
+}
+
+// Enriched provider data with averages baked in
+export interface EnrichedProviderData extends Omit<ProviderData, 'measures'> {
+  measures: EnrichedProviderMeasure[];
 }
 
 // Type for the raw CMS API response
