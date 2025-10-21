@@ -1,4 +1,7 @@
 import { ProviderData, RawCMSRecord } from "@/lib/types";
+import { getNationalData } from "./national-data";
+import { getNationalCahps } from "./national-cahps";
+import { getStateCahps } from "./state-cahps";
 
 /**
  * Transforms raw CMS API data into a structured format
@@ -41,6 +44,9 @@ export async function getProviderData(ccn: string): Promise<ProviderData | null>
       console.error(`HTTP error! status: ${response.status}`);
       return null;
     }
+
+    //test
+    await getStateCahps('ut');
 
     const rawData: RawCMSRecord[] = await response.json();
     

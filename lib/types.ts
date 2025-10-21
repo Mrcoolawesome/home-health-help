@@ -55,3 +55,32 @@ export interface RawCMSRecord {
   "Footnote": string;
   "Measure Date Range": string;
 }
+
+// Type for the raw National Data API response
+export interface RawNationalDataRecord {
+  "CMS Certification Number (CCN)": string;
+  "Measure Code": string;
+  "Measure Name": string;
+  "Score": string;
+  "Footnote": string;
+  "Date": string;
+}
+
+// Type for the raw National CAHPS API response
+export interface RawNationalCahpsRecord {
+  "Measure Code": string;
+  "Measure Name": string;
+  "Score": string;
+  "Footnote": string;
+  "Date": string;
+}
+
+// Type for the raw State CAHPS API response
+export interface RawStateCahpsRecord {
+  "State": string;
+  "Measure Code": string;
+  "Measure Name": string;
+  "Score": string;
+  "Footnote": string;
+  "Date": string;
+}
