@@ -1,21 +1,27 @@
 # GitHub Copilot Instructions
 
 ## Product Overview
-This application is a **physician-hospice referral network platform** that connects physicians with hospice home health providers to streamline hospice referrals for patients. The platform enables:
+This application is a **consumer-focused hospice comparison platform** that empowers patients and their families to make informed decisions about hospice care. The platform directly addresses the root cause of hospice referral challenges by providing transparent, comprehensive comparisons of hospice providers using official Medicare data.
 
-- **Physician profiles**: Doctors can create accounts, specify their medical specialties, and indicate their interest in providing hospice referrals
-- **Provider network**: Hospice home health providers can showcase their services and availability
-- **Contact coordination**: Physicians can include links to their contact information to facilitate direct communication outside the platform (avoiding HIPAA compliance requirements)
-- **Referral workflow**: Streamlined process for physicians to connect patients with appropriate hospice care
+### Core Features
+- **Hospice provider comparison**: Side-by-side comparisons of hospice providers with quality metrics, ratings, and services
+- **CMS data integration**: Real-time data from CMS.gov's open-source Medicare database via their Web API
+- **Search and filtering**: Geographic search (by location, county, zip code) with advanced filtering options
+- **Quality metrics**: Display of key performance indicators including patient satisfaction, care quality, and compliance ratings
+- **User-friendly interface**: Simplified presentation of complex Medicare data for non-technical users
+- **Decision support**: Tools to help families evaluate which hospice best meets their specific needs
 
-### User Interface Perspectives
-The platform serves two distinct user types with different UI needs:
+### Target Audience
+The platform serves patients' families and caregivers as a **B2C product**, providing a better alternative to the complex Medicare.gov hospice comparison tools. Users can directly research and compare hospice options without needing physician referrals or intermediaries.
 
-- **Home Health Provider View**: Search-focused interface with filters for county and medical profession to discover physicians accepting hospice referrals
-- **Physician/Doctor View**: Dashboard interface for profile management, allowing doctors to update their referral status (e.g., "looking to partner with home health") and maintain their professional information
+### Value Proposition
+By making Medicare's hospice data more accessible and easier to compare, this platform solves the fundamental problem in hospice referrals: information asymmetry. Families gain the knowledge needed to make confident, informed choices about hospice care.
 
 ## Technical Overview
 This is a Next.js 15 + Supabase starter kit using App Router, TypeScript, Tailwind CSS, and shadcn/ui components. The project implements cookie-based authentication that works across the entire Next.js stack (Client/Server Components, Route Handlers, Server Actions, and Middleware).
+
+### CMS API 
+We'll be getting all our data via the CMS api. Here is a link to the list of all 8 datasets we can pull from: https://data.cms.gov/provider-data/topics/hospice-care. A description on how to use their api's are listed in the api tabs of each of the datasets. 
 
 ## Architecture & Patterns
 
@@ -39,7 +45,6 @@ This is a Next.js 15 + Supabase starter kit using App Router, TypeScript, Tailwi
 
 ### Route Structure
 - **Public routes**: `/`, `/auth/*` (login, sign-up, forgot-password, etc.)
-- **Protected routes**: `/protected/*` with dedicated layout including navigation
 - **API routes**: `/auth/confirm/route.ts` for email verification handling
 
 ## Development Workflow
