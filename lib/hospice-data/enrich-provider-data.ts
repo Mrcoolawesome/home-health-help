@@ -2,7 +2,8 @@ import {
   ProviderData, 
   EnrichedProviderData, 
   RawNationalDataRecord, 
-  RawStateDataRecord 
+  RawStateDataRecord, 
+  RawNationalCahpsRecord
 } from "@/lib/types";
 
 /**
@@ -33,21 +34,25 @@ function createMeasureLookup(
 export function enrichProviderData(
   providerData: ProviderData,
   nationalData: RawNationalDataRecord[] | null,
-  stateData: RawStateDataRecord[] | null
+  nationalCahps: RawNationalCahpsRecord[] | null,
+  stateData: RawStateDataRecord[] | null,
+  stateCahps: RawStateDataRecord[] | null
 ): EnrichedProviderData {
   // Create lookup maps for O(1) access
   const nationalDataLookup = createMeasureLookup(nationalData);
+  const nationalCahpsLookup = createMeasureLookup(nationalCahps);
   const stateDataLookup = createMeasureLookup(stateData);
+  const stateCahpsLookup = createMeasureLookup(stateCahps);
 
   // Enrich each measure with comparison data
   const enrichedMeasures = providerData.measures.map(measure => ({
     ...measure,
-    nationalAverage: nationalDataLookup.get(measure.measureCode),
-    stateAverage: stateDataLookup.get(measure.measureCode)
+    nationalAverage: nationalDataLookup.get(measure.measureCode) || nationalCahpsLookup.get(measure.measureCode),
+    stateAverage: stateDataLookup.get(measure.measureCode) || stateCahpsLookup.get(measure.measureCode)
   }));
 
   return {
-    ...providerData,
+    ...providerData,  
     measures: enrichedMeasures
   };
 }
