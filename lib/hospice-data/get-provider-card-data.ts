@@ -1,8 +1,7 @@
 import { getCmsData } from "@/lib/hospice-data/get-cms-data";
 
-export async function GetProviderCardData(ccn: string) {
-    const DATASET_ID = '25a385ec-f668-500d-8509-550a8af86eff'; // Hospice - Provider Data
-    const query = `[SELECT cms_certification_number_ccn,facility_name,address_line_1,citytown,countyparish,state,telephone_number,ownership_type FROM ${DATASET_ID}][WHERE cms_certification_number_ccn = "${ccn}"]`;
+export async function GetProviderData(desiredStuff: string, ccn: string, datasetId: string) {
+    const query = `[SELECT ${desiredStuff} FROM ${datasetId}][WHERE cms_certification_number_ccn = "${ccn}"]`;
 
     const response = await getCmsData(query);
 

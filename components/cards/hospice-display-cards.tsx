@@ -1,7 +1,7 @@
 "use client"
 
 import { GetCmsByZip } from "@/lib/hospice-data/get-cms-by-zip";
-import { GetProviderCardData } from "@/lib/hospice-data/get-provider-card-data";
+import { GetProviderData } from "@/lib/hospice-data/get-provider-card-data";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -19,7 +19,8 @@ type HospiceCardData = {
 
 type Props = {
     page: number,
-    zip: string
+    zip: string,
+    sortBy: string
 }
 
 type HospiceProvider = {
@@ -31,7 +32,7 @@ type CmsApiResponse = {
   providers: HospiceProvider[];
 };
 
-export default function HospiceCards({ page, zip }: Props) {
+export default function HospiceCards({ page, zip, sortBy }: Props) {
     const [hospiceDisplayData, setHospiceDisplayData] = useState<HospiceCardData[]>([]);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
@@ -43,7 +44,9 @@ export default function HospiceCards({ page, zip }: Props) {
 
                 // Fetch all details in parallel
                 // Assumes getProviderDetailsByCcn(ccn) fetches the detailed data for one provider
-                const detailPromises = cmsNumberList.map(ccn => GetProviderCardData(ccn));
+                const desiredData = "cms_certification_number_ccn,facility_name,address_line_1,citytown,countyparish,state,telephone_number,ownership_type";
+                const DATASET_ID = '25a385ec-f668-500d-8509-550a8af86eff'; // Hospice - Provider Data
+                const detailPromises = cmsNumberList.map(ccn => GetProviderData(desiredData, ccn, DATASET_ID));
                 const rawDetailsArrays = await Promise.all(detailPromises);
 
                 // SIMPLIFIED STEP: Just extract the provider object from each API response
