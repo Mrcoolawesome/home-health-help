@@ -8,69 +8,98 @@ interface DetailPageProps {
 }
 
 export default async function DetailPage({ params }: DetailPageProps) {
-  const { ccn } = await params;
+  const { ccn } = params;
   const data: EnrichedProviderData | null = await getEnrichedProviderData(ccn);
   
   if (!data) {
-    return <div>Failed to load provider data</div>;
+    return <div className="container mx-auto max-w-4xl px-4 py-8">Failed to load provider data</div>;
   }
 
   return (
-    <div>
+    <div className="container mx-auto max-w-4xl px-4 py-8 space-y-8">
       {/* Provider Header */}
-      <header>
-        <h1>{data.facilityName}</h1>
-        <p>CCN: {data.ccn}</p>
+      <header className="border-b pb-6">
+        <h1 className="text-3xl font-bold tracking-tight">{data.facilityName}</h1>
+        <p className="text-sm text-muted-foreground mt-1">CCN: {data.ccn}</p>
       </header>
 
       {/* Contact Information Section */}
-      <section>
-        <h2>Contact Information</h2>
-        <div>
-          <p>Phone: {data.phone}</p>
+      <section className="rounded-lg border bg-card text-card-foreground p-6">
+        <h2 className="text-xl font-semibold mb-2">Contact Information</h2>
+        <div className="space-y-1">
+          <p className="text-sm">
+            <span className="text-muted-foreground">Phone:</span> {data.phone}
+          </p>
         </div>
       </section>
 
       {/* Address Section */}
-      <section>
-        <h2>Address</h2>
-        <div>
+      <section className="rounded-lg border bg-card text-card-foreground p-6">
+        <h2 className="text-xl font-semibold mb-2">Address</h2>
+        <div className="space-y-1 text-sm">
           <p>{data.addressLine1}</p>
           {data.addressLine2 && <p>{data.addressLine2}</p>}
-          <p>{data.city}, {data.state} {data.zipCode}</p>
-          <p>County: {data.county}</p>
+          <p>
+            {data.city}, {data.state} {data.zipCode}
+          </p>
+          <p className="text-muted-foreground">County: {data.county}</p>
         </div>
       </section>
 
       {/* Administrative Information */}
-      <section>
-        <h2>Administrative Information</h2>
-        <div>
-          <p>CMS Region: {data.cmsRegion}</p>
+      <section className="rounded-lg border bg-card text-card-foreground p-6">
+        <h2 className="text-xl font-semibold mb-2">Administrative Information</h2>
+        <div className="text-sm">
+          <p>
+            <span className="text-muted-foreground">CMS Region:</span> {data.cmsRegion}
+          </p>
         </div>
       </section>
 
       {/* Quality Measures Section */}
-      <section>
-        <h2>Quality Measures</h2>
+      <section className="rounded-lg border bg-card text-card-foreground p-6">
+        <h2 className="text-xl font-semibold mb-4">Quality Measures</h2>
         {data.measures.length > 0 ? (
-          <div>
+          <div className="grid gap-4 md:grid-cols-2">
             {data.measures.map((measure, index) => (
-              <article key={index}>
-                <h3>{measure.measureName}</h3>
-                <div>
-                  <p>Code: {measure.measureCode}</p>
-                  <p>Score: {measure.score}</p>
-                  <p>Date Range: {measure.measureDateRange}</p>
-                  {measure.footnote && <p>Note: {measure.footnote}</p>}
-                  {measure.stateAverage && <p>State Avg: {measure.stateAverage}</p>}
-                  {measure.nationalAverage && <p>National Avg: {measure.nationalAverage}</p>}
+              <article
+                key={`${measure.measureCode}-${measure.measureDateRange}-${index}`}
+                className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
+              >
+                <h3 className="font-medium">
+                  {measure.measureName ?? measure.measureCode}
+                </h3>
+                <div className="mt-2 space-y-1 text-sm">
+                  <p>
+                    <span className="text-muted-foreground">Code:</span> {measure.measureCode}
+                  </p>
+                  <p>
+                    <span className="text-muted-foreground">Score:</span> {measure.score}
+                  </p>
+                  <p>
+                    <span className="text-muted-foreground">Date Range:</span> {measure.measureDateRange}
+                  </p>
+                  {measure.footnote && (
+                    <p>
+                      <span className="text-muted-foreground">Note:</span> {measure.footnote}
+                    </p>
+                  )}
+                  {measure.stateAverage && (
+                    <p>
+                      <span className="text-muted-foreground">State Avg:</span> {measure.stateAverage}
+                    </p>
+                  )}
+                  {measure.nationalAverage && (
+                    <p>
+                      <span className="text-muted-foreground">National Avg:</span> {measure.nationalAverage}
+                    </p>
+                  )}
                 </div>
               </article>
             ))}
           </div>
         ) : (
-          <p>No quality measures available</p>
+          <p className="text-sm text-muted-foreground italic">No quality measures available</p>
         )}
       </section>
     </div>

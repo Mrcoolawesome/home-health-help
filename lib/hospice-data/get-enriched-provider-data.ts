@@ -1,8 +1,7 @@
 import { EnrichedProviderData } from "@/lib/types";
 import { getProviderData } from "./provider-data";
 import { getNationalData } from "./national-data";
-import { getNationalCahps } from "./national-cahps";
-import { getStateCahps } from "./state-cahps";
+import { getStateData } from "./state-data";
 import { enrichProviderData } from "./enrich-provider-data";
 
 /**
@@ -25,14 +24,13 @@ export async function getEnrichedProviderData(ccn: string): Promise<EnrichedProv
     }
 
     // Fetch comparison data in parallel for better performance
-    const [nationalData, nationalCahps, stateCahps] = await Promise.all([
+    const [nationalData, stateData] = await Promise.all([
       getNationalData(),
-      getNationalCahps(),
-      getStateCahps(providerData.state.toUpperCase())
+      getStateData(providerData.state.toUpperCase())
     ]);
 
     // Enrich the provider data with comparison averages
-    return enrichProviderData(providerData, nationalData, nationalCahps, stateCahps);
+    return enrichProviderData(providerData, nationalData, stateData);
 
   } catch (error) {
     console.error("Failed to fetch enriched provider data:", error);

@@ -86,8 +86,8 @@ export interface RawNationalCahpsRecord {
   "Date": string;
 }
 
-// Type for the raw State CAHPS API response
-export interface RawStateCahpsRecord {
+// Type for the raw State response
+export interface RawStateDataRecord {
   "State": string;
   "Measure Code": string;
   "Measure Name": string;
