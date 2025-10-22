@@ -18,6 +18,7 @@ export interface ProviderMeasure {
   measureCode: string;
   measureName: string;
   score: string;
+  starRating?: string;
   footnote: string;
   measureDateRange: string;
 }
@@ -62,6 +63,7 @@ export interface RawCMSRecord {
   "Measure Code": string;
   "Measure Name": string;
   "Score": string;
+  "Star Rating"?: string;
   "Footnote": string;
   "Measure Date Range": string;
 }
