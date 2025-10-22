@@ -1,5 +1,5 @@
 /**
- * Note about differnce between types and interfaces.
+ * Note about difference between types and interfaces.
  * They're very similar, but you can add parameters to an interface
  * later on in code, it doesn't all have to be declared at once.
  *      Aka you can 're-declare' the interface multiple times and it'll automatcially 
@@ -11,5 +11,7 @@
  */
 
 export type PersonalPageProps = { params: Promise<{ id: string }> };
+
+export type HospiceDisplayProps = { params: Promise<{ id: string }> } 
 
 export type PersonalPageDisplayProps = { id: string };
