@@ -161,14 +161,20 @@ export function SignUpFormDoctor({
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="county">County</Label>
-                <Input 
+                <select
                   id="county"
-                  type="county"
-                  placeholder="eg. Cache County"
                   required
                   value={county}
                   onChange={(e) => setCounty(e.target.value)}
-                />
+                  className="px-3 py-2 border border-input rounded-md bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="">Select a county</option>
+                  {UTAH_COUNTIES.map((county) => (
+                    <option key={county} value={county}>
+                      {county}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
