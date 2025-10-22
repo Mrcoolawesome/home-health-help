@@ -22,7 +22,7 @@ export function MeasureGroup({
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-6">{title}</h3>
-      <div className="space-y-5">
+      <div className="space-y-6">
         {measures.map((measure) => (
           <MeasureBar
             key={measure.measureCode}
@@ -35,6 +35,7 @@ export function MeasureGroup({
               measure.nationalAverage ? parseFloat(measure.nationalAverage) : undefined
             }
             comparisonType={comparisonType}
+            footnote={measure.footnote}
           />
         ))}
       </div>
