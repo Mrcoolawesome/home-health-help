@@ -1,4 +1,4 @@
-import DoctorCards from "@/components/cards/doctor-display-cards";
+import DoctorCards from "@/components/cards/hospice-display-cards";
 import { LogoutButton } from "@/components/buttons/logout-button";
 
 export default function DoctorDashboard() {

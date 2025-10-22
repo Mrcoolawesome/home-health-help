@@ -1,15 +1,20 @@
 "use client"
 
-import DoctorCards from "@/components/cards/doctor-display-cards";
 import SearchBar from "@/components/ui/search-bar";
 import { useState, useEffect } from "react";
 import { getUser } from "@/lib/get-user/get-user";
 import Link from "next/link";
+import HospiceCards from "@/components/cards/hospice-display-cards";
 
 export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userType, setUserType] = useState<string | undefined>("");
   const [isLoading, setIsLoading] = useState(true);
+  const [query, setQuery] = useState("");
+
+  const handleSearchChange = (newQuery: string) => {
+    setQuery(newQuery);
+  };
 
   useEffect(() => {
       const fetchUser = async () => {
@@ -65,7 +70,7 @@ export default function Home() {
             <p className="text-gray-300 mb-6">
               Log in as a home health provider to search and connect with physicians.
             </p>
-            <SearchBar />
+            <SearchBar onSearchChange={handleSearchChange}/>
           </div>
         </div>
       </div>
@@ -93,8 +98,8 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 py-12">
           <h1 className="text-4xl font-bold text-white mb-8">Provider Dashboard</h1>
           <p className="text-gray-300 mb-8">Search physicians and manage provider information.</p>
-          <SearchBar />
-          <DoctorCards page={0} />
+          <SearchBar onSearchChange={handleSearchChange}/>
+          <HospiceCards page={0} zip={query} />
         </div>
       </div>
     );
