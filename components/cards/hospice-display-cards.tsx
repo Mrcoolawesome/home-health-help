@@ -82,7 +82,7 @@ export default function HospiceCards({ page, zip }: Props) {
             ) : (
                 <div className="grid gap-4">
                     {hospiceDisplayData.map((facility) => (
-                        <Link key={facility?.cms_certification_number_ccn} href={`/physician/${facility?.cms_certification_number_ccn}`}>
+                        <Link key={facility?.cms_certification_number_ccn} href={`/details/${facility?.cms_certification_number_ccn}`}>
                             <div
                                 className="bg-white/10 border border-white/20 rounded-lg p-6 hover:bg-white/15 hover:border-white/30 transition cursor-pointer"
                             >
