@@ -8,7 +8,7 @@ interface DetailPageProps {
 }
 
 export default async function DetailPage({ params }: DetailPageProps) {
-  const { ccn } = params;
+  const { ccn } = await params;
   const data: EnrichedProviderData | null = await getEnrichedProviderData(ccn);
   
   if (!data) {
@@ -63,7 +63,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
           <div className="grid gap-4 md:grid-cols-2">
             {data.measures.map((measure, index) => (
               <article
-                key={`${measure.measureCode}-${measure.measureDateRange}-${index}`}
+                key={index}
                 className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
               >
                 <h3 className="font-medium">
@@ -84,14 +84,14 @@ export default async function DetailPage({ params }: DetailPageProps) {
                       <span className="text-muted-foreground">Note:</span> {measure.footnote}
                     </p>
                   )}
-                  {measure.stateAverage && (
-                    <p>
-                      <span className="text-muted-foreground">State Avg:</span> {measure.stateAverage}
-                    </p>
-                  )}
                   {measure.nationalAverage && (
                     <p>
                       <span className="text-muted-foreground">National Avg:</span> {measure.nationalAverage}
+                    </p>
+                  )}
+                  {measure.stateAverage && (
+                    <p>
+                      <span className="text-muted-foreground">State Avg:</span> {measure.stateAverage}
                     </p>
                   )}
                 </div>
