@@ -105,9 +105,9 @@ export function QualityViewer({ data }: QualityViewerProps) {
 
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Comparison Info */}
+        {/* Comparison Info with Legend */}
         <div className="bg-gray-100 rounded-lg p-4 mb-8">
-          <p className="text-sm text-gray-700">
+          <p className="text-sm text-gray-700 mb-4">
             {comparisonType === 'overview' && (
               'Color-coded comparison showing this hospice performs relative to quality benchmarks.'
             )}
@@ -118,6 +118,28 @@ export function QualityViewer({ data }: QualityViewerProps) {
               'Color-coded comparison showing this hospice performs relative to national benchmarks.'
             )}
           </p>
+          {comparisonType !== 'overview' && (
+            <div className="flex flex-wrap gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-green-500 rounded-full" />
+                <span className="text-gray-700">
+                  {comparisonType === 'state' ? 'Above State Avg' : 'Above National Avg'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-yellow-400 rounded-full" />
+                <span className="text-gray-700">
+                  {comparisonType === 'state' ? 'State Avg' : 'National Avg'}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-red-500 rounded-full" />
+                <span className="text-gray-700">
+                  {comparisonType === 'state' ? 'Below State Avg' : 'Below National Avg'}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Measure Groups */}
