@@ -1,7 +1,7 @@
 "use client"
 
-import { GetCmsByZip } from "@/lib/cms-data/get-cms-by-zip";
-import { GetProviderCardData } from "@/lib/cms-data/get-provider-card-data";
+import { GetCmsByZip } from "@/lib/hospice-data/get-cms-by-zip";
+import { GetProviderCardData } from "@/lib/hospice-data/get-provider-card-data";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
