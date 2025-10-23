@@ -1,5 +1,9 @@
 import { getEnrichedProviderData } from "@/lib/hospice-data/get-enriched-provider-data";
 import type { EnrichedProviderData } from "@/lib/types";
+import Overview from "./overview";
+import { Tabs } from "@/components/ui/tabs";
+import StateAvg from "./stateAvg";
+import NationalAvg from "./nationalAvg";
 
 interface DetailPageProps {
   params: {
@@ -15,8 +19,23 @@ export default async function DetailPage({ params }: DetailPageProps) {
     return <div className="container mx-auto max-w-4xl px-4 py-8">Failed to load provider data</div>;
   }
 
+  const tabs = [
+    {
+      name: "Overview",
+      content: <Overview data= { data }/>
+    },
+    {
+      name: "State Average",
+      content: <StateAvg data= { data }/>
+    },
+    {
+      name: "National Average",
+      content: <NationalAvg data= { data }/>
+    },
+  ];
+
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8 space-y-8">
+    <div>
       {/* Provider Header */}
       <header className="border-b pb-6">
         <h1 className="text-3xl font-bold tracking-tight">{data.facilityName}</h1>
@@ -56,52 +75,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
         </div>
       </section>
 
-      {/* Quality Measures Section */}
-      <section className="rounded-lg border bg-card text-card-foreground p-6">
-        <h2 className="text-xl font-semibold mb-4">Quality Measures</h2>
-        {data.measures.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            {data.measures.map((measure, index) => (
-              <article
-                key={index}
-                className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
-              >
-                <h3 className="font-medium">
-                  {measure.measureName ?? measure.measureCode}
-                </h3>
-                <div className="mt-2 space-y-1 text-sm">
-                  <p>
-                    <span className="text-muted-foreground">Code:</span> {measure.measureCode}
-                  </p>
-                  <p>
-                    <span className="text-muted-foreground">Score:</span> {measure.score}
-                  </p>
-                  <p>
-                    <span className="text-muted-foreground">Date Range:</span> {measure.measureDateRange}
-                  </p>
-                  {measure.footnote && (
-                    <p>
-                      <span className="text-muted-foreground">Note:</span> {measure.footnote}
-                    </p>
-                  )}
-                  {measure.nationalAverage && (
-                    <p>
-                      <span className="text-muted-foreground">National Avg:</span> {measure.nationalAverage}
-                    </p>
-                  )}
-                  {measure.stateAverage && (
-                    <p>
-                      <span className="text-muted-foreground">State Avg:</span> {measure.stateAverage}
-                    </p>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground italic">No quality measures available</p>
-        )}
-      </section>
+      <Tabs tabs={tabs} defaultTab={0} />
     </div>
   )
 }
