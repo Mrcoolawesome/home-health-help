@@ -4,6 +4,7 @@ import Overview from "./overview";
 import { Tabs } from "@/components/ui/tabs";
 import StateAvg from "./stateAvg";
 import NationalAvg from "./nationalAvg";
+import Statistic from "@/components/details/statistic";
 
 interface DetailPageProps {
   params: {
@@ -35,7 +36,8 @@ export default async function DetailPage({ params }: DetailPageProps) {
   ];
 
   return (
-    <div>
+    <div className="max-w-screen-lg mx-auto px-4 py-8">
+
       {/* Provider Header */}
       <header className="border-b pb-6">
         <h1 className="text-3xl font-bold tracking-tight">{data.facilityName}</h1>

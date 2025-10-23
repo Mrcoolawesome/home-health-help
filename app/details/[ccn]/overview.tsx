@@ -1,3 +1,4 @@
+import Statistic from "@/components/details/statistic";
 import { EnrichedProviderData } from "@/lib/types";
 
 export default function Overview({ data } : { data: EnrichedProviderData }) {
@@ -14,35 +15,7 @@ export default function Overview({ data } : { data: EnrichedProviderData }) {
                 key={index}
                 className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
               >
-                <h3 className="font-medium">
-                  {measure.measureName ?? measure.measureCode}
-                </h3>
-                <div className="mt-2 space-y-1 text-sm">
-                  <p>
-                    <span className="text-muted-foreground">Code:</span> {measure.measureCode}
-                  </p>
-                  <p>
-                    <span className="text-muted-foreground">Score:</span> {measure.score}
-                  </p>
-                  <p>
-                    <span className="text-muted-foreground">Date Range:</span> {measure.measureDateRange}
-                  </p>
-                  {measure.footnote && (
-                    <p>
-                      <span className="text-muted-foreground">Note:</span> {measure.footnote}
-                    </p>
-                  )}
-                  {measure.nationalAverage && (
-                    <p>
-                      <span className="text-muted-foreground">National Avg:</span> {measure.nationalAverage}
-                    </p>
-                  )}
-                  {measure.stateAverage && (
-                    <p>
-                      <span className="text-muted-foreground">State Avg:</span> {measure.stateAverage}
-                    </p>
-                  )}
-                </div>
+                <Statistic measure={ measure }/>
               </article>
             ))}
           </div>
