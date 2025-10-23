@@ -4,18 +4,8 @@ import { GetCmsByZip } from "@/lib/hospice-data/get-cms-by-zip";
 import { GetProviderData } from "@/lib/hospice-data/get-provider-card-data";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-// the only thing about these is that they NEED to be named the same way that we'd expect them to be named from CMS's API
-type HospiceCardData = {
-    cms_certification_number_ccn: string
-    facility_name: string,
-    address_line_1: string
-    countyparish: string,
-    citytown: string,
-    state: string,
-    telephone_number: string,
-    ownership_type: string
-}
+import { ImportantHospiceData } from "@/lib/types";
+import { SortByName } from "@/lib/sortby-functions/sortby-functions";
 
 type Props = {
     page: number,
@@ -33,7 +23,7 @@ type CmsApiResponse = {
 };
 
 export default function HospiceCards({ page, zip, sortBy }: Props) {
-    const [hospiceDisplayData, setHospiceDisplayData] = useState<HospiceCardData[]>([]);
+    const [hospiceDisplayData, setHospiceDisplayData] = useState<ImportantHospiceData[]>([]);
     const [error, setError] = useState<string | null>(null);
     useEffect(() => {
         const fetchHospices = async () => {
@@ -50,7 +40,7 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
                 const rawDetailsArrays = await Promise.all(detailPromises);
 
                 // SIMPLIFIED STEP: Just extract the provider object from each API response
-                const hospiceCards: HospiceCardData[] = rawDetailsArrays.map(
+                const hospiceData: ImportantHospiceData[] = rawDetailsArrays.map(
                     // For each item in the main array...
                     // 1. Access the .providers property to get the inner array.
                     // 2. Access the first element [0] to get the final object.
@@ -58,8 +48,12 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
                     (item) => item.providers[0]
                 );
 
+                if (sortBy === "facility_name") {
+                    hospiceData.sort(SortByName);
+                }
+
                 // Set the final data into your component's state
-                setHospiceDisplayData(hospiceCards);
+                setHospiceDisplayData(hospiceData);
 
             } catch (err) {
                 console.error("Failed to process hospice data:", err);
