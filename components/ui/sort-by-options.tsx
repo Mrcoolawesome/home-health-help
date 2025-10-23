@@ -4,7 +4,8 @@
 const sortOptions = [
     { value: 'facility_name', label: 'Sort by Name' },
     { value: 'citytown', label: 'Sort by City' },
-    { value: 'state', label: 'Sort by State' }
+    { value: 'state', label: 'Sort by State' },
+    { value: 'zip_code', label: 'Sort by Zipcode' }
 ];
 
 // Define the props our component will accept

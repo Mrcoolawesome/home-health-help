@@ -24,7 +24,8 @@ export type ImportantHospiceData  = {
   citytown: string,
   state: string,
   telephone_number: string,
-  ownership_type: string
+  ownership_type: string,
+  zip_code: string
 }
 
 // Hospice Provider Data Types

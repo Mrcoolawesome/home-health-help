@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ImportantHospiceData } from "@/lib/types";
 import { SortByName } from "@/lib/sortby-functions/sortby-functions";
+import { FetchDistanceMap } from "@/lib/sortby-functions/zipcode-helper/fetch-distance-map";
 
 type Props = {
     page: number,
@@ -34,7 +35,7 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
 
                 // Fetch all details in parallel
                 // Assumes getProviderDetailsByCcn(ccn) fetches the detailed data for one provider
-                const desiredData = "cms_certification_number_ccn,facility_name,address_line_1,citytown,countyparish,state,telephone_number,ownership_type";
+                const desiredData = "cms_certification_number_ccn,facility_name,address_line_1,citytown,countyparish,state,telephone_number,ownership_type,zip_code";
                 const DATASET_ID = '25a385ec-f668-500d-8509-550a8af86eff'; // Hospice - Provider Data
                 const detailPromises = cmsNumberList.map(ccn => GetProviderData(desiredData, ccn, DATASET_ID));
                 const rawDetailsArrays = await Promise.all(detailPromises);
@@ -48,8 +49,25 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
                     (item) => item.providers[0]
                 );
 
+                // This map will hold our distances if we need them
+                let distanceMap = new Map<string, number>();
+
+                // If sorting by distance, PRE-FETCH all distances
+                if (sortBy === "zip_code") {
+                    const destinationZips = hospiceData.map(h => h.zip_code);
+                    distanceMap = await FetchDistanceMap(zip, destinationZips);
+                }
+
+                // sort by whatever order they specify
                 if (sortBy === "facility_name") {
                     hospiceData.sort(SortByName);
+                } else if (sortBy === "zip_code") {
+                    const SortByDistance = (a: ImportantHospiceData, b: ImportantHospiceData) => {
+                        const distA = distanceMap.get(a.zip_code) || Infinity;
+                        const distB = distanceMap.get(b.zip_code) || Infinity;
+                        return distA - distB;
+                    };
+                    hospiceData.sort(SortByDistance);
                 }
 
                 // Set the final data into your component's state
@@ -64,7 +82,7 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
         if (zip) {
             fetchHospices();
         }
-    }, [page, zip]);
+    }, [page, zip, sortBy]);
 
     if (error) {
         return <div className="max-w-4xl mx-auto px-4 py-8 text-red-400">{error}</div>;
@@ -91,6 +109,9 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
                                 </p>
                                 <p className="text-gray-300 mb-3">
                                     {facility?.telephone_number}
+                                </p>
+                                <p className="text-gray-300 mb-3">
+                                    {facility?.citytown}, {facility?.zip_code}
                                 </p>
                             </div>
                         </Link>
