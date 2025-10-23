@@ -8,11 +8,11 @@ export default function Statistic({ measure } : { measure: EnrichedProviderMeasu
     <div className="space-y-2">
       {/* Header with info icon */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-700 dark:text-gray-300">
+        <span className="text-sm text-black">
           {measure.measureName}
         </span>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+          <span className="text-sm font-semibold text-black">
             {measure.score}%
           </span>
         </div>
