@@ -1,10 +1,11 @@
 "use client"
 
-// VERY IMPORTANT THAT THESE ARE NAMED THE EXACT SAME AS THE COLUMS WE WANNA SORT BY
+// these don't have to be named the same as the columns from CMS's api
 const sortOptions = [
-    { value: 'facility_name', label: 'Sort by Name' },
-    { value: 'citytown', label: 'Sort by City' },
-    { value: 'state', label: 'Sort by State' }
+    { value: 'name', label: 'Sort by Name' },
+    { value: 'city', label: 'Sort by City' },
+    { value: 'state', label: 'Sort by State' }, 
+    { value: 'care_prefrences', label: 'Sort by respect of Care Preferences'}
 ];
 
 // Define the props our component will accept

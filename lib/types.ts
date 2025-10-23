@@ -16,7 +16,7 @@ export type PersonalPageDisplayProps = { id: string };
 // This defines the specific data that the sortby functions need to use, along with the specific data the hospice display card function needs to use.
 // I made it a type because both the sortby functions and display cards need to be able to accept and return the same objects with the same data,
 // so making this an interface would imply that it's meant to be extended at some point, which isn't true.
-export type ImportantHospiceData  = {
+export type GeneralData = {
   cms_certification_number_ccn: string
   facility_name: string,
   address_line_1: string
@@ -25,6 +25,15 @@ export type ImportantHospiceData  = {
   state: string,
   telephone_number: string,
   ownership_type: string
+}
+
+export type SortbyMedicareScores = {
+  H_001_01_OBSERVED: string
+}
+
+export type CardData = {
+  general_data: GeneralData,
+  sortby_medicare_scores: SortbyMedicareScores
 }
 
 // Hospice Provider Data Types

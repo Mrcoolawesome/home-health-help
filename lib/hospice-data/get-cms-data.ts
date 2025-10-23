@@ -6,7 +6,6 @@ export async function getCmsData(query: string) {
         const CMS_QUERY_URL = `https://data.cms.gov/​provider-data​/api​/1​/datastore​/sql?query=${query}&show_db_columns=true`;
         // added on the '&show_db_columns=true' so that the headers of each of the pieces of data are what they're called in their db
         const cleanedUrl = CMS_QUERY_URL.replace(/[\u200B-\u200D\uFEFF]/g, ''); // this is so weird but for whatever reason the code reads the final url with a bunch of whitespace that doesn't exist so we have to get rid of the invisible whitespace
-        console.log(cleanedUrl);
         try {
             // Make the external GET request using fetch
             const response = await fetch(cleanedUrl, {

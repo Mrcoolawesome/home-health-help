@@ -1,8 +1,39 @@
 
-import { ImportantHospiceData } from "../types";
+import { CardData } from "../types";
 
 // given a list of hospice data objects, sort them by their names in alphabetical order
-export function SortByName(a: ImportantHospiceData, b: ImportantHospiceData): number {
-    console.log("are we here?")
-    return a.facility_name.localeCompare(b.facility_name);
+export function SortByName(a: CardData, b: CardData): number {
+    return a.general_data.facility_name.localeCompare(b.general_data.facility_name);
+}
+
+// the reason why this one is so long is because we need to check if the score isn't available
+export function SortByCarePrefrence(a: CardData, b: CardData): number {
+    // Get the scores from the data
+    const aScore = a.sortby_medicare_scores.H_001_01_OBSERVED;
+    const bScore = b.sortby_medicare_scores.H_001_01_OBSERVED;
+
+    // Check which scores are 'Not Available'
+    const aIsNA = aScore === 'Not Available';
+    const bIsNA = bScore === 'Not Available';
+
+    // --- Sorting rules ---
+
+    // 1. If both are 'Not Available', they are equal
+    if (aIsNA && bIsNA) {
+        return 0;
+    }
+    
+    // 2. If 'a' is 'Not Available', push it to the end (return 1)
+    if (aIsNA) {
+        return 1;
+    }
+
+    // 3. If 'b' is 'Not Available', push it to the end (return -1)
+    if (bIsNA) {
+        return -1;
+    }
+
+    // 4. If neither is 'Not Available', do the normal number comparison
+    // (This sorts highest-to-lowest)
+    return Number(bScore) - Number(aScore);
 }
