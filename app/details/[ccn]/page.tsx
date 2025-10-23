@@ -36,7 +36,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
   ];
 
   return (
-    <div className="max-w-screen-lg mx-auto px-4 py-8">
+    <div className="max-w-screen-xl mx-auto px-4 py-8">
 
       {/* Provider Header */}
       <header className="border-b pb-6">
