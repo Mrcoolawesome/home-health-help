@@ -1,13 +1,22 @@
 
 import { CardData } from "../types";
 
+export function Sort(combinedCardData: CardData[], sortBy: string) {
+    if (sortBy === "facility_name") {
+        combinedCardData.sort(SortByName);
+    } else if (sortBy === "H_001_01_OBSERVED") {
+        // we need data outside the General Data dataset
+        combinedCardData.sort(SortByCarePrefrence);
+    }
+}
+
 // given a list of hospice data objects, sort them by their names in alphabetical order
-export function SortByName(a: CardData, b: CardData): number {
+function SortByName(a: CardData, b: CardData): number {
     return a.general_data.facility_name.localeCompare(b.general_data.facility_name);
 }
 
 // the reason why this one is so long is because we need to check if the score isn't available
-export function SortByCarePrefrence(a: CardData, b: CardData): number {
+function SortByCarePrefrence(a: CardData, b: CardData): number {
     // Get the scores from the data
     const aScore = a.sortby_medicare_scores.H_001_01_OBSERVED;
     const bScore = b.sortby_medicare_scores.H_001_01_OBSERVED;
