@@ -1,10 +1,6 @@
 "use client"
 
-// THESE NEED TO BE NAMED THE SAME AS THEY WOULD IN THE API
-const sortOptions = [
-    { value: 'facility_name', label: 'Sort by Name' },
-    { value: 'H_001_01_OBSERVED', label: 'Sort by respect of Care Preferences'}
-];
+import { sortOptions } from "@/lib/types";
 
 // Define the props our component will accept
 type SortDropdownProps = {

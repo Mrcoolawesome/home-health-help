@@ -1,7 +1,7 @@
 import { GetCmsByZip } from "./get-cms-by-zip";
 import { GetProviderData } from "./get-provider-card-data";
 import { GetSortbyData } from "../sortby-functions/get-sortby-data";
-import { GeneralData, SortbyMedicareScores, CardData } from "../types";
+import { GeneralData, SortbyMedicareScores, CardData, sortOptions } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
 
 type HospiceProvider = {
@@ -40,10 +40,11 @@ export async function DisplayCardData(zip: string, sortBy: string) {
         (item) => item.providers[0]
     );
 
-    // the sortBy string will be the specific code you wanna compare to OR it's the others that have special cases
+    // the sortBy string will be the specific code you wanna compare to OR it's the others that are just sorting from the general dataset
+    // if they're sorting from the general dataset, just make the measureCode default to showing their respect of care prefrences
     let measureCode = "";
     if (sortBy === "facility_name") {
-        measureCode = "H_001_01_OBSERVED";
+        measureCode = sortOptions[1].value; // just leave this to make it a default value
     } else {
         measureCode = sortBy;
     }
@@ -52,10 +53,13 @@ export async function DisplayCardData(zip: string, sortBy: string) {
     const desiredProviderData = "score";
     const detailedPromisesProviderData = cmsNumberList.map(ccn => GetSortbyData(desiredProviderData, ccn, PROVIDER_DATA_DATASET_ID, measureCode));
     const rawProviderDetailsArray = await Promise.all(detailedPromisesProviderData);
-    console.log(rawProviderDetailsArray);
     const providerData: SortbyMedicareScores[] = rawProviderDetailsArray.map((item) => {
         const rawData = item.providers[0];
-        return { H_001_01_OBSERVED: rawData.score }; // map the score to be named what i wanna name it
+        // make the score what we've named it 
+        return { 
+            score: rawData.score,
+            score_desc: sortOptions.find(option => option.value === measureCode)?.label
+        }; 
     });
 
     // combine the two sets of data to make the CardData objects

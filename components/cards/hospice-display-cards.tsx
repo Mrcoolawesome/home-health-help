@@ -61,7 +61,7 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
                                     {facility?.general_data.telephone_number}
                                 </p>
                                 <p className="text-gray-300 mb-3">
-                                    {facility?.sortby_medicare_scores.H_001_01_OBSERVED}
+                                    {facility.sortby_medicare_scores.score_desc}: {facility?.sortby_medicare_scores.score}%
                                 </p>
                             </div>
                         </Link>

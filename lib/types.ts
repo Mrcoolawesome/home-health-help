@@ -28,8 +28,17 @@ export type GeneralData = {
 }
 
 export type SortbyMedicareScores = {
-  H_001_01_OBSERVED: string
+  score: string,
+  score_desc: string | undefined // need to do this because of how the 'find()' function works to find labels in the sortOptions array
 }
+
+// THESE VALUES NEED TO BE NAMED THE SAME AS THEY WOULD IN THE API
+// also make sure to name the label something good because it's what's displayed to the user
+export const sortOptions = [
+  { value: 'facility_name', label: 'Name' },
+  { value: 'H_008_01_OBSERVED', label: 'Respect of Care Preferences'},
+  { value: 'H_011_01_OBSERVED', label: 'Visits in the Last Days of Life' }
+];
 
 export type CardData = {
   general_data: GeneralData,

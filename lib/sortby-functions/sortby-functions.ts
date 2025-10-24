@@ -1,12 +1,18 @@
 
 import { CardData } from "../types";
 
+/**
+ * You NEED to make your own special sort function for things that aren't just higher is better numerical values.
+ * If they are just like that, then you can just pass the array into here and it'll use the SortByScore function
+ * @param combinedCardData 
+ * @param sortBy 
+ */
 export function Sort(combinedCardData: CardData[], sortBy: string) {
+    // you need to add a case to this chain for special sort functions
     if (sortBy === "facility_name") {
         combinedCardData.sort(SortByName);
-    } else if (sortBy === "H_001_01_OBSERVED") {
-        // we need data outside the General Data dataset
-        combinedCardData.sort(SortByCarePrefrence);
+    } else { // this assumes just numerical values where higher is better
+        combinedCardData.sort(SortByScore);
     }
 }
 
@@ -16,10 +22,11 @@ function SortByName(a: CardData, b: CardData): number {
 }
 
 // the reason why this one is so long is because we need to check if the score isn't available
-function SortByCarePrefrence(a: CardData, b: CardData): number {
+// this function is assuming a 'higher is better' set of numbers
+function SortByScore(a: CardData, b: CardData): number {
     // Get the scores from the data
-    const aScore = a.sortby_medicare_scores.H_001_01_OBSERVED;
-    const bScore = b.sortby_medicare_scores.H_001_01_OBSERVED;
+    const aScore = a.sortby_medicare_scores.score;
+    const bScore = b.sortby_medicare_scores.score;
 
     // Check which scores are 'Not Available'
     const aIsNA = aScore === 'Not Available';

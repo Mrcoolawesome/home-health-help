@@ -19,7 +19,6 @@ export default function Navbar() {
         // fetch the user on the initial check
         const fetchUser = async () => {
             const { isAuthed, user } = await getUser();
-            console.log(user);
             setIsAuthenticated(isAuthed);
         };
         fetchUser();
