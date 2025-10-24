@@ -1,7 +1,7 @@
-<h1 align="center">Physician-Hospice Referral Network</h1>
+<h1 align="center">Hospice Comparison Platform</h1>
 
 <p align="center">
- A platform connecting physicians with hospice home health providers to streamline hospice referrals
+ A consumer-focused platform empowering families to find and compare hospice providers using Medicare data
 </p>
 
 <p align="center">
@@ -15,30 +15,33 @@
 
 ## Overview
 
-This application is a **physician-hospice referral network platform** that connects physicians with hospice home health providers to facilitate easier access to hospice care for patients. The platform serves two main user types:
+This application is a consumer-focused hospice comparison platform that empowers patients and their families to make informed decisions about hospice care. The platform addresses the information asymmetry in hospice referrals by presenting transparent, comprehensive comparisons of hospice providers using official Medicare (CMS) data.
 
-### User Perspectives
+## Core Features
 
-**Home Health Provider View**: Search-focused interface with filters for county and medical profession to discover physicians accepting hospice referrals.
+- Hospice provider comparisons: Side-by-side comparisons of hospice providers with quality metrics, ratings, and services.
+- CMS data integration: Real-time use of CMS.gov Medicare hospice datasets via their public APIs.
+- Search & filtering: Geographic search (by location, county, zip code) and advanced filters to narrow providers by services and performance.
+- Quality metrics: Clear display of key performance indicators such as patient satisfaction, care quality, and compliance ratings drawn from Medicare data.
+- User-friendly interface: Simplified presentation of complex Medicare data for non-technical users using shadcn/ui + Tailwind.
+- Decision support: Tools and guidance to help families evaluate and choose the hospice that best meets their needs.
 
-**Physician/Doctor View**: Dashboard interface for profile management, allowing doctors to update their referral status (e.g., "looking to partner with home health") and maintain their professional information.
+## Target Audience
 
-### Key Features
-- **Physician Profiles**: Doctors can create accounts, specify medical specialties, and indicate interest in hospice referrals
-- **Provider Network**: Hospice providers can showcase services and search for physician partners
-- **Contact Coordination**: Physicians include links to contact information for external communication (avoiding HIPAA compliance requirements)
-- **Role-based Access**: Different interfaces optimized for each user type
+The platform is designed for patients, families, and caregivers (B2C), offering an accessible alternative to the complex Medicare.gov hospice comparison tools. It enables direct research and comparison of hospice options without needing intermediaries.
+
+## Value Proposition
+
+By surfacing Medicare hospice data in a clear, comparable format, the platform gives families the information needed to make confident, informed decisions about hospice care.
 
 ## Technical Features
 
-- **Next.js 15** with App Router for modern React development
-- **Supabase** for authentication, database, and real-time features
-- **TypeScript** for type safety and better developer experience
-- **Tailwind CSS** for responsive styling
-- **shadcn/ui** components with "new-york" style
-- **Cookie-based authentication** that works across the entire Next.js stack
-- **Row Level Security (RLS)** for secure data access
-- **Local development** with Supabase CLI and email testing
+- Next.js 15 with App Router
+- TypeScript and Tailwind CSS
+- Supabase for authentication, database, and real-time features
+- shadcn/ui components with "new-york" style
+- Cookie-based authentication working across Server/Client Components, Route Handlers, Server Actions, and Middleware
+- Integration points to CMS APIs for hospice datasets
 
 ## Getting Started
 
