@@ -1,10 +1,9 @@
 import { getEnrichedProviderData } from "@/lib/hospice-data/get-enriched-provider-data";
 import type { EnrichedProviderData } from "@/lib/types";
 import Overview from "./overview";
-import { Tabs } from "@/components/ui/tabs";
 import StateAvg from "./stateAvg";
 import NationalAvg from "./nationalAvg";
-import Statistic from "@/components/details/statistic";
+import { Tabs } from "@base-ui-components/react";
 
 interface DetailPageProps {
   params: {
@@ -77,7 +76,38 @@ export default async function DetailPage({ params }: DetailPageProps) {
         </div>
       </section>
 
-      <Tabs tabs={tabs} defaultTab={0} />
+      <Tabs.Root className="max-w-4xl mx-auto" defaultValue="overview">
+        <Tabs.List className="flex items-center bg-gray-400 text-black z-0 p-1 h-[40px] rounded-full">
+          <Tabs.Tab
+            className="flex-1 z-[2] h-full" 
+            value="overview"
+          >
+            Overview
+          </Tabs.Tab>
+          <Tabs.Tab 
+            className="flex-1 z-[2] h-full"
+            value="stateAvg"
+          >
+            State Avg
+          </Tabs.Tab>
+          <Tabs.Tab 
+            className="flex-1 z-[2] h-full"
+            value="nationalAvg"
+          >
+            National Avg
+          </Tabs.Tab>
+          <Tabs.Indicator className="rounded-full z-[1] absolute left-[var(--active-tab-left)] bg-white w-[var(--active-tab-width)] h-[var(--active-tab-height)] transition-all"/>
+        </Tabs.List>
+        <Tabs.Panel value="overview">
+          <Overview data= { data }/>
+        </Tabs.Panel>
+        <Tabs.Panel value="stateAvg">
+          <StateAvg data= { data }/>
+        </Tabs.Panel>
+        <Tabs.Panel value="nationalAvg">
+          <NationalAvg data= { data }/>
+        </Tabs.Panel>
+      </Tabs.Root>
     </div>
   )
 }
