@@ -42,7 +42,7 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
         <div id="hospice-display-box" className="max-w-4xl mx-auto px-4 py-8">
             {hospiceDisplayData.length === 0 ? (
                 <div className="text-center text-gray-400 py-12">
-                    <p>No physicians found. Sign up to get started!</p>
+                    <p>No hospices found! Please check your zipcode to see if it's correct.</p>
                 </div>
             ) : (
                 <div className="grid gap-4">
