@@ -11,7 +11,7 @@ export default function Overview({ data } : { data: EnrichedProviderData }) {
         <h2 className="text-xl font-semibold mb-4">Quality Measures</h2>
         {data.measures.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2">
-            <CategoryCard title={ "Category" } measures={ data.measures }/>
+            <CategoryCard title="Category" measures={ data.measures }/>
           </div>
         ) : (
           <p className="text-sm text-muted-foreground italic">No quality measures available</p>

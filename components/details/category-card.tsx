@@ -1,7 +1,13 @@
 import { EnrichedProviderMeasure } from "@/lib/types";
 import Statistic from "./statistic";
 
-export default function CategoryCard({ title, measures } : {title: string; measures: EnrichedProviderMeasure[] }){
+interface CategoryCardProps {
+  title: string,
+  measures: EnrichedProviderMeasure[],
+  compare?: "stateAverage" | "nationalAverage"
+}
+
+export default function CategoryCard({ title, measures, compare } : CategoryCardProps){
   return (
     <div className="bg-white border-2 border-gray-300 rounded-2xl text-black p-4">
       <h1>{title}</h1>
@@ -9,7 +15,7 @@ export default function CategoryCard({ title, measures } : {title: string; measu
         <article
           key={index}
         >
-          <Statistic measure={ measure }/>
+          <Statistic measure={ measure } compare={compare}/>
         </article>
       ))}
     </div>
