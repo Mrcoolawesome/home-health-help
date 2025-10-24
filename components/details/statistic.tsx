@@ -16,7 +16,7 @@ function Popout({ description }: {description: string}){
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner>
-          <Popover.Popup className="origin-[var(--transform-origin)] border-gray-400 bg-white text-black">
+          <Popover.Popup className="origin-[var(--transform-origin)] rounded-lg bg-white px-4 py-2 text-black outline outline-2 shadow-sm outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0">
             <Popover.Description>{description}</Popover.Description>
           </Popover.Popup>
         </Popover.Positioner>
