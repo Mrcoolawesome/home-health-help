@@ -31,8 +31,12 @@ export default function Statistic({ measure, compare } : StatisticProps) {
   let compPercentage: number | undefined;
   let diff: number | undefined;
 
-  if (compare && measure.nationalAverage){
+  if (compare && measure.nationalAverage && compare === "nationalAverage"){
     compPercentage = parseFloat(measure.nationalAverage);
+    diff = parseFloat((percentage - compPercentage).toFixed(1));
+  }
+  else if (compare && measure.stateAverage && compare === "stateAverage"){
+    compPercentage = parseFloat(measure.stateAverage);
     diff = parseFloat((percentage - compPercentage).toFixed(1));
   }
   
