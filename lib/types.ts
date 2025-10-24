@@ -36,8 +36,13 @@ export type SortbyMedicareScores = {
 // also make sure to name the label something good because it's what's displayed to the user
 export const sortOptions = [
   { value: 'facility_name', label: 'Name' },
-  { value: 'H_008_01_OBSERVED', label: 'Respect of Care Preferences'},
-  { value: 'H_011_01_OBSERVED', label: 'Visits in the Last Days of Life' }
+  { value: 'H_008_01_OBSERVED', label: 'Overall Quality Score %'}, 
+  { value: 'H_011_01_OBSERVED', label: 'Final Days Visits 0-100%' },
+  { value: 'H_012_00_OBSERVED', label: 'Performance Score 0-10' },
+  { value: 'H_004_01_OBSERVED', label: 'Pain Assessment 0-100%' },
+  { value: 'H_006_01_OBSERVED', label: 'Breathing Support 0-100%' }, 
+  { value: 'H_001_01_OBSERVED', label: 'Honoring Wishes 0-100%' },
+  { value: 'H_002_01_OBSERVED', label: 'Spiritual Support 0-100%' }
 ];
 
 export type CardData = {
