@@ -1,30 +1,39 @@
 import { EnrichedProviderMeasure } from "@/lib/types";
+import { Meter } from "@base-ui-components/react";
+import { Popover } from "@base-ui-components/react";
+import { InfoCircle } from "iconoir-react";
+
+function Popout({ description }: {description: string}){
+  return (
+    <Popover.Root openOnHover={true}>
+      <Popover.Trigger>
+        <InfoCircle color="grey" height={15}/>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Positioner>
+          <Popover.Popup className="origin-[var(--transform-origin)] border-gray-400 bg-white text-black">
+            <Popover.Description>{description}</Popover.Description>
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+}
 
 export default function Statistic({ measure } : { measure: EnrichedProviderMeasure }) {
   // Parse the score to get percentage value
   const percentage = parseFloat(measure.score);
   
   return (
-    <div className="space-y-2">
-      {/* Header with info icon */}
-      <div className="flex items-center justify-between">
-        <span className="text-sm text-black">
-          {measure.measureName}
-        </span>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold text-black">
-            {measure.score}%
-          </span>
-        </div>
+    <Meter.Root value={percentage}>
+      <div className="flex">
+        <Meter.Label id={measure.measureCode} className="">{measure.measureName ? measure.measureName : measure.measureCode}</Meter.Label>
+        <Popout description={measure.measureCode}/>
+        <Meter.Value className="flex-1 text-right"/>
       </div>
-      
-      {/* Progress bar */}
-      <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-        <div 
-          className="h-full bg-green-500 rounded-full transition-all duration-300"
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-    </div>
+      <Meter.Track className="bg-gray-400 h-2 rounded-full">
+        <Meter.Indicator className="bg-green-400 rounded-full"/>
+      </Meter.Track>
+    </Meter.Root>
   )
 }
