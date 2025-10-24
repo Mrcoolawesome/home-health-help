@@ -62,7 +62,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
       </section>
 
       <Tabs.Root className="max-w-4xl mx-auto" defaultValue="overview">
-        <Tabs.List className="flex items-center bg-gray-400 text-black z-0 p-1 h-[40px] rounded-full">
+        <Tabs.List className="sticky top-[65px] flex items-center bg-gray-400 text-black z-0 p-1 h-[40px] rounded-full">
           <Tabs.Tab
             className="flex-1 z-[2] h-full" 
             value="overview"
