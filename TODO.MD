@@ -1,2 +1,3 @@
-What todo when i get back
- - Abstract the logic done in hospice-display-cards so we can easily sort by things and add different sort by functions
+What todo when i get back.
+ - When we get back we need to do the login stuff.
+    - Also need to add the feature so that hospices can edit their pages.
