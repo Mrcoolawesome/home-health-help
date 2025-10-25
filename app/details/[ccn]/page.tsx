@@ -59,14 +59,19 @@ export default async function DetailPage({ params }: DetailPageProps) {
     <div className="max-w-screen-xl mx-auto px-4 py-8">
 
       {/* Provider Header */}
-      <header className="border-b pb-6">
+      <header className="pb-6">
         <h1 className="text-3xl font-bold tracking-tight">{data.facilityName}</h1>
-        <p className="text-sm text-muted-foreground mt-1">CCN: {data.ccn}</p>
       </header>
 
       {/* Contact Information Section */}
       <section className="rounded-lg border bg-card text-card-foreground p-6">
-        <h2 className="text-xl font-semibold mb-2">Contact Information</h2>
+        <div className="space-y-1 text-sm mb-2">
+          <p>{data.addressLine1}</p>
+          {data.addressLine2 && <p>{data.addressLine2}</p>}
+          <p>
+            {data.city}, {data.state} {data.zipCode}
+          </p>
+        </div>
         <div className="space-y-1">
           <p className="text-sm">
             <span className="text-muted-foreground">Phone:</span> {data.phone}
@@ -74,30 +79,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
         </div>
       </section>
 
-      {/* Address Section */}
-      <section className="rounded-lg border bg-card text-card-foreground p-6">
-        <h2 className="text-xl font-semibold mb-2">Address</h2>
-        <div className="space-y-1 text-sm">
-          <p>{data.addressLine1}</p>
-          {data.addressLine2 && <p>{data.addressLine2}</p>}
-          <p>
-            {data.city}, {data.state} {data.zipCode}
-          </p>
-          <p className="text-muted-foreground">County: {data.county}</p>
-        </div>
-      </section>
-
-      {/* Administrative Information */}
-      <section className="rounded-lg border bg-card text-card-foreground p-6">
-        <h2 className="text-xl font-semibold mb-2">Administrative Information</h2>
-        <div className="text-sm">
-          <p>
-            <span className="text-muted-foreground">CMS Region:</span> {data.cmsRegion}
-          </p>
-        </div>
-      </section>
-
-      <Tabs.Root className="w-full mx-auto" defaultValue="overview">
+      <Tabs.Root className="w-full mx-auto py-4" defaultValue="overview">
         <Tabs.List className="sticky top-[65px] flex items-center bg-gray-400 text-black z-0 p-1 h-[40px] rounded-full">
           <Tabs.Tab
             className="flex-1 z-[2] h-full" 
