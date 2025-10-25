@@ -1,9 +1,9 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { SunLight, HalfMoon } from "iconoir-react";
 
 const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
@@ -27,9 +27,9 @@ const ThemeSwitcher = () => {
   return (
     <Button variant="ghost" size="sm" onClick={toggleTheme}>
       {theme === "dark" ? (
-        <Sun key="light" size={ICON_SIZE} className="text-muted-foreground" />
+        <SunLight/>
       ) : (
-        <Moon key="dark" size={ICON_SIZE} className="text-muted-foreground" />
+        <HalfMoon/>
       )}
     </Button>
   );
