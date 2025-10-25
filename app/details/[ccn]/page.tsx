@@ -64,7 +64,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
       </header>
 
       {/* Contact Information Section */}
-      <section className="rounded-lg border bg-card text-card-foreground p-6">
+      <section className="rounded-lg border bg-background text-foreground p-6">
         <div className="space-y-1 text-sm mb-2">
           <p>{data.addressLine1}</p>
           {data.addressLine2 && <p>{data.addressLine2}</p>}
