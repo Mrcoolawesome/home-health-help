@@ -8,6 +8,7 @@ import LoginButton from "../buttons/login-button";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { ThemeSwitcher } from "../theme-switcher";
 
 export default function Navbar() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -63,6 +64,7 @@ export default function Navbar() {
                                 <LoginButton />
                             </div>
                         )}
+                        <ThemeSwitcher/>
                     </div>
                 </div>
             </div>

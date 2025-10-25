@@ -17,7 +17,7 @@ import { enrichProviderData } from "./enrich-provider-data";
 export async function getEnrichedProviderData(ccn: string): Promise<EnrichedProviderData | null> {
   try {
     // Fetch provider data first to get the state
-    const providerData = await getCombinedProviderData(ccn);
+    const providerData = await getCombinedProviderData(ccn, false);
     
     if (!providerData) {
       return null;
@@ -25,10 +25,10 @@ export async function getEnrichedProviderData(ccn: string): Promise<EnrichedProv
 
     // Fetch comparison data in parallel for better performance
     const [nationalData, nationalCahps, stateData, stateCahps] = await Promise.all([
-      getNationalData(),
-      getNationalCahps(),
-      getStateData(providerData.state.toUpperCase()),
-      getStateCahps(providerData.state.toUpperCase())
+      getNationalData(false),
+      getNationalCahps(false),
+      getStateData(providerData.state.toUpperCase(), false),
+      getStateCahps(providerData.state.toUpperCase(), false)
     ]);
 
     // Enrich the provider data with comparison averages

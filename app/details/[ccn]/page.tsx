@@ -1,5 +1,45 @@
 import { getEnrichedProviderData } from "@/lib/hospice-data/get-enriched-provider-data";
 import type { EnrichedProviderData } from "@/lib/types";
+import Overview from "./overview";
+import StateAvg from "./stateAvg";
+import NationalAvg from "./nationalAvg";
+import { Tabs } from "@base-ui-components/react";
+
+export const familyCaregiverExperience: string[] = [
+  "TEAM_COMM_TBV",
+  "TIMELY_CARE_TBV",
+  "RESPECT_TBV",
+  "EMO_REL_TBV",
+  "SYMPTOMS_TBV",
+  "TRAINING_TBV",
+  "RATING_TBV",
+  "RECOMMEND_TBV",
+]
+
+export const qualityPatientCare: string[] = [
+  "H_008_01_OBSERVED",
+  "H_011_01_OBSERVED",
+  "H_012_00_OBSERVED",
+]
+
+export const conditionsTreated: string[] = [
+  "Pct_Pts_w_Cancer",
+  "Pct_Pts_w_Dementia",
+  "Pct_Pts_w_Stroke",
+  "Pct_Pts_w_Circ_Heart_Disease",
+  "Pct_Pts_w_Resp_Disease",
+  "Pct_Pts_w_other_conditions",
+]
+
+export const locationCare: string[] = [
+  "Care_Provided_Home",
+  "Care_Provided_Assisted_Living",
+  "Care_Provided_Nursing_Facility",
+  "Care_Provided_Skilled_Nursing",
+  "Care_Provided_Inpatient_Hospital",
+  "Care_Provided_Inpatient_Hospice",
+  "Care_Provided_other_locations",
+]
 
 interface DetailPageProps {
   params: {
@@ -16,16 +56,22 @@ export default async function DetailPage({ params }: DetailPageProps) {
   }
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8 space-y-8">
+    <div className="max-w-screen-xl mx-auto px-4 py-8">
+
       {/* Provider Header */}
-      <header className="border-b pb-6">
+      <header className="pb-6">
         <h1 className="text-3xl font-bold tracking-tight">{data.facilityName}</h1>
-        <p className="text-sm text-muted-foreground mt-1">CCN: {data.ccn}</p>
       </header>
 
       {/* Contact Information Section */}
       <section className="rounded-lg border bg-card text-card-foreground p-6">
-        <h2 className="text-xl font-semibold mb-2">Contact Information</h2>
+        <div className="space-y-1 text-sm mb-2">
+          <p>{data.addressLine1}</p>
+          {data.addressLine2 && <p>{data.addressLine2}</p>}
+          <p>
+            {data.city}, {data.state} {data.zipCode}
+          </p>
+        </div>
         <div className="space-y-1">
           <p className="text-sm">
             <span className="text-muted-foreground">Phone:</span> {data.phone}
@@ -33,75 +79,38 @@ export default async function DetailPage({ params }: DetailPageProps) {
         </div>
       </section>
 
-      {/* Address Section */}
-      <section className="rounded-lg border bg-card text-card-foreground p-6">
-        <h2 className="text-xl font-semibold mb-2">Address</h2>
-        <div className="space-y-1 text-sm">
-          <p>{data.addressLine1}</p>
-          {data.addressLine2 && <p>{data.addressLine2}</p>}
-          <p>
-            {data.city}, {data.state} {data.zipCode}
-          </p>
-          <p className="text-muted-foreground">County: {data.county}</p>
-        </div>
-      </section>
-
-      {/* Administrative Information */}
-      <section className="rounded-lg border bg-card text-card-foreground p-6">
-        <h2 className="text-xl font-semibold mb-2">Administrative Information</h2>
-        <div className="text-sm">
-          <p>
-            <span className="text-muted-foreground">CMS Region:</span> {data.cmsRegion}
-          </p>
-        </div>
-      </section>
-
-      {/* Quality Measures Section */}
-      <section className="rounded-lg border bg-card text-card-foreground p-6">
-        <h2 className="text-xl font-semibold mb-4">Quality Measures</h2>
-        {data.measures.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            {data.measures.map((measure, index) => (
-              <article
-                key={index}
-                className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
-              >
-                <h3 className="font-medium">
-                  {measure.measureName ?? measure.measureCode}
-                </h3>
-                <div className="mt-2 space-y-1 text-sm">
-                  <p>
-                    <span className="text-muted-foreground">Code:</span> {measure.measureCode}
-                  </p>
-                  <p>
-                    <span className="text-muted-foreground">Score:</span> {measure.score}
-                  </p>
-                  <p>
-                    <span className="text-muted-foreground">Date Range:</span> {measure.measureDateRange}
-                  </p>
-                  {measure.footnote && (
-                    <p>
-                      <span className="text-muted-foreground">Note:</span> {measure.footnote}
-                    </p>
-                  )}
-                  {measure.nationalAverage && (
-                    <p>
-                      <span className="text-muted-foreground">National Avg:</span> {measure.nationalAverage}
-                    </p>
-                  )}
-                  {measure.stateAverage && (
-                    <p>
-                      <span className="text-muted-foreground">State Avg:</span> {measure.stateAverage}
-                    </p>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground italic">No quality measures available</p>
-        )}
-      </section>
+      <Tabs.Root className="w-full mx-auto py-4" defaultValue="overview">
+        <Tabs.List className="sticky top-[65px] flex items-center bg-gray-400 text-black z-0 p-1 h-[40px] rounded-full">
+          <Tabs.Tab
+            className="flex-1 z-[2] h-full" 
+            value="overview"
+          >
+            Overview
+          </Tabs.Tab>
+          <Tabs.Tab 
+            className="flex-1 z-[2] h-full"
+            value="stateAvg"
+          >
+            State Avg
+          </Tabs.Tab>
+          <Tabs.Tab 
+            className="flex-1 z-[2] h-full"
+            value="nationalAvg"
+          >
+            National Avg
+          </Tabs.Tab>
+          <Tabs.Indicator className="rounded-full z-[1] absolute left-[var(--active-tab-left)] bg-white w-[var(--active-tab-width)] h-[var(--active-tab-height)] transition-all"/>
+        </Tabs.List>
+        <Tabs.Panel value="overview">
+          <Overview data= { data }/>
+        </Tabs.Panel>
+        <Tabs.Panel value="stateAvg">
+          <StateAvg data= { data }/>
+        </Tabs.Panel>
+        <Tabs.Panel value="nationalAvg">
+          <NationalAvg data= { data }/>
+        </Tabs.Panel>
+      </Tabs.Root>
     </div>
   )
 }
