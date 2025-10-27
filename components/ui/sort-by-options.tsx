@@ -23,14 +23,14 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
         <select 
             value={selectedValue} 
             onChange={handleChange}
-            className="p-2 rounded-md bg-white/10 border border-white/20 text-white"
+            className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground"
         >
             {/* We map over our options array to create an <option> for each one */}
             {sortOptions.map(option => (
                 <option 
                     key={option.value} 
                     value={option.value}
-                    className="text-black" // Options often need their own color
+                    className="text-foreground" // Options often need their own color
                 >
                     {option.label}
                 </option>
