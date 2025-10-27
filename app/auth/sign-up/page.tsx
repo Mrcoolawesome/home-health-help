@@ -1,11 +1,9 @@
-import SignUpDirection from "@/components/sign-up-screen";
+import { SignUpFormHomeHealth } from "@/components/signup-forms/sign-up-form-homehealth";
 
 export default function Page() {
-  return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <SignUpDirection />
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <SignUpFormHomeHealth />
+        </div>
+    );
 }
