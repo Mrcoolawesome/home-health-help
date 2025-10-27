@@ -19,8 +19,7 @@ export default function Navbar() {
 
         // fetch the user on the initial check
         const fetchUser = async () => {
-            const { isAuthed, user } = await getUser();
-            console.log(user);
+            const { isAuthed } = await getUser();
             setIsAuthenticated(isAuthed);
         };
         fetchUser();
@@ -49,7 +48,7 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-row justify-between items-center h-16">
                     <Link href="/" className="text-xl font-bold text-foreground hover:text-foreground-alt transition">
-                        Find Referrals
+                        Find Hospices
                     </Link>
 
                     <div className="flex items-center gap-4">

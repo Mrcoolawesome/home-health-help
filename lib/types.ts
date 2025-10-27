@@ -13,6 +13,43 @@ export type HospiceDisplayProps = { params: Promise<{ id: string }> }
 
 export type PersonalPageDisplayProps = { id: string };
 
+// This defines the specific data that the sortby functions need to use, along with the specific data the hospice display card function needs to use.
+// I made it a type because both the sortby functions and display cards need to be able to accept and return the same objects with the same data,
+// so making this an interface would imply that it's meant to be extended at some point, which isn't true.
+export type GeneralData = {
+  cms_certification_number_ccn: string
+  facility_name: string,
+  address_line_1: string
+  countyparish: string,
+  citytown: string,
+  state: string,
+  telephone_number: string,
+  ownership_type: string
+}
+
+export type SortbyMedicareScores = {
+  score: string,
+  score_desc: string | undefined // need to do this because of how the 'find()' function works to find labels in the sortOptions array
+}
+
+// THESE VALUES NEED TO BE NAMED THE SAME AS THEY WOULD IN THE API
+// also make sure to name the label something good because it's what's displayed to the user
+export const sortOptions = [
+  { value: 'facility_name', label: 'Name' },
+  { value: 'H_008_01_OBSERVED', label: 'Overall Quality Score %'}, 
+  { value: 'H_011_01_OBSERVED', label: 'Final Days Visits 0-100%' },
+  { value: 'H_012_00_OBSERVED', label: 'Performance Score 0-10' },
+  { value: 'H_004_01_OBSERVED', label: 'Pain Assessment 0-100%' },
+  { value: 'H_006_01_OBSERVED', label: 'Breathing Support 0-100%' }, 
+  { value: 'H_001_01_OBSERVED', label: 'Honoring Wishes 0-100%' },
+  { value: 'H_002_01_OBSERVED', label: 'Spiritual Support 0-100%' }
+];
+
+export type CardData = {
+  general_data: GeneralData,
+  sortby_medicare_scores: SortbyMedicareScores
+}
+
 // Hospice Provider Data Types
 export interface ProviderMeasure {
   measureCode: string;

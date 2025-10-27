@@ -10,8 +10,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Find referalls",
-  description: "The most optimal way to help others get onto hospice.",
+  title: "Find Hospices",
+  description: "The best way to find the hospice that's right for you.",
 };
 
 const geistSans = Geist({

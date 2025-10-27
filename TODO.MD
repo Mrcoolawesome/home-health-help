@@ -1,10 +1,3 @@
-# For home health
- - Get the homepage to display what home health workers want.
- - Get a search  bar to sort by county.
-# For doctors
- - Setup their personal page.
- - Make a dashboard for them to see view counts and stuff like that.
- - Make it so that when they sign up the county can be chosen by a dropdown list of pre-dermined strings that are names of counties. 
-
-#### When we get back
- - Start using the new get-user.ts file to figure out what type of user they are and then make the homepage look different for them depending on what they are.
+What todo when i get back.
+ - When we get back we need to do the login stuff.
+    - Also need to add the feature so that hospices can edit their pages.
