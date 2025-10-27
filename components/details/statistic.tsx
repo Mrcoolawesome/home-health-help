@@ -16,7 +16,7 @@ function Popout({ description }: {description: string}){
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner>
-          <Popover.Popup className="origin-[var(--transform-origin)] rounded-lg bg-white px-4 py-2 text-black outline outline-2 shadow-sm outline-gray-200 transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0">
+          <Popover.Popup className="origin-[var(--transform-origin)] rounded-lg bg-background px-4 py-2 text-foreground outline outline-2 shadow-sm outline-foreground-alt transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0">
             <Popover.Description>{description}</Popover.Description>
           </Popover.Popup>
         </Popover.Positioner>
@@ -48,19 +48,19 @@ export default function Statistic({ measure, compare } : StatisticProps) {
         <Meter.Value className="flex-1 text-right"/>
         {compPercentage && diff !== undefined &&
           (diff >= 0 ?
-            <span className="text-gray-500">(+{diff}%)</span> :
-            <span className="text-gray-500">({diff}%)</span>
+            <span className="text-foreground-alt">(+{diff}%)</span> :
+            <span className="text-foreground-alt">({diff}%)</span>
           )
         }
       </div>
-      <Meter.Track className="bg-gray-400 h-2 rounded-full">
+      <Meter.Track className="bg-foreground-alt h-2 rounded-full">
         {diff && diff < 0 ?
           <Meter.Indicator className="bg-yellow-300 rounded-full"/> :
           <Meter.Indicator className="bg-green-400 rounded-full"/>
         }
       </Meter.Track>
       {compPercentage &&
-        <p className="text-gray-500">{compare}: {compPercentage}%</p>
+        <p className="text-foreground-alt">{compare}: {compPercentage}%</p>
       }
     </Meter.Root>
   )

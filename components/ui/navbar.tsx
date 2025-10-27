@@ -44,15 +44,15 @@ export default function Navbar() {
     }, [router]); // the router must be a dependency because it is used in the useEffect function
 
     return (
-        <nav className="sticky top-0 z-50 bg-black/95 border-b border-white/10 backdrop-blur-md">
+        <nav className="sticky top-0 z-50 bg-background border-b border-foreground-alt backdrop-blur-md">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-row justify-between items-center h-16">
-                    <Link href="/" className="text-xl font-bold text-white hover:text-gray-300 transition">
+                    <Link href="/" className="text-xl font-bold text-foreground hover:text-foreground-alt transition">
                         Find Hospices
                     </Link>
 
                     <div className="flex items-center gap-4">
-                        <Link href="/about" className="text-gray-300 hover:text-white transition font-medium">
+                        <Link href="/about" className="text-foreground hover:text-foreground-alt transition font-medium">
                             About
                         </Link>
                         {isAuthenticated ? (

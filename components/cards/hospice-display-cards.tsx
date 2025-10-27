@@ -49,18 +49,18 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
                     {hospiceDisplayData.map((facility) => (
                         <Link key={facility?.general_data.cms_certification_number_ccn} href={`/details/${facility?.general_data.cms_certification_number_ccn}`}>
                             <div
-                                className="bg-white/10 border border-white/20 rounded-lg p-6 hover:bg-white/15 hover:border-white/30 transition cursor-pointer"
+                                className="bg-backround border border-foreground-alt rounded-lg p-6 hover:bg-background-alt transition cursor-pointer hover:ring-2 hover:ring-primary"
                             >
-                                <h3 className="text-xl font-bold text-white mb-2">
+                                <h3 className="text-xl font-bold text-foreground mb-2">
                                     {facility?.general_data.facility_name}
                                 </h3>
-                                <p className="text-gray-300 mb-3">
+                                <p className="text-foreground-alt mb-3">
                                     {facility?.general_data.ownership_type}
                                 </p>
-                                <p className="text-gray-300 mb-3">
+                                <p className="text-foreground-alt mb-3">
                                     {facility?.general_data.telephone_number}
                                 </p>
-                                <p className="text-gray-300 mb-3">
+                                <p className="text-foreground-alt mb-3">
                                     {facility.sortby_medicare_scores.score_desc}: {facility?.sortby_medicare_scores.score}
                                 </p>
                             </div>
