@@ -12,6 +12,9 @@ export default {
     extend: {
       colors: {
         primary: "var(--primary)",
+        good: "var(--good)",
+        warning: "var(--warning)",
+        error: "var(--error)",
         background: {
           DEFAULT: "var(--background)",
           alt: "var(--background-alt)",

@@ -5,12 +5,18 @@
 @layer base {
   :root {
     --primary: #d3d3ff;
+    --good: #4ade80;
+    --warning: #fde047;
+    --error: #ef4444;
     --background: #f2f4f7;
     --background-alt: #e3e5e9;
     --foreground: #212224;
     --foreground-alt: #9ca3af;
   }.dark {
     --primary: #d3d3ff;
+    --good: #4ade80;
+    --warning: #fde047;
+    --error: #ef4444;
     --background: #212224;
     --background-alt: #424345;
     --foreground: #f2f4f7;

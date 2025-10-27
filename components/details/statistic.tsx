@@ -56,8 +56,8 @@ export default function Statistic({ measure, compare } : StatisticProps) {
       </div>
       <Meter.Track className="bg-foreground-alt h-2 rounded-full">
         {diff && diff < 0 ?
-          <Meter.Indicator className="bg-yellow-300 rounded-full"/> :
-          <Meter.Indicator className="bg-green-400 rounded-full"/>
+          <Meter.Indicator className="bg-warning rounded-full"/> :
+          <Meter.Indicator className="bg-good rounded-full"/>
         }
       </Meter.Track>
       {compPercentage &&
