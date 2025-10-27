@@ -45,11 +45,15 @@ export function enrichProviderData(
   const stateCahpsLookup = createMeasureLookup(stateCahps);
 
   // Enrich each measure with comparison data
-  const enrichedMeasures = providerData.measures.map(measure => ({
-    ...measure,
-    nationalAverage: nationalDataLookup.get(measure.measureCode) || nationalCahpsLookup.get(measure.measureCode),
-    stateAverage: stateDataLookup.get(measure.measureCode) || stateCahpsLookup.get(measure.measureCode)
-  }));
+  // Use uppercase for case-insensitive matching
+  const enrichedMeasures = providerData.measures.map(measure => {
+    const measureCodeUpper = measure.measureCode.trim().toUpperCase();
+    return {
+      ...measure,
+      nationalAverage: nationalDataLookup.get(measureCodeUpper) || nationalCahpsLookup.get(measureCodeUpper),
+      stateAverage: stateDataLookup.get(measureCodeUpper) || stateCahpsLookup.get(measureCodeUpper)
+    };
+  });
 
   return {
     ...providerData,  

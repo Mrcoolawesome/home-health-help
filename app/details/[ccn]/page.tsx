@@ -55,6 +55,8 @@ export default async function DetailPage({ params }: DetailPageProps) {
     return <div className="container mx-auto max-w-4xl px-4 py-8">Failed to load provider data</div>;
   }
 
+  console.log(data.measures);
+
   return (
     <div className="max-w-screen-xl mx-auto px-4 py-8">
 
