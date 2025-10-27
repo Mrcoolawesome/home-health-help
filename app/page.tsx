@@ -27,7 +27,7 @@ export default function Home() {
   };
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-slate-900 to-background">
+    <div className="min-h-screen bg-gradient-to-b from-background">
       <div className="max-w-6xl mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-foreground mb-8">Provider Dashboard</h1>
         <p className="text-foreground mb-8">Search physicians and manage provider information.</p>

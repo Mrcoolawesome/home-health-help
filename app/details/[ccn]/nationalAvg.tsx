@@ -7,7 +7,7 @@ export default function NationalAvg({ data } : { data: EnrichedProviderData }) {
     <div className="container mx-auto w-full px-4 py-8 space-y-8">
     
       {/* Quality Measures Section */}
-      <section className="rounded-lg border bg-card text-card-foreground p-6">
+      <section className="rounded-lg border border-foreground-alt bg-background text-foreground p-6">
         <h2 className="text-xl font-semibold mb-4">Quality Measures</h2>
         {data.measures.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2">
@@ -20,7 +20,7 @@ export default function NationalAvg({ data } : { data: EnrichedProviderData }) {
             <CategoryCard title="All" measures={data.measures} compare="nationalAverage"/>
           </div>
         ) : (
-          <p className="text-sm text-muted-foreground italic">No quality measures available</p>
+          <p className="text-sm text-foreground-alt italic">No quality measures available</p>
         )}
       </section>
     </div>

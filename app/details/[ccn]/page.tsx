@@ -64,7 +64,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
       </header>
 
       {/* Contact Information Section */}
-      <section className="rounded-lg border bg-background text-foreground p-6">
+      <section className="rounded-lg border border-foreground-alt bg-background text-foreground p-6">
         <div className="space-y-1 text-sm mb-2">
           <p>{data.addressLine1}</p>
           {data.addressLine2 && <p>{data.addressLine2}</p>}
@@ -74,13 +74,13 @@ export default async function DetailPage({ params }: DetailPageProps) {
         </div>
         <div className="space-y-1">
           <p className="text-sm">
-            <span className="text-muted-foreground">Phone:</span> {data.phone}
+            <span className="text-foreground-alt">Phone:</span> {data.phone}
           </p>
         </div>
       </section>
 
       <Tabs.Root className="w-full mx-auto py-4" defaultValue="overview">
-        <Tabs.List className="sticky top-[65px] flex items-center bg-gray-400 text-black z-0 p-1 h-[40px] rounded-full">
+        <Tabs.List className="sticky top-[65px] flex items-center bg-background-alt text-foreground z-0 p-1 h-[40px] rounded-full">
           <Tabs.Tab
             className="flex-1 z-[2] h-full" 
             value="overview"
@@ -99,7 +99,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
           >
             National Avg
           </Tabs.Tab>
-          <Tabs.Indicator className="rounded-full z-[1] absolute left-[var(--active-tab-left)] bg-white w-[var(--active-tab-width)] h-[var(--active-tab-height)] transition-all"/>
+          <Tabs.Indicator className="rounded-full z-[1] absolute left-[var(--active-tab-left)] bg-background w-[var(--active-tab-width)] h-[var(--active-tab-height)] transition-all"/>
         </Tabs.List>
         <Tabs.Panel value="overview">
           <Overview data= { data }/>

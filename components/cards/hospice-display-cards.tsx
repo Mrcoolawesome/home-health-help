@@ -84,15 +84,15 @@ export default function HospiceCards({ page, zip }: Props) {
                     {hospiceDisplayData.map((facility) => (
                         <Link key={facility?.cms_certification_number_ccn} href={`/details/${facility?.cms_certification_number_ccn}`}>
                             <div
-                                className="bg-backround border border-foreground rounded-lg p-6 hover:bg-white/15 hover:border-white/30 transition cursor-pointer"
+                                className="bg-backround border border-foreground-alt rounded-lg p-6 hover:bg-background-alt transition cursor-pointer hover:ring-2 hover:ring-primary"
                             >
                                 <h3 className="text-xl font-bold text-foreground mb-2">
                                     {facility?.facility_name}
                                 </h3>
-                                <p className="text-foreground mb-3">
+                                <p className="text-foreground-alt mb-3">
                                     {facility?.ownership_type}
                                 </p>
-                                <p className="text-foreground mb-3">
+                                <p className="text-foreground-alt mb-3">
                                     {facility?.telephone_number}
                                 </p>
                             </div>
