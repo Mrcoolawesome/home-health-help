@@ -5,7 +5,7 @@ import { InfoCircle } from "iconoir-react";
 
 interface StatisticProps {
   measure: EnrichedProviderMeasure,
-  compare?: "stateAverage" | "nationalAverage"
+  compare?: "stateAverage" | "nationalAverage",
 }
 
 function Popout({ description }: {description: string}){
@@ -30,6 +30,7 @@ export default function Statistic({ measure, compare } : StatisticProps) {
   const percentage = parseFloat(measure.score);
   let compPercentage: number | undefined;
   let diff: number | undefined;
+  const maxValue = measure.measureCode === "H_012_00_OBSERVED" ? 10 : 100;
 
   if (compare && measure.nationalAverage && compare === "nationalAverage"){
     compPercentage = parseFloat(measure.nationalAverage);
@@ -41,7 +42,7 @@ export default function Statistic({ measure, compare } : StatisticProps) {
   }
   
   return (
-    <Meter.Root value={percentage}>
+    <Meter.Root value={percentage} max={maxValue} format={{ maximumFractionDigits: 1}}>
       <div className="flex">
         <Meter.Label id={measure.measureCode} className="">{measure.measureName ? measure.measureName : measure.measureCode}</Meter.Label>
         <Popout description={measure.measureCode}/>
