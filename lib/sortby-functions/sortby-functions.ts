@@ -2,6 +2,53 @@
 import { CardData } from "../types";
 
 /**
+ * Generic sorting function for scores that handles both numeric and non-numeric values.
+ * Sorts in descending order (highest to lowest), pushing non-numeric scores to the bottom.
+ * 
+ * @param a - First item to compare
+ * @param b - Second item to compare
+ * @param getScore - Function that extracts the score string from an item
+ * @returns Sort comparison number
+ */
+export function sortByScoreGeneric<T>(
+    a: T,
+    b: T,
+    getScore: (item: T) => string
+): number {
+    // Get the scores using the provided getter function
+    const aScore = getScore(a);
+    const bScore = getScore(b);
+
+    // Try to parse as numbers
+    const aNum = parseFloat(aScore);
+    const bNum = parseFloat(bScore);
+
+    // Check if scores are valid numbers
+    const aIsValid = !isNaN(aNum);
+    const bIsValid = !isNaN(bNum);
+
+    // --- Sorting rules ---
+
+    // 1. If both are invalid, maintain their order
+    if (!aIsValid && !bIsValid) {
+        return 0;
+    }
+    
+    // 2. If 'a' is invalid, push it to the end (return 1)
+    if (!aIsValid) {
+        return 1;
+    }
+
+    // 3. If 'b' is invalid, push it to the end (return -1)
+    if (!bIsValid) {
+        return -1;
+    }
+
+    // 4. Both are valid numbers, sort descending (highest first)
+    return bNum - aNum;
+}
+
+/**
  * You NEED to make your own special sort function for things that aren't just higher is better numerical values.
  * If they are just like that, then you can just pass the array into here and it'll use the SortByScore function
  * @param combinedCardData 
@@ -24,32 +71,5 @@ function SortByName(a: CardData, b: CardData): number {
 // the reason why this one is so long is because we need to check if the score isn't available
 // this function is assuming a 'higher is better' set of numbers
 function SortByScore(a: CardData, b: CardData): number {
-    // Get the scores from the data
-    const aScore = a.sortby_medicare_scores.score;
-    const bScore = b.sortby_medicare_scores.score;
-
-    // Check which scores are 'Not Available'
-    const aIsNA = aScore === 'Not Available';
-    const bIsNA = bScore === 'Not Available';
-
-    // --- Sorting rules ---
-
-    // 1. If both are 'Not Available', they are equal
-    if (aIsNA && bIsNA) {
-        return 0;
-    }
-    
-    // 2. If 'a' is 'Not Available', push it to the end (return 1)
-    if (aIsNA) {
-        return 1;
-    }
-
-    // 3. If 'b' is 'Not Available', push it to the end (return -1)
-    if (bIsNA) {
-        return -1;
-    }
-
-    // 4. If neither is 'Not Available', do the normal number comparison
-    // (This sorts highest-to-lowest)
-    return Number(bScore) - Number(aScore);
+    return sortByScoreGeneric(a, b, (item) => item.sortby_medicare_scores.score);
 }
