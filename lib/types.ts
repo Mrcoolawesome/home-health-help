@@ -37,6 +37,11 @@ export type CardData = {
   sortby_medicare_scores: SortbyMedicareScores
 }
 
+export type Code = {
+    code: string,
+    real_desc: string
+}
+
 // Hospice Provider Data Types
 export interface ProviderMeasure {
   measureCode: string;

@@ -4,6 +4,7 @@ import { GetSortbyData } from "../sortby-functions/get-sortby-data";
 import { GeneralData, SortbyMedicareScores, CardData } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
 import { createClient } from "../supabase/client";
+import { GetCodeDesc } from "../get-code-details";
 
 type HospiceProvider = {
     // Since the key is a string with spaces, it must be in quotes
@@ -25,7 +26,6 @@ const PROVIDER_DATA_DATASET_ID = "098c6cc4-7426-5407-aae1-b361fc2072d6"; // Hosp
 export async function DisplayCardData(zip: string, sortBy: string) {
     const hospicesData: CmsApiResponse = await GetCmsByZip(zip);
     const cmsNumberList = hospicesData.providers.map(provider => provider['cms_certification_number_ccn']);
-    const supabase = createClient();
 
     // Fetch all details in parallel
     // Assumes getProviderDetailsByCcn(ccn) fetches the detailed data for one provider
@@ -51,6 +51,9 @@ export async function DisplayCardData(zip: string, sortBy: string) {
         measureCode = sortBy;
     }
 
+    // get the description for what we're looking for
+    const descriptionString = await GetCodeDesc(measureCode, "Facility observed rate");
+
     // im making the desiredData a parameter because in the future when we do cahps stuff and reuse this GetSortbyData function
     const desiredProviderData = "score";
     const detailedPromisesProviderData = cmsNumberList.map(ccn => GetSortbyData(desiredProviderData, ccn, PROVIDER_DATA_DATASET_ID, measureCode));
@@ -59,23 +62,6 @@ export async function DisplayCardData(zip: string, sortBy: string) {
         rawProviderDetailsArray.map(async (item) => { // 3. Make the .map() callback 'async'
             
             const rawData = item.providers[0];
-
-            // 4. Await your Supabase query directly inside the map
-            const { data, error } = await supabase
-                .from("measure_codes")
-                .select("real_desc") // 5. Select ONLY the string you need
-                .eq('measure_code', measureCode)
-                .eq("description", "Facility observed rate")
-                .single();
-
-            // 6. Handle the error and set a fallback to guarantee a string
-            let descriptionString: string;
-            if (error || !data) {
-                console.error('Could not find description:', error);
-                descriptionString = "Description not found"; // Fallback string
-            } else {
-                descriptionString = data.real_desc;
-            }
 
             // 7. Return the final object. This is now correct.
             return {

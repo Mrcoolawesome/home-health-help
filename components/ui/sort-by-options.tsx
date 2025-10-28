@@ -1,6 +1,6 @@
 "use client"
 
-import { createClient } from "@/lib/supabase/client";
+import { GetCodeDetails } from "@/lib/get-code-details";
 import { useEffect, useState } from "react";
 
 // Define the props our component will accept
@@ -24,46 +24,13 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
         onSortChange(event.target.value);
     };
 
-    const supabase = createClient();
     useEffect(() => {
-        const fetchOptions = async () => {
-            const { data: sortOptions, error: sortOptionsError } = await supabase.from('sort_options').select('measure_code,description');
-            if (sortOptionsError) {
-                console.error("Error fetching sorting options", sortOptionsError);
-            }
-
-            // we have to do a bunch of bullshit to get the associated codes with their real description
-            if (sortOptions) {
-                const optionsPromises: Promise<Option | null>[] = sortOptions.map( async (givenOption) => {
-                    // get the associated 'real' descriptions for each code
-                    const { data: codeDetails, error: codeDetailsError } = await supabase.from("measure_codes").select("real_desc").eq("measure_code", givenOption.measure_code).eq("description", givenOption.description).single();
-
-                    if (codeDetailsError || !codeDetails) {
-                        console.error("Error fetching code details", codeDetailsError);
-                        return null;
-                    }
-
-                    const newOption: Option = {
-                        code: givenOption.measure_code,
-                        real_desc: codeDetails.real_desc
-                    }
-                    return newOption;
-                });
-
-                const resolvedOptions = await Promise.all(optionsPromises);
-
-                // Filter out any 'null' values from the results
-                //    The type of 'finalOptions' is now correctly 'Option[]'
-                const finalOptions = resolvedOptions.filter(
-                    (option): option is Option => option !== null
-                );
-
-                setMeasureCodes(finalOptions);
-            }
+        const fetchCodes = async () => {
+            const codes = await GetCodeDetails("sort_options");
+            setMeasureCodes(codes as Option[]);
         };
-        fetchOptions();
-        
-    }, [supabase]);
+        fetchCodes();
+    }, []);
 
     return (
         // The `select` element is the core of the dropdown.
