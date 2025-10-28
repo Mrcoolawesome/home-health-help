@@ -1,6 +1,7 @@
 "use client"
 
-import { sortOptions } from "@/lib/types";
+import { GetCodeDetails } from "@/lib/get-code-details";
+import { useEffect, useState } from "react";
 
 // Define the props our component will accept
 type SortDropdownProps = {
@@ -8,7 +9,13 @@ type SortDropdownProps = {
     onSortChange: (newSortValue: string) => void;
 };
 
+type Option = {
+    code: string,
+    real_desc: string
+}
+
 export default function SortDropdown({ selectedValue, onSortChange }: SortDropdownProps) {
+    const [measureCodes, setMeasureCodes] = useState<Option[]>([]);
     
     // This function runs when the user selects a new option
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -16,6 +23,14 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
         // to update the parent's state
         onSortChange(event.target.value);
     };
+
+    useEffect(() => {
+        const fetchCodes = async () => {
+            const codes = await GetCodeDetails("sort_options");
+            setMeasureCodes(codes as Option[]);
+        };
+        fetchCodes();
+    }, []);
 
     return (
         // The `select` element is the core of the dropdown.
@@ -26,13 +41,13 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
             className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground"
         >
             {/* We map over our options array to create an <option> for each one */}
-            {sortOptions.map(option => (
+            {measureCodes.map(option => (
                 <option 
-                    key={option.value} 
-                    value={option.value}
+                    key={option.code} 
+                    value={option.code}
                     className="text-foreground" // Options often need their own color
                 >
-                    {option.label}
+                    {option.real_desc}
                 </option>
             ))}
         </select>

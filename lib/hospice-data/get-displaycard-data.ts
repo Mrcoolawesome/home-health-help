@@ -1,8 +1,10 @@
 import { GetCmsByZip } from "./get-cms-by-zip";
 import { GetProviderData } from "./get-provider-card-data";
 import { GetSortbyData } from "../sortby-functions/get-sortby-data";
-import { GeneralData, SortbyMedicareScores, CardData, sortOptions } from "../types";
+import { GeneralData, SortbyMedicareScores, CardData } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
+import { createClient } from "../supabase/client";
+import { GetCodeDesc } from "../get-code-details";
 
 type HospiceProvider = {
     // Since the key is a string with spaces, it must be in quotes
@@ -44,23 +46,30 @@ export async function DisplayCardData(zip: string, sortBy: string) {
     // if they're sorting from the general dataset, just make the measureCode default to showing their respect of care prefrences
     let measureCode = "";
     if (sortBy === "facility_name") {
-        measureCode = sortOptions[1].value; // just leave this to make it a default value
+        measureCode = 'H_008_01_OBSERVED'; // just leave this to make it a default value
     } else {
         measureCode = sortBy;
     }
+
+    // get the description for what we're looking for
+    const descriptionString = await GetCodeDesc(measureCode, "Facility observed rate");
 
     // im making the desiredData a parameter because in the future when we do cahps stuff and reuse this GetSortbyData function
     const desiredProviderData = "score";
     const detailedPromisesProviderData = cmsNumberList.map(ccn => GetSortbyData(desiredProviderData, ccn, PROVIDER_DATA_DATASET_ID, measureCode));
     const rawProviderDetailsArray = await Promise.all(detailedPromisesProviderData);
-    const providerData: SortbyMedicareScores[] = rawProviderDetailsArray.map((item) => {
-        const rawData = item.providers[0];
-        // make the score what we've named it 
-        return { 
-            score: rawData.score,
-            score_desc: sortOptions.find(option => option.value === measureCode)?.label
-        }; 
-    });
+    const providerData: SortbyMedicareScores[] = await Promise.all( // 2. Await Promise.all()
+        rawProviderDetailsArray.map(async (item) => { // 3. Make the .map() callback 'async'
+            
+            const rawData = item.providers[0];
+
+            // 7. Return the final object. This is now correct.
+            return {
+                score: rawData.score,
+                score_desc: descriptionString, // This is now a string!
+            };
+        })
+    );
 
     // combine the two sets of data to make the CardData objects
     const combinedCardData: CardData[] = generalHospiceData.map((generalItem, index) => {
