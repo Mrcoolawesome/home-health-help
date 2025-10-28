@@ -1,6 +1,12 @@
 import CategoryCard from "@/components/details/category-card";
-import { EnrichedProviderData } from "@/lib/types";
+import { EnrichedProviderData, EnrichedProviderMeasure } from "@/lib/types";
+import { sortByScoreGeneric } from "@/lib/sortby-functions/sortby-functions";
 import { conditionsTreated, familyCaregiverExperience, locationCare, qualityPatientCare } from "./page";
+
+// Helper function to sort measures by score, using the generic sorting function
+function sortByScore(a: EnrichedProviderMeasure, b: EnrichedProviderMeasure): number {
+  return sortByScoreGeneric(a, b, (measure) => measure.score);
+}
 
 export default function Overview({ data } : { data: EnrichedProviderData }) {
   return (
@@ -14,12 +20,12 @@ export default function Overview({ data } : { data: EnrichedProviderData }) {
             <CategoryCard title="Conditions treated" measures={ 
               data.measures
                 .filter((measure) => conditionsTreated.includes(measure.measureCode))
-                .sort((a, b) => parseFloat(b.score) - parseFloat(a.score))
+                .sort(sortByScore)
             }/>
             <CategoryCard title="Location of care" measures={ 
               data.measures
                 .filter((measure) => locationCare.includes(measure.measureCode))
-                .sort((a, b) => parseFloat(b.score) - parseFloat(a.score))
+                .sort(sortByScore)
             }/>
             <CategoryCard title="Family/Caregiver Experience" measures={ 
               data.measures.filter((measure) => familyCaregiverExperience.includes(measure.measureCode)) 
