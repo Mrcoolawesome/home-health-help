@@ -39,12 +39,12 @@ export type CardData = {
 
 // THIS SHOULD BE UPDATED WITH ANY NEW COLUMNS ADDED TO THE `measure_codes` TABLE
 export type Code = {
-    id: string,
-    measure_code: string,
-    description: string,
-    measure_name: string,
-    real_desc: string,
-    opt_sorting: boolean
+  id: string,
+  measure_code: string,
+  description: string,
+  measure_name: string,
+  real_desc: string,
+  opt_sorting: boolean
 }
 
 // Hospice Provider Data Types
