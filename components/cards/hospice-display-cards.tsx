@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CardData } from "@/lib/types";
 import { DisplayCardData } from "@/lib/hospice-data/get-displaycard-data";
+import { useRouter } from "next/navigation";
 
 type Props = {
     page: number,
@@ -14,6 +15,9 @@ type Props = {
 export default function HospiceCards({ page, zip, sortBy }: Props) {
     const [hospiceDisplayData, setHospiceDisplayData] = useState<CardData[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [selectedCCNs, setSelectedCCNs] = useState<string[]>([]);
+    const router = useRouter();
+    
     useEffect(() => {
         const fetchHospices = async () => {
             try {
@@ -34,6 +38,27 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
         }
     }, [page, zip, sortBy]);
 
+    const toggleSelection = (ccn: string) => {
+        setSelectedCCNs(prev => {
+            if (prev.includes(ccn)) {
+                return prev.filter(id => id !== ccn)
+            }
+            if (prev.length < 5) {
+                return [...prev, ccn];
+            }
+
+            return prev;
+        })
+    }
+
+    const isSelected = (ccn: string) => selectedCCNs.includes(ccn);
+
+    const handleCompare = () => {
+        const params = new URLSearchParams();
+        selectedCCNs.forEach(ccn => params.append('ccn', ccn));
+        router.push(`/compare?${params.toString()}`);
+    };
+
     if (error) {
         return <div className="max-w-4xl mx-auto px-4 py-8 text-red-400">{error}</div>;
     }
@@ -46,26 +71,69 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
                 </div>
             ) : (
                 <div className="grid gap-4">
-                    {hospiceDisplayData.map((facility) => (
-                        <Link key={facility?.general_data.cms_certification_number_ccn} href={`/details/${facility?.general_data.cms_certification_number_ccn}`}>
+                    {hospiceDisplayData.map((facility) => {
+                        const ccn = facility?.general_data.cms_certification_number_ccn;
+                        const selected = isSelected(ccn);
+                        
+                        return (
                             <div
-                                className="bg-backround border border-foreground-alt rounded-lg p-6 hover:bg-background-alt transition cursor-pointer hover:ring-2 hover:ring-primary"
+                                key={ccn}
+                                className={`bg-background border rounded-lg p-6 transition ${
+                                    selected 
+                                        ? 'border-primary ring-2 ring-primary' 
+                                        : 'border-foreground-alt hover:bg-background-alt hover:ring-2 hover:ring-primary'
+                                }`}
                             >
-                                <h3 className="text-xl font-bold text-foreground mb-2">
-                                    {facility?.general_data.facility_name}
-                                </h3>
-                                <p className="text-foreground-alt mb-3">
-                                    {facility?.general_data.ownership_type}
-                                </p>
-                                <p className="text-foreground-alt mb-3">
-                                    {facility?.general_data.telephone_number}
-                                </p>
-                                <p className="text-foreground-alt mb-3">
-                                    {facility.sortby_medicare_scores.score_desc}: {facility?.sortby_medicare_scores.score}
-                                </p>
+                                <div className="flex items-start gap-3">
+                                    <input
+                                        type="checkbox"
+                                        checked={selected}
+                                        onChange={() => toggleSelection(ccn)}
+                                        disabled={!selected && selectedCCNs.length >= 5}
+                                        className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
+                                    />
+                                    <Link href={`/details/${ccn}`} className="flex-1">
+                                        <div className="cursor-pointer">
+                                            <h3 className="text-xl font-bold text-foreground mb-2">
+                                                {facility?.general_data.facility_name}
+                                            </h3>
+                                            <p className="text-foreground-alt mb-3">
+                                                {facility?.general_data.ownership_type}
+                                            </p>
+                                            <p className="text-foreground-alt mb-3">
+                                                {facility?.general_data.telephone_number}
+                                            </p>
+                                            <p className="text-foreground-alt mb-3">
+                                                {facility.sortby_medicare_scores.score_desc}: {facility?.sortby_medicare_scores.score}
+                                            </p>
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
-                        </Link>
-                    ))}
+                        );
+                    })}
+                </div>
+            )}
+
+            {/* Floating Compare Bar */}
+            {selectedCCNs.length > 0 && (
+                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full shadow-lg px-6 py-3 flex items-center gap-4 z-50">
+                    <span className="font-semibold">
+                        {selectedCCNs.length} selected
+                    </span>
+                    <button
+                        onClick={() => setSelectedCCNs([])}
+                        className="text-sm underline hover:no-underline"
+                    >
+                        Clear
+                    </button>
+                    <button
+                        onClick={handleCompare}
+                        disabled={selectedCCNs.length < 2}
+                        className="bg-background text-foreground px-4 py-2 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-background-alt transition"
+                    >
+                        Compare
+                    </button>
                 </div>
             )}
         </div>
