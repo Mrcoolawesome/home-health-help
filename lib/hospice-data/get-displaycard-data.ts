@@ -1,7 +1,6 @@
 import { GetCmsByZip } from "./get-cms-by-zip";
 import { GetProviderData, GetProviderScoreData } from "./get-provider-data";
-import { GetSortbyData } from "../sortby-functions/get-sortby-data";
-import { GeneralData, SortbyMedicareScores, CardData } from "../types";
+import { GeneralData, SortbyMedicareScores, CardData, Code } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
 import { GetCodeDesc } from "../get-code-details";
 

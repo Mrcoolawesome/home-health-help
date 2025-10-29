@@ -2,17 +2,18 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { CardData } from "@/lib/types";
+import { CardData, Code } from "@/lib/types";
 import { DisplayCardData } from "@/lib/hospice-data/get-displaycard-data";
 import { useRouter } from "next/navigation";
 
 type Props = {
     page: number,
     zip: string,
-    sortBy: string
+    sortBy: string,
+    scoreData: Code
 }
 
-export default function HospiceCards({ page, zip, sortBy }: Props) {
+export default function HospiceCards({ page, zip, sortBy, scoreData }: Props) {
     const [hospiceDisplayData, setHospiceDisplayData] = useState<CardData[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [selectedCCNs, setSelectedCCNs] = useState<string[]>([]);
@@ -63,6 +64,20 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
         return <div className="max-w-4xl mx-auto px-4 py-8 text-red-400">{error}</div>;
     }
 
+    // need to figure out what the score's out of
+    let outOfDisplay = "";
+    // this checks if scoreData exists first because it doesn't upon first load
+    console.log(scoreData);
+    if (scoreData && scoreData.out_of !== "N/A" && scoreData.out_of !== "yes/no") {
+        // if the 'out_of' parameter is a number that means the score is #/that-given number
+        const isOutOfANum = !isNaN(Number(scoreData.out_of));
+        if (isOutOfANum) {
+            outOfDisplay = `/${scoreData.out_of}`;
+        } else {
+            outOfDisplay = scoreData.out_of;
+        }
+    }
+
     return (
         <div id="hospice-display-box" className="max-w-4xl mx-auto px-4 py-8">
             {hospiceDisplayData.length === 0 ? (
@@ -104,7 +119,7 @@ export default function HospiceCards({ page, zip, sortBy }: Props) {
                                                 {facility?.general_data.telephone_number}
                                             </p>
                                             <p className="text-foreground-alt mb-3">
-                                                {facility.sortby_medicare_scores.score_desc}: {facility?.sortby_medicare_scores.score}
+                                                {facility.sortby_medicare_scores.score_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
                                             </p>
                                         </div>
                                     </Link>
