@@ -23,7 +23,11 @@ export default function HospiceCards({ page, zip, sortBy, scoreData }: Props) {
         const fetchHospices = async () => {
             try {
                 // get the card data based on the zip and how we're sorting it
-                const cardData = await DisplayCardData(zip, sortBy);
+                let lower_is_better = false;
+                if (scoreData) {
+                    lower_is_better = scoreData.lower_is_better;
+                }
+                const cardData = await DisplayCardData(zip, sortBy, lower_is_better);
 
                 // Set the final data into your component's state
                 setHospiceDisplayData(cardData);
