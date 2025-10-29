@@ -2,6 +2,7 @@ import { EnrichedProviderMeasure } from "@/lib/types";
 import { Meter } from "@base-ui-components/react";
 import { InfoCircle } from "iconoir-react";
 import Popout from "./popout";
+import { getFootnote } from "./footnote";
 
 
 interface StatisticProps {
@@ -47,7 +48,7 @@ export default function Statistic({ measure, compare } : StatisticProps) {
             {measure.score}
           </span>
           {measure.footnote && 
-            <Popout description={measure.footnote}>
+            <Popout description={getFootnote(measure.footnote)}>
               <span className="text-primary underline">{measure.footnote}</span>
             </Popout>
           }
