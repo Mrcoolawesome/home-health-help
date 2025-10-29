@@ -3,6 +3,11 @@
 import { Code } from "./types";
 import { createClient } from "./supabase/server";
 
+/**
+ * 
+ * @param optionColumnName - This is the name of the column with the booleans that represent if a row is tagged or not.
+ * @returns - A bunch of Code objects. The Code type should be updated if you add a new tag to the table.
+ */
 export async function GetCodeDetails(optionColumnName: string): Promise<Code[]> {
     const supabase = await createClient();
 

@@ -37,6 +37,7 @@ export type CardData = {
   sortby_medicare_scores: SortbyMedicareScores
 }
 
+// THIS SHOULD BE UPDATED WITH ANY NEW COLUMNS ADDED TO THE `measure_codes` TABLE
 export type Code = {
     id: string,
     measure_code: string,
