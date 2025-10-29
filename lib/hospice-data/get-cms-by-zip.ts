@@ -1,4 +1,4 @@
-import { getCmsData } from "./get-cms-data";
+import { GetCmsData } from "./get-cms-data";
 
 // This is the route that get's the providers CMS number's that work within a zip code area
 // We need to make it clear that this will show a list of providers that work within the spcified zip-code
@@ -12,7 +12,7 @@ export async function GetCmsByZip(zip: string) {
     const query = `[SELECT cms_certification_number_ccn FROM ${DATASET_ID}][WHERE zip_code = "${zip}"]`;
     
     // this does error handling so we don't have to do it here (yeah i think that's how that works)
-    const response = await getCmsData(query);
+    const response = await GetCmsData(query);
 
     return response.json();
 

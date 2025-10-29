@@ -1,6 +1,7 @@
 "use client"
 
 import { GetCodeDetails } from "@/lib/get-code-details";
+import { Code } from "@/lib/types";
 import { useEffect, useState } from "react";
 
 // Define the props our component will accept
@@ -9,13 +10,8 @@ type SortDropdownProps = {
     onSortChange: (newSortValue: string) => void;
 };
 
-type Option = {
-    code: string,
-    real_desc: string
-}
-
 export default function SortDropdown({ selectedValue, onSortChange }: SortDropdownProps) {
-    const [measureCodes, setMeasureCodes] = useState<Option[]>([]);
+    const [measureCodes, setMeasureCodes] = useState<Code[]>([]);
     
     // This function runs when the user selects a new option
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -26,8 +22,8 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
 
     useEffect(() => {
         const fetchCodes = async () => {
-            const codes = await GetCodeDetails("sort_options");
-            setMeasureCodes(codes as Option[]);
+            const codes = await GetCodeDetails("opt_sorting");
+            setMeasureCodes(codes);
         };
         fetchCodes();
     }, []);
@@ -43,8 +39,8 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
             {/* We map over our options array to create an <option> for each one */}
             {measureCodes.map(option => (
                 <option 
-                    key={option.code} 
-                    value={option.code}
+                    key={option.measure_code} 
+                    value={option.measure_code}
                     className="text-foreground" // Options often need their own color
                 >
                     {option.real_desc}

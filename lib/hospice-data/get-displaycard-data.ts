@@ -1,9 +1,8 @@
 import { GetCmsByZip } from "./get-cms-by-zip";
-import { GetProviderData } from "./get-provider-card-data";
+import { GetProviderData, GetProviderScoreData } from "./get-provider-data";
 import { GetSortbyData } from "../sortby-functions/get-sortby-data";
 import { GeneralData, SortbyMedicareScores, CardData } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
-import { createClient } from "../supabase/client";
 import { GetCodeDesc } from "../get-code-details";
 
 type HospiceProvider = {
@@ -16,7 +15,6 @@ type CmsApiResponse = {
 };
 
 const GENERAL_DATA_DATASET_ID = '25a385ec-f668-500d-8509-550a8af86eff'; // Hospice - General Data
-const PROVIDER_DATA_DATASET_ID = "098c6cc4-7426-5407-aae1-b361fc2072d6"; // Hospice - Provider Data
 /**
  * HOW TO ADD MORE THINGS TO SORT BY:
  * * You first need to add a new parameter to the type SortbyMedicareScores preferribly named the same code that they name it by.
@@ -54,9 +52,8 @@ export async function DisplayCardData(zip: string, sortBy: string) {
     // get the description for what we're looking for
     const descriptionString = await GetCodeDesc(measureCode, "Facility observed rate");
 
-    // im making the desiredData a parameter because in the future when we do cahps stuff and reuse this GetSortbyData function
-    const desiredProviderData = "score";
-    const detailedPromisesProviderData = cmsNumberList.map(ccn => GetSortbyData(desiredProviderData, ccn, PROVIDER_DATA_DATASET_ID, measureCode));
+    // this GetProviderScoreData gets score data from both the regular and cahps dataset
+    const detailedPromisesProviderData = cmsNumberList.map(ccn => GetProviderScoreData(ccn, measureCode));
     const rawProviderDetailsArray = await Promise.all(detailedPromisesProviderData);
     const providerData: SortbyMedicareScores[] = await Promise.all( // 2. Await Promise.all()
         rawProviderDetailsArray.map(async (item) => { // 3. Make the .map() callback 'async'
