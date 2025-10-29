@@ -43,7 +43,7 @@ export async function DisplayCardData(zip: string, sortBy: string) {
     // the sortBy string will be the specific code you wanna compare to OR it's the others that are just sorting from the general dataset
     // if they're sorting from the general dataset, just make the measureCode default to showing their respect of care prefrences
     let measureCode = "";
-    if (sortBy === "facility_name") {
+    if (sortBy === "") {
         measureCode = 'H_008_01_OBSERVED'; // just leave this to make it a default value
     } else {
         measureCode = sortBy;

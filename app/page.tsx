@@ -11,7 +11,7 @@ export default function Home() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('search') || "");
-  const [sortBy, setSortBy] = useState('facility_name');
+  const [sortBy, setSortBy] = useState('');
 
   // This function now updates the URL.
   const handleSearchChange = (newQuery: string) => {
@@ -45,4 +45,4 @@ export default function Home() {
       </div>
     </div>
   );
-} 
+}

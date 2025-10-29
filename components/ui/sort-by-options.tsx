@@ -36,6 +36,10 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
             onChange={handleChange}
             className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground"
         >
+            {/* Default placeholder option */}
+            <option value="" className="text-foreground">
+                Name
+            </option>
             {/* We map over our options array to create an <option> for each one */}
             {measureCodes.map(option => (
                 <option 
