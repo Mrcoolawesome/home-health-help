@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // This function contains the logic that was in your `/api/get-data` route
-export async function getCmsData(query: string) {
+export async function GetCmsData(query: string) {
     // NOTE: if it has to get too many rows at once their api might just error and return nothing.
         const CMS_QUERY_URL = `https://data.cms.gov/​provider-data​/api​/1​/datastore​/sql?query=${query}&show_db_columns=true`;
         // added on the '&show_db_columns=true' so that the headers of each of the pieces of data are what they're called in their db
