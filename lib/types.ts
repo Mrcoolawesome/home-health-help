@@ -38,8 +38,12 @@ export type CardData = {
 }
 
 export type Code = {
-    code: string,
-    real_desc: string
+    id: string,
+    measure_code: string,
+    description: string,
+    measure_name: string,
+    real_desc: string,
+    opt_sorting: boolean
 }
 
 // Hospice Provider Data Types
