@@ -44,7 +44,13 @@ export type Code = {
   description: string,
   measure_name: string,
   real_desc: string,
-  opt_sorting: boolean
+  opt_sorting: boolean,
+  family_caregiver_experience: boolean,
+  quality_patient_care: boolean,
+  conditions_treated: boolean,
+  location_of_care: boolean,
+  out_of: string,
+  lower_is_better: boolean,
 }
 
 // Hospice Provider Data Types
@@ -61,6 +67,14 @@ export interface ProviderMeasure {
 export interface EnrichedProviderMeasure extends ProviderMeasure {
   nationalAverage?: string;
   stateAverage?: string;
+  real_desc?: string,
+  opt_sorting?: boolean,
+  family_caregiver_experience?: boolean,
+  quality_patient_care?: boolean,
+  conditions_treated?: boolean,
+  location_of_care?: boolean,
+  out_of?: string,
+  lower_is_better?: boolean,
 }
 
 export interface ProviderData {

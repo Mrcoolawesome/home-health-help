@@ -42,3 +42,16 @@ export async function GetCodeDesc(measure_code: string, desc: string): Promise<s
 
     return descriptionString;
 }
+
+export async function getAllCodes(): Promise<Code[]> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.from('measure_codes').select('*');
+
+    if (error) {
+        console.error(`Error fetching codes. Error:`, error);
+        return []; 
+    }
+
+    return data as Code[];
+}

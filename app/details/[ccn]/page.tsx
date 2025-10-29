@@ -5,42 +5,6 @@ import StateAvg from "./stateAvg";
 import NationalAvg from "./nationalAvg";
 import { Tabs } from "@base-ui-components/react";
 
-export const familyCaregiverExperience: string[] = [
-  "TEAM_COMM_TBV",
-  "TIMELY_CARE_TBV",
-  "RESPECT_TBV",
-  "EMO_REL_TBV",
-  "SYMPTOMS_TBV",
-  "TRAINING_TBV",
-  "RATING_TBV",
-  "RECOMMEND_TBV",
-]
-
-export const qualityPatientCare: string[] = [
-  "H_008_01_OBSERVED",
-  "H_011_01_OBSERVED",
-  "H_012_00_OBSERVED",
-]
-
-export const conditionsTreated: string[] = [
-  "Pct_Pts_w_Cancer",
-  "Pct_Pts_w_Dementia",
-  "Pct_Pts_w_Stroke",
-  "Pct_Pts_w_Circ_Heart_Disease",
-  "Pct_Pts_w_Resp_Disease",
-  "Pct_Pts_w_other_conditions",
-]
-
-export const locationCare: string[] = [
-  "Care_Provided_Home",
-  "Care_Provided_Assisted_Living",
-  "Care_Provided_Nursing_Facility",
-  "Care_Provided_Skilled_Nursing",
-  "Care_Provided_Inpatient_Hospital",
-  "Care_Provided_Inpatient_Hospice",
-  "Care_Provided_other_locations",
-]
-
 interface DetailPageProps {
   params: {
     ccn: string;
@@ -54,8 +18,6 @@ export default async function DetailPage({ params }: DetailPageProps) {
   if (!data) {
     return <div className="container mx-auto max-w-4xl px-4 py-8">Failed to load provider data</div>;
   }
-
-  console.log(data.measures);
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 py-8">

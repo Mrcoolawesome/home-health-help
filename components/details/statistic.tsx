@@ -20,7 +20,7 @@ export default function Statistic({ measure, compare } : StatisticProps) {
   const percentage = isNumeric ? parseFloat(measure.score) : 0;
   let compPercentage: number | undefined;
   let diff: number | undefined;
-  const maxValue = measure.measureCode === "H_012_00_OBSERVED" ? 10 : 100;
+  const maxValue = measure.out_of === "10" ? 10 : 100;
 
   if (compare && measure.nationalAverage && compare === "nationalAverage"){
     compPercentage = parseFloat(measure.nationalAverage);

@@ -1,7 +1,6 @@
 import CategoryCard from "@/components/details/category-card";
 import { EnrichedProviderData, EnrichedProviderMeasure } from "@/lib/types";
 import { sortByScoreGeneric } from "@/lib/sortby-functions/sortby-functions";
-import { conditionsTreated, familyCaregiverExperience, locationCare, qualityPatientCare } from "./page";
 
 // Helper function to sort measures by score, using the generic sorting function
 function sortByScore(a: EnrichedProviderMeasure, b: EnrichedProviderMeasure): number {
@@ -19,19 +18,19 @@ export default function Overview({ data } : { data: EnrichedProviderData }) {
           <div className="grid gap-4 md:grid-cols-2">
             <CategoryCard title="Conditions treated" measures={ 
               data.measures
-                .filter((measure) => conditionsTreated.includes(measure.measureCode))
+                .filter((measure) => measure.conditions_treated)
                 .sort(sortByScore)
             }/>
             <CategoryCard title="Location of care" measures={ 
               data.measures
-                .filter((measure) => locationCare.includes(measure.measureCode))
+                .filter((measure) => measure.location_of_care)
                 .sort(sortByScore)
             }/>
             <CategoryCard title="Family/Caregiver Experience" measures={ 
-              data.measures.filter((measure) => familyCaregiverExperience.includes(measure.measureCode)) 
+              data.measures.filter((measure) => measure.family_caregiver_experience) 
             }/>
             <CategoryCard title="Quality of patient care" measures={ 
-              data.measures.filter((measure) => qualityPatientCare.includes(measure.measureCode)) 
+              data.measures.filter((measure) => measure.quality_patient_care) 
             }/>
             <CategoryCard title="All" measures={data.measures}/>
           </div>
