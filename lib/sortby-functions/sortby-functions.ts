@@ -56,7 +56,7 @@ export function sortByScoreGeneric<T>(
  */
 export function Sort(combinedCardData: CardData[], sortBy: string) {
     // you need to add a case to this chain for special sort functions
-    if (sortBy === "facility_name") {
+    if (sortBy === "") {
         combinedCardData.sort(SortByName);
     } else { // this assumes just numerical values where higher is better
         combinedCardData.sort(SortByScore);
