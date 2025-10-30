@@ -1,4 +1,3 @@
-
 import { CardData } from "../types";
 
 /**
@@ -53,13 +52,14 @@ export function sortByScoreGeneric<T>(
  * If they are just like that, then you can just pass the array into here and it'll use the SortByScore function
  * @param combinedCardData 
  * @param sortBy 
+ * @param lower_is_better 
  */
-export function Sort(combinedCardData: CardData[], sortBy: string) {
+export function Sort(combinedCardData: CardData[], sortBy: string, lower_is_better: boolean) {
     // you need to add a case to this chain for special sort functions
     if (sortBy === "") {
         combinedCardData.sort(SortByName);
     } else { // this assumes just numerical values where higher is better
-        combinedCardData.sort(SortByScore);
+        combinedCardData.sort((a, b) => SortByScore(a, b, lower_is_better));
     }
 }
 
@@ -69,7 +69,9 @@ function SortByName(a: CardData, b: CardData): number {
 }
 
 // the reason why this one is so long is because we need to check if the score isn't available
-// this function is assuming a 'higher is better' set of numbers
-function SortByScore(a: CardData, b: CardData): number {
-    return sortByScoreGeneric(a, b, (item) => item.sortby_medicare_scores.score);
+// this function handles both 'higher is better' and 'lower is better' based on the parameter
+function SortByScore(a: CardData, b: CardData, lower_is_better: boolean): number {
+    const result = sortByScoreGeneric(a, b, (item) => item.sortby_medicare_scores.score);
+    // Reverse the sort order if lower is better
+    return lower_is_better ? -result : result;
 }

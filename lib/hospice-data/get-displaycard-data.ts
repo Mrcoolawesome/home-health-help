@@ -1,7 +1,6 @@
 import { GetCmsByZip } from "./get-cms-by-zip";
 import { GetProviderData, GetProviderScoreData } from "./get-provider-data";
-import { GetSortbyData } from "../sortby-functions/get-sortby-data";
-import { GeneralData, SortbyMedicareScores, CardData } from "../types";
+import { GeneralData, SortbyMedicareScores, CardData, Code } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
 import { GetCodeDesc } from "../get-code-details";
 
@@ -21,7 +20,7 @@ const GENERAL_DATA_DATASET_ID = '25a385ec-f668-500d-8509-550a8af86eff'; // Hospi
  * * Then, you need to add that same code to the 
  */
 // takes in the given zipcode, then the thing to sort by
-export async function DisplayCardData(zip: string, sortBy: string) {
+export async function DisplayCardData(zip: string, sortBy: string, lower_is_better: boolean) {
     const hospicesData: CmsApiResponse = await GetCmsByZip(zip);
     const cmsNumberList = hospicesData.providers.map(provider => provider['cms_certification_number_ccn']);
 
@@ -80,7 +79,7 @@ export async function DisplayCardData(zip: string, sortBy: string) {
         };
     });                
 
-    Sort(combinedCardData, sortBy);
+    Sort(combinedCardData, sortBy, lower_is_better);
 
     return combinedCardData;
 }

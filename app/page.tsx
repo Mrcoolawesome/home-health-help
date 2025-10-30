@@ -5,6 +5,8 @@ import { useState } from "react";
 import HospiceCards from "@/components/cards/hospice-display-cards";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import SortDropdown from "@/components/ui/sort-by-options";
+import { Code } from "@/lib/types";
+import { Code } from "iconoir-react";
 
 export default function Home() {
   const router = useRouter();
@@ -12,6 +14,7 @@ export default function Home() {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('search') || "");
   const [sortBy, setSortBy] = useState('');
+  const [scoreData, setScoreData] = useState<Code>();
 
   // This function now updates the URL.
   const handleSearchChange = (newQuery: string) => {
@@ -27,8 +30,9 @@ export default function Home() {
   };
 
   // this handles sorting the stuff by specific values
-  const handleSortChange = (newSortValue: string) => {
+  const handleSortChange = (newSortValue: string, newCode: Code) => {
     setSortBy(newSortValue);
+    setScoreData(newCode);
   };
   
   return (
@@ -41,7 +45,7 @@ export default function Home() {
               selectedValue={sortBy} 
               onSortChange={handleSortChange}
           />
-        <HospiceCards page={0} zip={query} sortBy={sortBy}/>
+        <HospiceCards page={0} zip={query} sortBy={sortBy} scoreData={scoreData}/>
       </div>
     </div>
   );
