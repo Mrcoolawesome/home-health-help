@@ -134,7 +134,7 @@ export default function About() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 font-bold mt-1">→</span>
-                <span>Direct access to official Medicare data via CMS's datasets</span>
+                <span>Direct access to official Medicare data via CMS&apos;s datasets</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 font-bold mt-1">→</span>

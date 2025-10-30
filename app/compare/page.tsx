@@ -35,7 +35,7 @@ export default function ComparePage() {
         } else {
             setLoading(false);
         }
-    }, [ccns.length]);
+    }, [ccns]);
 
     // Get all unique measure codes across all providers
     const getAllMeasureCodes = (): string[] => {

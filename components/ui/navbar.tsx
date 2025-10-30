@@ -39,7 +39,7 @@ export default function Navbar() {
         return () => {
             listener?.subscription.unsubscribe();
         };
-    }, [router]); // the router must be a dependency because it is used in the useEffect function
+    }, [router, supabase]); // the router must be a dependency because it is used in the useEffect function
 
     return (
         <nav className="sticky top-0 z-50 bg-background border-b border-foreground-alt backdrop-blur-md">
