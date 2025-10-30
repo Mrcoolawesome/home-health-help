@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { getUser } from "@/lib/get-user/get-user";
 import { LogoutButton } from "../buttons/logout-button";
-import SignupButton from "../buttons/signup-button";
-import LoginButton from "../buttons/login-button";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -57,12 +55,7 @@ export default function Navbar() {
                         </Link>
                         {isAuthenticated ? (
                             <LogoutButton />
-                        ) : (
-                            <div className="flex gap-3">
-                                <SignupButton />
-                                <LoginButton />
-                            </div>
-                        )}
+                        ) : (<></>)}
                         <ThemeSwitcher/>
                     </div>
                 </div>
