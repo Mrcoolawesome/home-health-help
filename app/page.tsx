@@ -39,11 +39,13 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-foreground mb-8">Search Hospices</h1>
         <p className="text-foreground mb-8">Search hospices by the zip code they operate in.</p>
+        <div className="flex flex-row justify-center max-w-full">
           <SearchBar value={query} onSearchChange={handleSearchChange}/>
           <SortDropdown 
               selectedValue={measureCode} 
               onSortChange={handleSortChange}
           />
+        </div>
         <HospiceCards page={0} zip={query} measureCode={measureCode} scoreData={scoreData}/>
       </div>
     </div>

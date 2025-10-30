@@ -47,7 +47,7 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
         <select 
             value={selectedValue} 
             onChange={handleChange}
-            className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground"
+            className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground max-w-[250px] max-h-[50px] overflow-x-auto"
         >
             <option value="" className="text-foreground">
                 Name
