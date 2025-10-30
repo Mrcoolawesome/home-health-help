@@ -53,6 +53,8 @@ export type Code = {
   lower_is_better: boolean,
 }
 
+type codeOmit = Omit<Code, 'id'|'measure_code'|'description'|'measure_name'>;
+
 // Hospice Provider Data Types
 export interface ProviderMeasure {
   measureCode: string;
@@ -64,17 +66,9 @@ export interface ProviderMeasure {
 }
 
 // Enriched measure with comparison data
-export interface EnrichedProviderMeasure extends ProviderMeasure {
+export type EnrichedProviderMeasure = ProviderMeasure & codeOmit & {
   nationalAverage?: string;
   stateAverage?: string;
-  real_desc?: string,
-  opt_sorting?: boolean,
-  family_caregiver_experience?: boolean,
-  quality_patient_care?: boolean,
-  conditions_treated?: boolean,
-  location_of_care?: boolean,
-  out_of?: string,
-  lower_is_better?: boolean,
 }
 
 export interface ProviderData {
