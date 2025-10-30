@@ -18,8 +18,16 @@ export async function GetProviderScoreData(ccn: string, measureCode: string) {
     const basicDataResponse = await GetCmsData(basicDataQuery);
     const basicData = await basicDataResponse.json();
 
+    // need to determine if it found it or not.
+    // the api won't just error if it can't find it, it'll just return an empty array.
+    // hence GetCmsData will return an object with an array called 'providers' that will be empty
+    let isInBasicData = false;
+    if (basicData.providers.length > 0) {
+        isInBasicData = true;
+    }
+
     // if fetching the basic data didn't error, then return it
-    if (!basicData.error) {
+    if (isInBasicData) {
         return basicData;
     }
 
