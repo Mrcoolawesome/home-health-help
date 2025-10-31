@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CardData, Code } from "@/lib/types";
-import { DisplayCardData } from "@/lib/hospice-data/get-displaycard-data";
+import { fetchHospiceData } from "@/lib/hospice-data/actions";
 import { useRouter } from "next/navigation";
 
 type Props = {
@@ -22,11 +22,14 @@ export default function HospiceCards({ page, zip, measureCode, scoreData }: Prop
     useEffect(() => {
         const fetchHospices = async () => {
             try {
-                // get the card data based on the zip and how we're sorting it
-                const cardData = await DisplayCardData(zip, measureCode, scoreData);
+                // Call the server action to get the card data
+                const result = await fetchHospiceData(zip, measureCode, scoreData);
 
-                // Set the final data into your component's state
-                setHospiceDisplayData(cardData);
+                if (result.success) {
+                    setHospiceDisplayData(result.data);
+                } else {
+                    setError(result.error || "An error occurred while loading hospice details.");
+                }
 
             } catch (err) {
                 console.error("Failed to process hospice data:", err);
