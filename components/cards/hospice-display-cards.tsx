@@ -10,7 +10,7 @@ type Props = {
     page: number,
     zip: string,
     measureCode: string,
-    scoreData: Code
+    scoreData?: Code
 }
 
 export default function HospiceCards({ page, zip, measureCode, scoreData }: Props) {
