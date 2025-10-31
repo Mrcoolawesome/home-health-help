@@ -29,6 +29,11 @@ jobs:
           echo "${{ secrets.FLY_ENV_FILE }}" > .env.local
           flyctl secrets import < .env.local
 
-      # Step 4: Deploy your application to Fly.io.
+      # Step 4: Deploy your application to Fly.io, passing build-time secrets.
       - name: Deploy application
-        run: flyctl deploy
+        run: |
+          flyctl deploy \
+            --build-arg NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }} \
+            --build-arg NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
