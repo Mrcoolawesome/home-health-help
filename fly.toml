@@ -1,3 +1,7 @@
+# fly.toml app configuration file generated for home-health-help on 2025-10-30T20:54:58-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
 app = 'home-health-help'
 primary_region = 'lax'
@@ -13,4 +17,6 @@ primary_region = 'lax'
   processes = ['app']
 
 [[vm]]
-  size = 'shared-cpu-4x'
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
