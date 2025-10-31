@@ -47,16 +47,16 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
         <select 
             value={selectedValue} 
             onChange={handleChange}
-            className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground max-w-[250px] max-h-[50px] overflow-x-auto"
+            className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground max-w-[250px] max-h-[50px] overflow-x-auto font-sans"
         >
-            <option value="" className="text-foreground">
+            <option value="" className="text-foreground font-sans">
                 Name
             </option>
             {measureCodes.map((option, index) => (
                 <option 
                     key={index} 
                     value={option.measure_code} // Value must be the string ID
-                    className="text-foreground"
+                    className="text-foreground font-sans"
                 >
                     {option.real_desc}
                 </option>
