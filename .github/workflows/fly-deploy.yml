@@ -1,0 +1,36 @@
+# This workflow is triggered on pushes to the 'main' branch.
+name: Deploy to Fly.io
+
+on:
+  push:
+    branches:
+      - main # Or 'master', depending on your default branch name
+
+jobs:
+  deploy:
+    # This is the crucial line that tells GitHub to use your runner.
+    runs-on: self-hosted
+
+    # Set the Fly.io API token for all steps in this job.
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+    steps:
+      # Step 1: Check out your repository's code so the runner can access it.
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the flyctl command-line tool.
+      - name: Set up flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      # Step 3: Create the .env.local file from your GitHub secret
+      # and then import the secrets into your Fly.io app.
+      - name: Create and import secrets
+        run: |
+          echo "${{ secrets.FLY_ENV_FILE }}" > .env.local
+          flyctl secrets import < .env.local
+
+      # Step 4: Deploy your application to Fly.io.
+      - name: Deploy application
+        run: flyctl deploy
