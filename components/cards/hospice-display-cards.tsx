@@ -37,7 +37,7 @@ export default function HospiceCards({ page, zip, measureCode, scoreData }: Prop
         if (zip) {
             fetchHospices();
         }
-    }, [page, zip, measureCode]);
+    }, [page, zip, measureCode, scoreData]);
 
     const toggleSelection = (ccn: string) => {
         setSelectedCCNs(prev => {
@@ -88,7 +88,7 @@ export default function HospiceCards({ page, zip, measureCode, scoreData }: Prop
         <div id="hospice-display-box" className="max-w-4xl mx-auto px-4 py-8">
             {hospiceDisplayData.length === 0 ? (
                 <div className="text-center text-gray-400 py-12">
-                    <p>No hospices found! Please check your zipcode to see if it's correct.</p>
+                    <p>No hospices found! Please check your zipcode to see if it&apos;s correct.</p>
                 </div>
             ) : (
                 <div className="grid gap-4">
