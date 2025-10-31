@@ -16,7 +16,16 @@ export default function StateAvg({ data } : { data: EnrichedProviderData }) {
             <CategoryCard title="Quality of patient care" measures={ 
               data.measures.filter((measure) => measure.quality_patient_care) 
             } compare="stateAverage"/>
-            <CategoryCard title="All" measures={data.measures} compare="stateAverage"/>
+            <CategoryCard title="All Data That Isn't Organized Yet" measures={
+              data.measures.filter((measure) => 
+                !measure.measureCode.includes("DENOMINATOR") &&
+                !measure.conditions_treated &&
+                !measure.location_of_care &&
+                !measure.details_section &&
+                !measure.family_caregiver_experience &&
+                !measure.quality_patient_care
+              )
+            } compare="stateAverage"/>
           </div>
         ) : (
           <p className="text-sm text-foreground-alt italic">No quality measures available</p>

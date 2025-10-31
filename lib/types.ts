@@ -51,6 +51,7 @@ export type Code = {
   location_of_care: boolean,
   out_of: string,
   lower_is_better: boolean,
+  details_section: boolean,
 }
 
 type codeOmit = Partial<Omit<Code, 'id'|'measure_code'|'description'|'measure_name'>>;

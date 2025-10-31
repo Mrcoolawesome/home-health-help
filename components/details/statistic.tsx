@@ -12,8 +12,8 @@ interface StatisticProps {
 
 export default function Statistic({ measure, compare } : StatisticProps) {
   // Check if score is yes/no or numeric
-  const scoreLower = measure.score.toLowerCase();
-  const isYesNo = scoreLower === 'yes' || scoreLower === 'no';
+  const isYesNo = measure.out_of === "yes/no";
+  const printScore = measure.out_of === "N/A";
   const isNumeric = !isNaN(parseFloat(measure.score)) && isFinite(parseFloat(measure.score));
   
   // Parse the score to get percentage value (only for numeric scores)
@@ -36,7 +36,7 @@ export default function Statistic({ measure, compare } : StatisticProps) {
   }
   
   // For non-numeric values (yes/no, not available, etc.), display without meter
-  if (!isNumeric) {
+  if (!isNumeric || printScore) {
     return (
       <div>
         <div className="flex items-center gap-2">
@@ -44,7 +44,7 @@ export default function Statistic({ measure, compare } : StatisticProps) {
           <Popout description={measure.measureCode}>
             <InfoCircle color="grey" height={15}/>
           </Popout>
-          <span className={`flex-1 text-right font-semibold ${isYesNo ? 'capitalize' : 'text-foreground-alt italic'}`}>
+          <span className={`flex-1 text-right font-semibold ${isYesNo || printScore ? 'capitalize' : 'text-foreground-alt italic'}`}>
             {measure.score}
           </span>
           {measure.footnote && 
@@ -64,7 +64,7 @@ export default function Statistic({ measure, compare } : StatisticProps) {
     <Meter.Root value={percentage} max={maxValue} format={{ maximumFractionDigits: 1}}>
       <div className="flex">
         <Meter.Label id={measure.measureCode} className="">{measure.measureName ? measure.measureName : measure.measureCode}</Meter.Label>
-        <Popout description={measure.measureCode}>
+        <Popout description={measure.real_desc ? measure.real_desc : measure.measureCode}>
           <InfoCircle color="grey" height={15}/>
         </Popout>
         <Meter.Value className="flex-1 text-right"/>

@@ -73,19 +73,15 @@ export function enrichProviderData(
     const measureCodeUpper = measure.measureCode.trim().toUpperCase();
     const codeData = codeLookup.get(measureCodeUpper);
     
+    // Destructure to omit 'id', 'measure_code', 'description', and 'measure_name'
+    const { id, measure_code, description, measure_name, ...codeFields } = codeData || {};
+    
     return {
       ...measure,
       nationalAverage: nationalDataLookup.get(measureCodeUpper) || nationalCahpsLookup.get(measureCodeUpper),
       stateAverage: stateDataLookup.get(measureCodeUpper) || stateCahpsLookup.get(measureCodeUpper),
-      // Add fields from Code type
-      real_desc: codeData?.real_desc,
-      opt_sorting: codeData?.opt_sorting,
-      family_caregiver_experience: codeData?.family_caregiver_experience,
-      quality_patient_care: codeData?.quality_patient_care,
-      conditions_treated: codeData?.conditions_treated,
-      location_of_care: codeData?.location_of_care,
-      out_of: codeData?.out_of,
-      lower_is_better: codeData?.lower_is_better,
+      // Spread all fields from codeOmit type
+      ...codeFields,
     };
   });
 
