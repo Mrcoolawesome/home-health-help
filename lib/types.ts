@@ -53,7 +53,7 @@ export type Code = {
   lower_is_better: boolean,
 }
 
-type codeOmit = Omit<Code, 'id'|'measure_code'|'description'|'measure_name'>;
+type codeOmit = Partial<Omit<Code, 'id'|'measure_code'|'description'|'measure_name'>>;
 
 // Hospice Provider Data Types
 export interface ProviderMeasure {
