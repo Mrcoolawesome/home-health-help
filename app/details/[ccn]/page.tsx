@@ -6,9 +6,9 @@ import NationalAvg from "./nationalAvg";
 import { Tabs } from "@base-ui-components/react";
 
 interface DetailPageProps {
-  params: {
+  params: Promise<{
     ccn: string;
-  }
+  }>
 }
 
 export default async function DetailPage({ params }: DetailPageProps) {
