@@ -5,13 +5,15 @@ import { useState } from "react";
 import HospiceCards from "@/components/cards/hospice-display-cards";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import SortDropdown from "@/components/ui/sort-by-options";
+import { Code } from "@/lib/types";
 
 export default function Home() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('search') || "");
-  const [sortBy, setSortBy] = useState('facility_name');
+  const [measureCode, setMeasureCode] = useState('');
+  const [scoreData, setScoreData] = useState<Code>();
 
   // This function now updates the URL.
   const handleSearchChange = (newQuery: string) => {
@@ -27,8 +29,9 @@ export default function Home() {
   };
 
   // this handles sorting the stuff by specific values
-  const handleSortChange = (newSortValue: string) => {
-    setSortBy(newSortValue);
+  const handleSortChange = (newSortValue: string, newCode: Code) => {
+    setMeasureCode(newSortValue);
+    setScoreData(newCode);
   };
   
   return (
@@ -36,13 +39,15 @@ export default function Home() {
       <div className="max-w-6xl mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-foreground mb-8">Search Hospices</h1>
         <p className="text-foreground mb-8">Search hospices by the zip code they operate in.</p>
+        <div className="flex flex-row justify-center max-w-full">
           <SearchBar value={query} onSearchChange={handleSearchChange}/>
           <SortDropdown 
-              selectedValue={sortBy} 
+              selectedValue={measureCode} 
               onSortChange={handleSortChange}
           />
-        <HospiceCards page={0} zip={query} sortBy={sortBy}/>
+        </div>
+        <HospiceCards page={0} zip={query} measureCode={measureCode} scoreData={scoreData}/>
       </div>
     </div>
   );
-} 
+}

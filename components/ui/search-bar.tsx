@@ -12,12 +12,12 @@ export default function SearchBar({ onSearchChange, value } : SearchBarProps ) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="min-w-[100px] max-w-[250px]">
       <input
         type="text"
         value={value}
         onChange={handleChange}
-        placeholder="Search hospices by a zipcode they serve"
+        placeholder="Search by zip"
         className="w-full px-4 py-3 bg-background border border-foreground rounded-lg text-foreground placeholder-foreground-alt focus:outline-none focus:ring-2 focus:ring-primary transition"
       />
     </div>

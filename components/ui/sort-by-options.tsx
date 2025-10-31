@@ -4,44 +4,59 @@ import { GetCodeDetails } from "@/lib/get-code-details";
 import { Code } from "@/lib/types";
 import { useEffect, useState } from "react";
 
-// Define the props our component will accept
 type SortDropdownProps = {
     selectedValue: string;
-    onSortChange: (newSortValue: string) => void;
+    onSortChange: (newSortValue: string, newCode: Code) => void;
 };
 
 export default function SortDropdown({ selectedValue, onSortChange }: SortDropdownProps) {
+    // We still need the array for mapping the <option> elements
     const [measureCodes, setMeasureCodes] = useState<Code[]>([]);
     
-    // This function runs when the user selects a new option
+    // **NEW: State to hold our fast-lookup map**
+    const [measureCodeMap, setMeasureCodeMap] = useState<Map<string, Code>>(new Map());
+    
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        // It calls the function passed down from the parent
-        // to update the parent's state
-        onSortChange(event.target.value);
+        const selectedMeasureCode = event.target.value;
+        
+        // **BETTER: Use the Map for an O(1) lookup**
+        const measureCodeObject = measureCodeMap.get(selectedMeasureCode);
+
+        // The logic is the same, but the lookup was instant
+        if (measureCodeObject) {
+            onSortChange(selectedMeasureCode, measureCodeObject);
+        }
     };
 
     useEffect(() => {
         const fetchCodes = async () => {
             const codes = await GetCodeDetails("opt_sorting");
             setMeasureCodes(codes);
+
+            // **NEW: Build the map once the codes are fetched**
+            const newMap = new Map<string, Code>();
+            for (const code of codes) {
+                newMap.set(code.measure_code, code);
+            }
+            setMeasureCodeMap(newMap);
         };
         fetchCodes();
     }, []);
 
     return (
-        // The `select` element is the core of the dropdown.
-        // We style it here with basic Tailwind classes.
         <select 
             value={selectedValue} 
             onChange={handleChange}
-            className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground"
+            className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground max-w-[250px] max-h-[50px] overflow-x-auto"
         >
-            {/* We map over our options array to create an <option> for each one */}
-            {measureCodes.map(option => (
+            <option value="" className="text-foreground">
+                Name
+            </option>
+            {measureCodes.map((option, index) => (
                 <option 
-                    key={option.measure_code} 
-                    value={option.measure_code}
-                    className="text-foreground" // Options often need their own color
+                    key={index} 
+                    value={option.measure_code} // Value must be the string ID
+                    className="text-foreground"
                 >
                     {option.real_desc}
                 </option>

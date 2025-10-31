@@ -1,7 +1,6 @@
 import { GetCmsByZip } from "./get-cms-by-zip";
 import { GetProviderData, GetProviderScoreData } from "./get-provider-data";
-import { GetSortbyData } from "../sortby-functions/get-sortby-data";
-import { GeneralData, SortbyMedicareScores, CardData } from "../types";
+import { GeneralData, SortbyMedicareScores, CardData, Code } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
 import { GetCodeDesc } from "../get-code-details";
 
@@ -21,7 +20,7 @@ const GENERAL_DATA_DATASET_ID = '25a385ec-f668-500d-8509-550a8af86eff'; // Hospi
  * * Then, you need to add that same code to the 
  */
 // takes in the given zipcode, then the thing to sort by
-export async function DisplayCardData(zip: string, sortBy: string) {
+export async function DisplayCardData(zip: string, measureCode: string, scoreData: Code) {
     const hospicesData: CmsApiResponse = await GetCmsByZip(zip);
     const cmsNumberList = hospicesData.providers.map(provider => provider['cms_certification_number_ccn']);
 
@@ -42,11 +41,8 @@ export async function DisplayCardData(zip: string, sortBy: string) {
 
     // the sortBy string will be the specific code you wanna compare to OR it's the others that are just sorting from the general dataset
     // if they're sorting from the general dataset, just make the measureCode default to showing their respect of care prefrences
-    let measureCode = "";
-    if (sortBy === "facility_name") {
+    if (measureCode === "") {
         measureCode = 'H_008_01_OBSERVED'; // just leave this to make it a default value
-    } else {
-        measureCode = sortBy;
     }
 
     // get the description for what we're looking for
@@ -78,9 +74,17 @@ export async function DisplayCardData(zip: string, sortBy: string) {
             general_data: generalItem,
             sortby_medicare_scores: sortItem
         };
-    });                
+    });
 
-    Sort(combinedCardData, sortBy);
+    // the score data will be undefined at the beginning so we need to account for that
+    let out_of = "";
+    let lower_is_better = false;
+    if (scoreData) {
+        out_of = scoreData.out_of;
+        lower_is_better = scoreData.lower_is_better;
+    }
+
+    Sort(combinedCardData, out_of, lower_is_better);
 
     return combinedCardData;
 }

@@ -10,13 +10,13 @@ export default function About() {
     },
     {
       title: "Medicare Data Integration",
-      description: "Real-time access to official CMS.gov Medicare hospice datasets through their public APIs.",
+      description: "Real-time access to official CMS.gov Medicare hospice data.",
       icon: "🏥",
       color: "from-yellow-500 to-yellow-600"
     },
     {
       title: "Geographic Search",
-      description: "Find hospice providers by location, county, or zip code with advanced filtering options.",
+      description: "Find hospice providers by zip codes they serve, and take advantage of our advanced sorting options.",
       icon: "📍",
       color: "from-green-500 to-green-600"
     },
@@ -37,7 +37,7 @@ export default function About() {
           <span className="block rainbow-text mt-2">Clearer & Easier</span>
         </h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-          A consumer-focused platform that helps families compare hospice providers using transparent Medicare data.
+          A platform that helps families compare hospice providers.
         </p>
       </section>
 
@@ -104,7 +104,7 @@ export default function About() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-400 font-bold mt-1">→</span>
-                <span>Families face information asymmetry during critical decisions</span>
+                <span>Families have few resources to find information about hospice options</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-red-400 font-bold mt-1">→</span>
@@ -134,11 +134,11 @@ export default function About() {
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 font-bold mt-1">→</span>
-                <span>Direct access to official Medicare data via CMS APIs</span>
+                <span>Direct access to official Medicare data via CMS's datasets</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-green-400 font-bold mt-1">→</span>
-                <span>Decision support tools tailored to your specific needs</span>
+                <span>Decision making tools tailored to your specific needs</span>
               </li>
             </ul>
           </div>
@@ -156,8 +156,8 @@ export default function About() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { title: "Official Data", desc: "All information sourced directly from Medicare CMS databases", color: "from-orange-500 to-red-500" },
-            { title: "Always Up-to-Date", desc: "Real-time API integration ensures current provider information", color: "from-pink-500 to-rose-500" },
+            { title: "Official Data", desc: "All information sourced directly from Medicare", color: "from-orange-500 to-red-500" },
+            { title: "Always Up-to-Date", desc: "Real-time Medicare dataseti integration ensures current provider information", color: "from-pink-500 to-rose-500" },
             { title: "Family-Focused", desc: "Designed for patients and caregivers, not healthcare professionals", color: "from-fuchsia-500 to-purple-500" }
           ].map((benefit, idx) => (
             <div key={idx} className="bg-white/10 border border-white/20 rounded-lg p-6 hover:bg-white/15 transition">
@@ -187,17 +187,17 @@ export default function About() {
             Search Hospices
           </Link>
           <Link
-            href="/auth/sign-up"
+            href="/auth/login"
             className="px-8 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition"
           >
-            Create Account
+            For hospice accounts, click here to sign in
           </Link>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-white/10 mt-20 py-12 text-center text-gray-400">
-        <p>&copy; 2024 Hospice Comparison Platform. Empowering families with transparent Medicare data.</p>
+        <p>&copy; 2025 Hospice Comparison Platform. Empowering families with transparent Medicare data.</p>
       </footer>
     </div>
   );
