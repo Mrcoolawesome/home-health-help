@@ -10,7 +10,7 @@ type Props = {
     page: number,
     zip: string,
     measureCode: string,
-    scoreData: Code
+    scoreData?: Code
 }
 
 export default function HospiceCards({ page, zip, measureCode, scoreData }: Props) {
@@ -37,7 +37,7 @@ export default function HospiceCards({ page, zip, measureCode, scoreData }: Prop
         if (zip) {
             fetchHospices();
         }
-    }, [page, zip, measureCode]);
+    }, [page, zip, measureCode, scoreData]);
 
     const toggleSelection = (ccn: string) => {
         setSelectedCCNs(prev => {
