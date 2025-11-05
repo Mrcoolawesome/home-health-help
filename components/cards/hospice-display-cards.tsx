@@ -120,7 +120,7 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
                         </div>
                     ))}
                 </div>
-            ) : hospiceDisplayData.length === 0 && zip ? (
+            ) : hospiceDisplayData.length === 0 && zip && !isLoading ? (
                 <div className="text-center text-foreground-alt py-12">
                     <p>No hospices found! Please check your zipcode to see if it&apos;s correct.</p>
                 </div>
