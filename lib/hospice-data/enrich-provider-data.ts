@@ -1,8 +1,8 @@
-import { 
-  ProviderData, 
-  EnrichedProviderData, 
-  RawNationalDataRecord, 
-  RawStateDataRecord, 
+import {
+  ProviderData,
+  EnrichedProviderData,
+  RawNationalDataRecord,
+  RawStateDataRecord,
   RawNationalCahpsRecord,
   Code
 } from "@/lib/types";
@@ -16,7 +16,7 @@ function createMeasureLookup(
 ): Map<string, string> {
   const lookup = new Map<string, string>();
   if (!records) return lookup;
-  
+
   records.forEach(record => {
     // Store with uppercase key for case-insensitive matching
     const measureCode = record["Measure Code"]?.trim().toUpperCase();
@@ -24,7 +24,7 @@ function createMeasureLookup(
       lookup.set(measureCode, record["Score"]);
     }
   });
-  
+
   return lookup;
 }
 
@@ -36,7 +36,7 @@ function createCodeLookup(
 ): Map<string, Code> {
   const lookup = new Map<string, Code>();
   if (!codes) return lookup;
-  
+
   codes.forEach(code => {
     // Store with uppercase key for case-insensitive matching
     const measureCode = code.measure_code?.trim().toUpperCase();
@@ -44,7 +44,7 @@ function createCodeLookup(
       lookup.set(measureCode, code);
     }
   });
-  
+
   return lookup;
 }
 
@@ -72,25 +72,27 @@ export function enrichProviderData(
   const enrichedMeasures = providerData.measures.map(measure => {
     const measureCodeUpper = measure.measureCode.trim().toUpperCase();
     const codeData = codeLookup.get(measureCodeUpper);
-    
+
+    // Destructure to omit 'id', 'measure_code', 'description', and 'measure_name'
+    const {
+      id: _id, // Renamed to start with an underscore
+      measure_code: _measure_code, // Renamed to start with an underscore
+      description: _description, // Renamed to start with an underscore
+      measure_name: _measure_name, // Renamed to start with an underscore
+      ...codeFields
+    } = codeData || {};
+
     return {
       ...measure,
       nationalAverage: nationalDataLookup.get(measureCodeUpper) || nationalCahpsLookup.get(measureCodeUpper),
       stateAverage: stateDataLookup.get(measureCodeUpper) || stateCahpsLookup.get(measureCodeUpper),
-      // Add fields from Code type
-      real_desc: codeData?.real_desc,
-      opt_sorting: codeData?.opt_sorting,
-      family_caregiver_experience: codeData?.family_caregiver_experience,
-      quality_patient_care: codeData?.quality_patient_care,
-      conditions_treated: codeData?.conditions_treated,
-      location_of_care: codeData?.location_of_care,
-      out_of: codeData?.out_of,
-      lower_is_better: codeData?.lower_is_better,
+      // Spread all fields from codeOmit type
+      ...codeFields,
     };
   });
 
   return {
-    ...providerData,  
+    ...providerData,
     measures: enrichedMeasures
   };
 }

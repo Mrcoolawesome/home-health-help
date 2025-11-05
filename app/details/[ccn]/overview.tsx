@@ -26,13 +26,25 @@ export default function Overview({ data } : { data: EnrichedProviderData }) {
                 .filter((measure) => measure.location_of_care)
                 .sort(sortByScore)
             }/>
+            <CategoryCard title="Details" measures={ 
+              data.measures.filter((measure) => measure.details_section) 
+            }/>
             <CategoryCard title="Family/Caregiver Experience" measures={ 
               data.measures.filter((measure) => measure.family_caregiver_experience) 
             }/>
             <CategoryCard title="Quality of patient care" measures={ 
               data.measures.filter((measure) => measure.quality_patient_care) 
             }/>
-            <CategoryCard title="All" measures={data.measures}/>
+            <CategoryCard title="All Data That Isn't Organized Yet" measures={
+              data.measures.filter((measure) => 
+                !measure.measureCode.includes("DENOMINATOR") &&
+                !measure.conditions_treated &&
+                !measure.location_of_care &&
+                !measure.details_section &&
+                !measure.family_caregiver_experience &&
+                !measure.quality_patient_care
+              )
+            }/>
           </div>
         ) : (
           <p className="text-sm text-foreground-alt italic">No quality measures available</p>
