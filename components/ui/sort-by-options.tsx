@@ -7,9 +7,10 @@ import { useEffect, useState } from "react";
 type SortDropdownProps = {
     selectedValue: string;
     onSortChange: (newSortValue: string, newCode: Code) => void;
+    loading?: boolean;
 };
 
-export default function SortDropdown({ selectedValue, onSortChange }: SortDropdownProps) {
+export default function SortDropdown({ selectedValue, onSortChange, loading }: SortDropdownProps) {
     // We still need the array for mapping the <option> elements
     const [measureCodes, setMeasureCodes] = useState<Code[]>([]);
     
@@ -44,23 +45,32 @@ export default function SortDropdown({ selectedValue, onSortChange }: SortDropdo
     }, []);
 
     return (
-        <select 
-            value={selectedValue} 
-            onChange={handleChange}
-            className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground max-w-[250px] max-h-[50px] overflow-x-auto font-sans"
-        >
-            <option value="" className="text-foreground font-sans">
-                Name
-            </option>
-            {measureCodes.map((option, index) => (
-                <option 
-                    key={index} 
-                    value={option.measure_code} // Value must be the string ID
-                    className="text-foreground font-sans"
-                >
-                    {option.real_desc}
+        <div className="flex items-center gap-2">
+            <select 
+                value={selectedValue} 
+                onChange={handleChange}
+                disabled={loading}
+                className="p-2 rounded-md bg-background-alt border border-foreground-alt text-foreground max-w-[250px] max-h-[50px] overflow-x-auto font-sans disabled:opacity-60"
+            >
+                <option value="" className="text-foreground font-sans">
+                    Name
                 </option>
-            ))}
-        </select>
+                {measureCodes.map((option, index) => (
+                    <option 
+                        key={index} 
+                        value={option.measure_code} // Value must be the string ID
+                        className="text-foreground font-sans"
+                    >
+                        {option.real_desc}
+                    </option>
+                ))}
+            </select>
+            {loading && (
+                <span
+                    aria-label="Loading"
+                    className="h-5 w-5 animate-spin rounded-full border-2 border-foreground-alt border-t-primary"
+                />
+            )}
+        </div>
     );
 }
