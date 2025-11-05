@@ -21,6 +21,7 @@ export default function HomeClient({ initialSearch, initialSort, initialScoreDat
   const [searchQuery, setSearchQuery] = useState(initialSearch || "");
   const [measureCode, setMeasureCode] = useState(initialSort || "");
   const [scoreData, setScoreData] = useState<Code | undefined>(initialScoreData);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Keep sort in sync if URL changes due to navigation (back/forward)
   useEffect(() => {
@@ -72,11 +73,17 @@ export default function HomeClient({ initialSearch, initialSort, initialScoreDat
         <h1 className="text-4xl font-bold text-foreground mb-8">Search Hospices</h1>
         <p className="text-foreground ">Search hospices by the zip code they operate in.</p>
         <p className="text-foreground mb-8">Select the checkbox of every hospice you&apos;d like to compare, you can compare up to 5 hospices.</p>
-        <div className="flex flex-row justify-center max-w-full">
+        <div className="flex flex-row justify-center max-w-full gap-3 items-center">
           <SearchBar value={searchQuery} onSearchChange={handleSearchChange} />
-          <SortDropdown selectedValue={measureCode} onSortChange={handleSortChange} />
+          <SortDropdown selectedValue={measureCode} onSortChange={handleSortChange} loading={isLoading} />
         </div>
-        <HospiceCards page={0} zip={searchQuery} measureCode={measureCode} scoreData={scoreData} />
+        <HospiceCards
+          page={0}
+          zip={searchQuery}
+          measureCode={measureCode}
+          scoreData={scoreData}
+          onLoadingChange={setIsLoading}
+        />
       </div>
     </div>
   );

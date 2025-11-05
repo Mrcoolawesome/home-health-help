@@ -1,41 +1,59 @@
 "use client"
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CardData, Code } from "@/lib/types";
-import { DisplayCardData } from "@/lib/hospice-data/get-displaycard-data";
+import { fetchHospiceData } from "@/lib/hospice-data/actions";
 import { useRouter } from "next/navigation";
 
 type Props = {
-    page: number,
-    zip: string,
-    measureCode: string,
-    scoreData?: Code
+    page: number;
+    zip: string;
+    measureCode: string;
+    scoreData?: Code;
+    onLoadingChange?: (loading: boolean) => void;
 }
 
-export default function HospiceCards({ page, zip, measureCode, scoreData }: Props) {
+export default function HospiceCards({ page, zip, measureCode, scoreData, onLoadingChange }: Props) {
     const [hospiceDisplayData, setHospiceDisplayData] = useState<CardData[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedCCNs, setSelectedCCNs] = useState<string[]>([]);
     const router = useRouter();
-    
+    const requestIdRef = useRef(0);
     useEffect(() => {
         const fetchHospices = async () => {
+            const rid = ++requestIdRef.current;
+            onLoadingChange?.(true);
+            setIsLoading(true);
             try {
-                // get the card data based on the zip and how we're sorting it
-                const cardData = await DisplayCardData(zip, measureCode, scoreData);
-
-                // Set the final data into your component's state
-                setHospiceDisplayData(cardData);
-
+                // Call the server action to get the card data
+                const result = await fetchHospiceData(zip, measureCode, scoreData);
+                if (result.success) {
+                    setHospiceDisplayData(result.data);
+                    setError(null);
+                } else {
+                    setError(result.error || "An error occurred while loading hospice details.");
+                }
             } catch (err) {
                 console.error("Failed to process hospice data:", err);
                 setError("An error occurred while loading hospice details.");
+            } finally {
+                if (requestIdRef.current === rid) {
+                    onLoadingChange?.(false);
+                    setIsLoading(false);
+                }
             }
         };
 
         if (zip) {
             fetchHospices();
+        } else {
+            // If zip cleared, ensure loading stops and data resets
+            onLoadingChange?.(false);
+            setHospiceDisplayData([]);
+            setError(null);
+            setIsLoading(false);
         }
     }, [page, zip, measureCode, scoreData]);
 
@@ -86,8 +104,24 @@ export default function HospiceCards({ page, zip, measureCode, scoreData }: Prop
 
     return (
         <div id="hospice-display-box" className="max-w-4xl mx-auto px-4 py-8">
-            {hospiceDisplayData.length === 0 ? (
-                <div className="text-center text-gray-400 py-12">
+            {isLoading ? (
+                <div className="grid gap-4">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className="bg-background border border-foreground-alt rounded-lg p-6 animate-pulse">
+                            <div className="flex items-start gap-3">
+                                <div className="mt-1 h-5 w-5 rounded bg-background-alt" />
+                                <div className="flex-1 space-y-3">
+                                    <div className="h-6 w-2/3 bg-background-alt rounded" />
+                                    <div className="h-4 w-1/3 bg-background-alt rounded" />
+                                    <div className="h-4 w-1/4 bg-background-alt rounded" />
+                                    <div className="h-4 w-1/2 bg-background-alt rounded" />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : hospiceDisplayData.length === 0 && zip ? (
+                <div className="text-center text-foreground-alt py-12">
                     <p>No hospices found! Please check your zipcode to see if it&apos;s correct.</p>
                 </div>
             ) : (
