@@ -7,190 +7,190 @@ import { fetchHospiceData } from "@/lib/hospice-data/actions";
 import { useRouter } from "next/navigation";
 
 type Props = {
-    page: number;
-    zip: string;
-    measureCode: string;
-    scoreData?: Code;
-    onLoadingChange?: (loading: boolean) => void;
+  page: number;
+  zip: string;
+  measureCode: string;
+  scoreData?: Code;
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 export default function HospiceCards({ page, zip, measureCode, scoreData, onLoadingChange }: Props) {
-    const [hospiceDisplayData, setHospiceDisplayData] = useState<CardData[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [selectedCCNs, setSelectedCCNs] = useState<string[]>([]);
-    const router = useRouter();
-    const requestIdRef = useRef(0);
-    useEffect(() => {
-        const fetchHospices = async () => {
-            const rid = ++requestIdRef.current;
-            onLoadingChange?.(true);
-            setIsLoading(true);
-            try {
-                // Call the server action to get the card data
-                const result = await fetchHospiceData(zip, measureCode, scoreData);
-                if (result.success) {
-                    setHospiceDisplayData(result.data);
-                    setError(null);
-                } else {
-                    setError(result.error || "An error occurred while loading hospice details.");
-                }
-            } catch (err) {
-                console.error("Failed to process hospice data:", err);
-                setError("An error occurred while loading hospice details.");
-            } finally {
-                if (requestIdRef.current === rid) {
-                    onLoadingChange?.(false);
-                    setIsLoading(false);
-                }
-            }
-        };
+  const [hospiceDisplayData, setHospiceDisplayData] = useState<CardData[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedCCNs, setSelectedCCNs] = useState<string[]>([]);
+  const router = useRouter();
+  const requestIdRef = useRef(0);
 
-        if (zip) {
-            fetchHospices();
+  useEffect(() => {
+    const fetchHospices = async () => {
+      const rid = ++requestIdRef.current;
+      onLoadingChange?.(true);
+      setIsLoading(true);
+      try {
+        // Call the server action to get the card data
+        const result = await fetchHospiceData(zip, measureCode, scoreData);
+        if (result.success) {
+          setHospiceDisplayData(result.data);
+          setError(null);
         } else {
-            // If zip cleared, ensure loading stops and data resets
-            onLoadingChange?.(false);
-            setHospiceDisplayData([]);
-            setError(null);
-            setIsLoading(false);
+          setError(result.error || "An error occurred while loading hospice details.");
         }
-    }, [page, zip, measureCode, scoreData]);
-
-    const toggleSelection = (ccn: string) => {
-        setSelectedCCNs(prev => {
-            if (prev.includes(ccn)) {
-                return prev.filter(id => id !== ccn)
-            }
-            if (prev.length < 5) {
-                return [...prev, ccn];
-            }
-
-            return prev;
-        })
-    }
-
-    const isSelected = (ccn: string) => selectedCCNs.includes(ccn);
-
-    const handleCompare = () => {
-        const params = new URLSearchParams();
-        selectedCCNs.forEach(ccn => params.append('ccn', ccn));
-        router.push(`/compare?${params.toString()}`);
+      } catch (err) {
+        console.error("Failed to process hospice data:", err);
+        setError("An error occurred while loading hospice details.");
+      } finally {
+        if (requestIdRef.current === rid) {
+          onLoadingChange?.(false);
+          setIsLoading(false);
+        }
+      }
     };
 
-    if (error) {
-        return <div className="max-w-4xl mx-auto px-4 py-8 text-red-400">{error}</div>;
+    if (zip) {
+      fetchHospices();
+    } else {
+      // If zip cleared, ensure loading stops and data resets
+      onLoadingChange?.(false);
+      setHospiceDisplayData([]);
+      setError(null);
+      setIsLoading(false);
+    }
+  }, [page, zip, measureCode, scoreData]);
+
+  const toggleSelection = (ccn: string) => {
+    setSelectedCCNs(prev => {
+      if (prev.includes(ccn)) {
+        return prev.filter(id => id !== ccn)
+      }
+      if (prev.length < 5) {
+        return [...prev, ccn];
+      }
+
+      return prev;
+    })
+  }
+
+  const isSelected = (ccn: string) => selectedCCNs.includes(ccn);
+
+  const handleCompare = () => {
+    const params = new URLSearchParams();
+    selectedCCNs.forEach(ccn => params.append('ccn', ccn));
+    router.push(`/compare?${params.toString()}`);
+  };
+
+  if (error) {
+    return <div className="max-w-4xl mx-auto px-4 py-8 text-red-400">{error}</div>;
+  }
+
+  // need to figure out what the score's out of
+  let outOfDisplay = "";
+  let real_desc = "General Process Score"; // this corresponds to the default code in get-displaycard-data.ts
+  // this checks if scoreData exists first because it doesn't upon first load
+  if (scoreData) {
+    // for updating the symbol to go next to the number
+    if (scoreData.out_of !== "N/A" && scoreData.out_of !== "yes/no") {
+      // if the 'out_of' parameter is a number that means the score is #/that-given number
+      const isOutOfANum = !isNaN(Number(scoreData.out_of));
+      if (isOutOfANum) {
+        outOfDisplay = `/${scoreData.out_of}`;
+      } else {
+        outOfDisplay = scoreData.out_of;
+      }
     }
 
-    // need to figure out what the score's out of
-    let outOfDisplay = "";
-    let real_desc = "General Process Score"; // this corresponds to the default code in get-displaycard-data.ts
-    // this checks if scoreData exists first because it doesn't upon first load
-    if (scoreData) {
-        // for updating the symbol to go next to the number
-        if (scoreData.out_of !== "N/A" && scoreData.out_of !== "yes/no") {
-            // if the 'out_of' parameter is a number that means the score is #/that-given number
-            const isOutOfANum = !isNaN(Number(scoreData.out_of));
-            if (isOutOfANum) {
-                outOfDisplay = `/${scoreData.out_of}`;
-            } else {
-                outOfDisplay = scoreData.out_of;
-            }
-        }
+    // for updating the description
+    real_desc = scoreData.real_desc;
+  }
 
-        // for updating the description
-        real_desc = scoreData.real_desc;
-    }
-
-    return (
-        <div id="hospice-display-box" className="max-w-4xl mx-auto px-4 py-8">
-            {isLoading ? (
-                <div className="grid gap-4">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <div key={i} className="bg-background border border-foreground-alt rounded-lg p-6 animate-pulse">
-                            <div className="flex items-start gap-3">
-                                <div className="mt-1 h-5 w-5 rounded bg-background-alt" />
-                                <div className="flex-1 space-y-3">
-                                    <div className="h-6 w-2/3 bg-background-alt rounded" />
-                                    <div className="h-4 w-1/3 bg-background-alt rounded" />
-                                    <div className="h-4 w-1/4 bg-background-alt rounded" />
-                                    <div className="h-4 w-1/2 bg-background-alt rounded" />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+  return (
+    <div id="hospice-display-box" className="max-w-4xl mx-auto px-4 py-8">
+      {isLoading ? (
+        <div className="grid gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="bg-background border border-foreground-alt rounded-lg p-6 animate-pulse">
+              <div className="flex items-start gap-3">
+                <div className="mt-1 h-5 w-5 rounded bg-background-alt" />
+                <div className="flex-1 space-y-3">
+                  <div className="h-6 w-2/3 bg-background-alt rounded" />
+                  <div className="h-4 w-1/3 bg-background-alt rounded" />
+                  <div className="h-4 w-1/4 bg-background-alt rounded" />
+                  <div className="h-4 w-1/2 bg-background-alt rounded" />
                 </div>
-            ) : hospiceDisplayData.length === 0 && zip ? (
-                <div className="text-center text-foreground-alt py-12">
-                    <p>No hospices found! Please check your zipcode to see if it&apos;s correct.</p>
-                </div>
-            ) : (
-                <div className="grid gap-4">
-                    {hospiceDisplayData.map((facility) => {
-                        const ccn = facility?.general_data.cms_certification_number_ccn;
-                        const selected = isSelected(ccn);
-                        
-                        return (
-                            <div
-                                key={ccn}
-                                className={`bg-background border rounded-lg p-6 transition ${
-                                    selected 
-                                        ? 'border-primary ring-2 ring-primary' 
-                                        : 'border-foreground-alt hover:bg-background-alt hover:ring-2 hover:ring-primary'
-                                }`}
-                            >
-                                <div className="flex items-start gap-3">
-                                    <input
-                                        type="checkbox"
-                                        checked={selected}
-                                        onChange={() => toggleSelection(ccn)}
-                                        disabled={!selected && selectedCCNs.length >= 5}
-                                        className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
-                                    />
-                                    <Link href={`/details/${ccn}`} className="flex-1">
-                                        <div className="cursor-pointer">
-                                            <h3 className="text-xl font-bold text-foreground mb-2">
-                                                {facility?.general_data.facility_name}
-                                            </h3>
-                                            <p className="text-foreground-alt mb-3">
-                                                {facility?.general_data.ownership_type}
-                                            </p>
-                                            <p className="text-foreground-alt mb-3">
-                                                {facility?.general_data.telephone_number}
-                                            </p>
-                                            <p className="text-foreground-alt mb-3">
-                                                {real_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
-                                            </p>
-                                        </div>
-                                    </Link>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-
-            {/* Floating Compare Bar */}
-            {selectedCCNs.length > 0 && (
-                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full shadow-lg px-6 py-3 flex items-center gap-4 z-50">
-                    <span className="font-semibold">
-                        {selectedCCNs.length} selected
-                    </span>
-                    <button
-                        onClick={() => setSelectedCCNs([])}
-                        className="text-sm underline hover:no-underline"
-                    >
-                        Clear
-                    </button>
-                    <button
-                        onClick={handleCompare}
-                        disabled={selectedCCNs.length < 2}
-                        className="bg-background text-foreground px-4 py-2 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-background-alt transition"
-                    >
-                        Compare
-                    </button>
-                </div>
-            )}
+              </div>
+            </div>
+          ))}
         </div>
-    );
+      ) : hospiceDisplayData.length === 0 && zip ? (
+        <div className="text-center text-foreground-alt py-12">
+          <p>No hospices found! Please check your zipcode to see if it&apos;s correct.</p>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {hospiceDisplayData.map((facility) => {
+            const ccn = facility?.general_data.cms_certification_number_ccn;
+            const selected = isSelected(ccn);
+
+            return (
+              <div
+                key={ccn}
+                className={`bg-background border rounded-lg p-6 transition ${selected
+                  ? 'border-primary ring-2 ring-primary'
+                  : 'border-foreground-alt hover:bg-background-alt hover:ring-2 hover:ring-primary'
+                  }`}
+              >
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    checked={selected}
+                    onChange={() => toggleSelection(ccn)}
+                    disabled={!selected && selectedCCNs.length >= 5}
+                    className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
+                  />
+                  <Link href={`/details/${ccn}`} className="flex-1">
+                    <div className="cursor-pointer">
+                      <h3 className="text-xl font-bold text-foreground mb-2">
+                        {facility?.general_data.facility_name}
+                      </h3>
+                      <p className="text-foreground-alt mb-3">
+                        {facility?.general_data.ownership_type}
+                      </p>
+                      <p className="text-foreground-alt mb-3">
+                        {facility?.general_data.telephone_number}
+                      </p>
+                      <p className="text-foreground-alt mb-3">
+                        {real_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
+                      </p>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Floating Compare Bar */}
+      {selectedCCNs.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full shadow-lg px-6 py-3 flex items-center gap-4 z-50">
+          <span className="font-semibold">
+            {selectedCCNs.length} selected
+          </span>
+          <button
+            onClick={() => setSelectedCCNs([])}
+            className="text-sm underline hover:no-underline"
+          >
+            Clear
+          </button>
+          <button
+            onClick={handleCompare}
+            disabled={selectedCCNs.length < 2}
+            className="bg-background text-foreground px-4 py-2 rounded-full font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-background-alt transition"
+          >
+            Compare
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
