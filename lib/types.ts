@@ -52,6 +52,9 @@ export type Code = {
   out_of: string,
   lower_is_better: boolean,
   details_section: boolean,
+  is_cahps: boolean,
+  is_hci: boolean,
+  is_general_metric: boolean,
 }
 
 type codeOmit = Partial<Omit<Code, 'id'|'measure_code'|'description'|'measure_name'>>;
