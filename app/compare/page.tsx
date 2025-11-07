@@ -16,6 +16,9 @@ export default async function ComparePage({
       {ccns.map((ccn) => (
         <CompareColumn ccn={ccn} key={ccn} />
       ))}
+      {ccns.length < 5 &&
+        <div>Add</div>
+      }
     </div>
   );
 }
