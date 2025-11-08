@@ -55,7 +55,7 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
             setError(null);
             setIsLoading(false);
         }
-    }, [page, zip, measureCode, scoreData]);
+    }, [page, zip, measureCode, scoreData, onLoadingChange]);
 
     const toggleSelection = (ccn: string) => {
         setSelectedCCNs(prev => {
