@@ -41,19 +41,21 @@ export default function CompareColumn({ ccn }: { ccn: string }) {
 
   if (loading) {
     return (
-      <div>loading...</div>
+      <div className="min-w-[200px]">loading...</div>
     )
   }
 
   return (
-    <div className="min-w-[200px] flex flex-col m-2">
-      <div className="sticky top-[65px] flex flex-col">
+    <div className="min-w-[200px] flex flex-col">
+      <div className="sticky top-[40px] flex flex-col bg-background">
         <button onClick={() => deleteCCN(ccn)} >Delete</button>
-        {data?.facilityName}
+        <div className="h-[60px] line-clamp-2 border border-foreground p-1">
+          {data?.facilityName}
+        </div>
       </div>
       {data?.measures.map((measure) => (
-        <div key={measure.measureCode}>
-          {measure.measureCode}:{measure.score}
+        <div key={measure.measureCode} className="w-full border border-foreground p-1">
+          {measure.score}
         </div>
       ))}
     </div>
