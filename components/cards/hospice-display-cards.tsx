@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CardData, Code } from "@/lib/types";
 import { fetchHospiceData } from "@/lib/hospice-data/actions";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 type Props = {
@@ -13,14 +13,16 @@ type Props = {
   measureCode: string;
   scoreData?: Code;
   onLoadingChange?: (loading: boolean) => void;
+  forComparePage?: boolean;
 }
 
-export default function HospiceCards({ page, zip, measureCode, scoreData, onLoadingChange }: Props) {
+export default function HospiceCards({ page, zip, measureCode, scoreData, onLoadingChange, forComparePage }: Props) {
   const [hospiceDisplayData, setHospiceDisplayData] = useState<CardData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCCNs, setSelectedCCNs] = useState<string[]>([]);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const requestIdRef = useRef(0);
   const [isComparing, setIsComparing] = useState(false);
 
@@ -114,6 +116,16 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
     real_desc = scoreData.real_desc;
   }
 
+  const handleClickComparePage = (ccn: string) => {
+    if (forComparePage) {
+      const params = new URLSearchParams(searchParams.toString());
+      if (!params.toString().includes(ccn)) {
+        params.append('ccn', ccn);
+        router.push(`/compare?${params.toString()}`);
+      }
+    }
+  }
+
   return (
     <div id="hospice-display-box" className="max-w-4xl mx-auto px-4 py-8">
       {isLoading ? (
@@ -164,8 +176,8 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
                   ) : null}
 
                   {/* Card Content - disable navigation during comparison mode */}
-                  {isComparing ? (
-                    <div className="flex-1">
+                  {isComparing || forComparePage ? (
+                    <div className="flex-1" onClick={() => handleClickComparePage(ccn)}>
                       <div>
                         <h3 className="text-xl font-bold text-foreground mb-2">
                           {facility?.general_data.facility_name}
@@ -202,7 +214,7 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
                 </div>
 
                 {/* Compare trigger - themed and positioned top-right when not in comparison mode */}
-                {!isComparing && (
+                {!isComparing && !forComparePage && (
                   <Button
                     variant="outline"
                     size="lg"

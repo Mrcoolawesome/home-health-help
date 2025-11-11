@@ -1,3 +1,4 @@
+import AddColumn from "./addColumn";
 import CompareColumn from "./compareColumn";
 import NameColumn from "./nameColumn";
 
@@ -17,7 +18,7 @@ export default async function ComparePage({
         <CompareColumn ccn={ccn} key={ccn} />
       ))}
       {ccns.length < 5 &&
-        <div>Add</div>
+        <AddColumn />
       }
     </div>
   );

@@ -11,9 +11,10 @@ type Props = {
   initialSearch: string;
   initialSort: string;
   initialScoreData?: Code;
+  forComparePage?: boolean;
 };
 
-export default function HomeClient({ initialSearch, initialSort, initialScoreData }: Props) {
+export default function HomeClient({ initialSearch, initialSort, initialScoreData, forComparePage = false }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -68,7 +69,7 @@ export default function HomeClient({ initialSearch, initialSort, initialScoreDat
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen min-w-[500px] bg-background">
       <div className="max-w-6xl mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-foreground mb-8">Search Hospices</h1>
         <p className="text-foreground ">Search hospices by the zip code they operate in.</p>
@@ -83,6 +84,7 @@ export default function HomeClient({ initialSearch, initialSort, initialScoreDat
           measureCode={measureCode}
           scoreData={scoreData}
           onLoadingChange={setIsLoading}
+          forComparePage={forComparePage}
         />
       </div>
     </div>
