@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { CardData, Code } from "@/lib/types";
 import { fetchHospiceData } from "@/lib/hospice-data/actions";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   page: number;
@@ -21,6 +22,7 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
   const [selectedCCNs, setSelectedCCNs] = useState<string[]>([]);
   const router = useRouter();
   const requestIdRef = useRef(0);
+  const [isComparing, setIsComparing] = useState(false);
 
   useEffect(() => {
     const fetchHospices = async () => {
@@ -56,11 +58,18 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
       setError(null);
       setIsLoading(false);
     }
-  }, [page, zip, measureCode, scoreData]);
+  }, [page, zip, measureCode, scoreData, onLoadingChange]);
 
+  // This toggles the selection for a specific card for a given ccn.
+  // It adds that CCN to the already selected CCN list only if the list doesn't already have 5 elements.
   const toggleSelection = (ccn: string) => {
     setSelectedCCNs(prev => {
       if (prev.includes(ccn)) {
+        // if we have everything unchecked that means we're done comparing
+        // so if we're removing the last element that means it's empty now
+        if (prev.length === 1) {
+          setIsComparing(false);
+        }
         return prev.filter(id => id !== ccn)
       }
       if (prev.length < 5) {
@@ -71,8 +80,10 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
     })
   }
 
+  // Put the selected CCN's into a list
   const isSelected = (ccn: string) => selectedCCNs.includes(ccn);
 
+  // This redirects to the compare endpoint with the CCN's listed in the search params
   const handleCompare = () => {
     const params = new URLSearchParams();
     selectedCCNs.forEach(ccn => params.append('ccn', ccn));
@@ -134,36 +145,73 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
             return (
               <div
                 key={ccn}
-                className={`bg-background border rounded-lg p-6 transition ${selected
+                className={`relative bg-background border rounded-lg p-6 transition ${selected
                   ? 'border-primary ring-2 ring-primary'
                   : 'border-foreground-alt hover:bg-background-alt hover:ring-2 hover:ring-primary'
-                  }`}
+                  } ${isComparing ? 'cursor-pointer' : ''}`}
+                onClick={isComparing ? () => toggleSelection(ccn) : undefined}
               >
                 <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    checked={selected}
-                    onChange={() => toggleSelection(ccn)}
-                    disabled={!selected && selectedCCNs.length >= 5}
-                    className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
-                  />
-                  <Link href={`/details/${ccn}`} className="flex-1">
-                    <div className="cursor-pointer">
-                      <h3 className="text-xl font-bold text-foreground mb-2">
-                        {facility?.general_data.facility_name}
-                      </h3>
-                      <p className="text-foreground-alt mb-3">
-                        {facility?.general_data.ownership_type}
-                      </p>
-                      <p className="text-foreground-alt mb-3">
-                        {facility?.general_data.telephone_number}
-                      </p>
-                      <p className="text-foreground-alt mb-3">
-                        {real_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
-                      </p>
+                  {isComparing ? (
+                    <input
+                      type="checkbox"
+                      checked={selected}
+                      onChange={() => toggleSelection(ccn)}
+                      disabled={!selected && selectedCCNs.length >= 5}
+                      onClick={(e) => e.stopPropagation()}
+                      className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
+                    />
+                  ) : null}
+
+                  {/* Card Content - disable navigation during comparison mode */}
+                  {isComparing ? (
+                    <div className="flex-1">
+                      <div>
+                        <h3 className="text-xl font-bold text-foreground mb-2">
+                          {facility?.general_data.facility_name}
+                        </h3>
+                        <p className="text-foreground-alt mb-3">
+                          {facility?.general_data.ownership_type}
+                        </p>
+                        <p className="text-foreground-alt mb-3">
+                          {facility?.general_data.telephone_number}
+                        </p>
+                        <p className="text-foreground-alt mb-3">
+                          {real_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
+                        </p>
+                      </div>
                     </div>
-                  </Link>
+                  ) : (
+                    <Link href={`/details/${ccn}`} className="flex-1">
+                      <div className="cursor-pointer">
+                        <h3 className="text-xl font-bold text-foreground mb-2">
+                          {facility?.general_data.facility_name}
+                        </h3>
+                        <p className="text-foreground-alt mb-3">
+                          {facility?.general_data.ownership_type}
+                        </p>
+                        <p className="text-foreground-alt mb-3">
+                          {facility?.general_data.telephone_number}
+                        </p>
+                        <p className="text-foreground-alt mb-3">
+                          {real_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
+                        </p>
+                      </div>
+                    </Link>
+                  )}
                 </div>
+
+                {/* Compare trigger - themed and positioned top-right when not in comparison mode */}
+                {!isComparing && (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="absolute top-4 right-4 border-2 border-foreground text-foreground hover:bg-background-alt dark:border-primary dark:text-primary dark:hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-ring dark:focus-visible:ring-primary"
+                    onClick={(e) => { e.stopPropagation(); setIsComparing(true); }}
+                  >
+                    Compare
+                  </Button>
+                )}
               </div>
             );
           })}
