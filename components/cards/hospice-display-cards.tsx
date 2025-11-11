@@ -21,6 +21,8 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
     const [selectedCCNs, setSelectedCCNs] = useState<string[]>([]);
     const router = useRouter();
     const requestIdRef = useRef(0);
+    const [isComparing, setIsComparing] = useState(false);
+
     useEffect(() => {
         const fetchHospices = async () => {
             const rid = ++requestIdRef.current;
@@ -57,9 +59,16 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
         }
     }, [page, zip, measureCode, scoreData, onLoadingChange]);
 
+    // This toggles the selection for a specific card for a given ccn.
+    // It adds that CCN to the already selected CCN list only if the list doesn't already have 5 elements.
     const toggleSelection = (ccn: string) => {
         setSelectedCCNs(prev => {
             if (prev.includes(ccn)) {
+                // if we have everything unchecked that means we're done comparing
+                // so if we're removing the last element that means it's empty now
+                if (prev.length === 1) {
+                    setIsComparing(false);
+                }
                 return prev.filter(id => id !== ccn)
             }
             if (prev.length < 5) {
@@ -70,8 +79,10 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
         })
     }
 
+    // Put the selected CCN's into a list
     const isSelected = (ccn: string) => selectedCCNs.includes(ccn);
 
+    // This redirects to the compare endpoint with the CCN's listed in the search params
     const handleCompare = () => {
         const params = new URLSearchParams();
         selectedCCNs.forEach(ccn => params.append('ccn', ccn));
@@ -139,14 +150,29 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
                                         : 'border-foreground-alt hover:bg-background-alt hover:ring-2 hover:ring-primary'
                                 }`}
                             >
-                                <div className="flex items-start gap-3">
-                                    <input
-                                        type="checkbox"
-                                        checked={selected}
-                                        onChange={() => toggleSelection(ccn)}
-                                        disabled={!selected && selectedCCNs.length >= 5}
-                                        className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
-                                    />
+                                <div className="flex items-start gap-3"> 
+                                    {isComparing ? (
+                                            <input
+                                                type="checkbox"
+                                                checked={selected}
+                                                onChange={() => toggleSelection(ccn)}
+                                                disabled={!selected && selectedCCNs.length >= 5}
+                                                className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
+                                            />
+                                        ) : (
+                                            <>
+                                                {/* We can always set isComparing to true here because it get's changed back when we've deselected everything */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsComparing(true)}
+                                                    value="Compare"
+                                                    className="mt-1 h-5 w-20 rounded border-foreground-alt bg-transparent text-sm"
+                                                >
+                                                    Compare
+                                                </button>
+                                            </>
+                                        )
+                                    }
                                     <Link href={`/details/${ccn}`} className="flex-1">
                                         <div className="cursor-pointer">
                                             <h3 className="text-xl font-bold text-foreground mb-2">
