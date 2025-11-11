@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { CardData, Code } from "@/lib/types";
 import { fetchHospiceData } from "@/lib/hospice-data/actions";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 type Props = {
     page: number;
@@ -144,52 +145,74 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
                         return (
                             <div
                                 key={ccn}
-                                className={`bg-background border rounded-lg p-6 transition ${
+                                className={`relative bg-background border rounded-lg p-6 transition ${
                                     selected 
                                         ? 'border-primary ring-2 ring-primary' 
                                         : 'border-foreground-alt hover:bg-background-alt hover:ring-2 hover:ring-primary'
-                                }`}
+                                } ${isComparing ? 'cursor-pointer' : ''}`}
+                                onClick={isComparing ? () => toggleSelection(ccn) : undefined}
                             >
                                 <div className="flex items-start gap-3"> 
                                     {isComparing ? (
-                                            <input
-                                                type="checkbox"
-                                                checked={selected}
-                                                onChange={() => toggleSelection(ccn)}
-                                                disabled={!selected && selectedCCNs.length >= 5}
-                                                className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
-                                            />
-                                        ) : (
-                                            <>
-                                                {/* We can always set isComparing to true here because it get's changed back when we've deselected everything */}
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setIsComparing(true)}
-                                                    value="Compare"
-                                                    className="mt-1 h-5 w-20 rounded border-foreground-alt bg-transparent text-sm"
-                                                >
-                                                    Compare
-                                                </button>
-                                            </>
-                                        )
-                                    }
-                                    <Link href={`/details/${ccn}`} className="flex-1">
-                                        <div className="cursor-pointer">
-                                            <h3 className="text-xl font-bold text-foreground mb-2">
-                                                {facility?.general_data.facility_name}
-                                            </h3>
-                                            <p className="text-foreground-alt mb-3">
-                                                {facility?.general_data.ownership_type}
-                                            </p>
-                                            <p className="text-foreground-alt mb-3">
-                                                {facility?.general_data.telephone_number}
-                                            </p>
-                                            <p className="text-foreground-alt mb-3">
-                                                {real_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
-                                            </p>
+                                        <input
+                                            type="checkbox"
+                                            checked={selected}
+                                            onChange={() => toggleSelection(ccn)}
+                                            disabled={!selected && selectedCCNs.length >= 5}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="mt-1 h-5 w-5 rounded border-foreground-alt cursor-pointer"
+                                        />
+                                    ) : null}
+
+                                    {/* Card Content - disable navigation during comparison mode */}
+                                    {isComparing ? (
+                                        <div className="flex-1">
+                                            <div>
+                                                <h3 className="text-xl font-bold text-foreground mb-2">
+                                                    {facility?.general_data.facility_name}
+                                                </h3>
+                                                <p className="text-foreground-alt mb-3">
+                                                    {facility?.general_data.ownership_type}
+                                                </p>
+                                                <p className="text-foreground-alt mb-3">
+                                                    {facility?.general_data.telephone_number}
+                                                </p>
+                                                <p className="text-foreground-alt mb-3">
+                                                    {real_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </Link>
+                                    ) : (
+                                        <Link href={`/details/${ccn}`} className="flex-1">
+                                            <div className="cursor-pointer">
+                                                <h3 className="text-xl font-bold text-foreground mb-2">
+                                                    {facility?.general_data.facility_name}
+                                                </h3>
+                                                <p className="text-foreground-alt mb-3">
+                                                    {facility?.general_data.ownership_type}
+                                                </p>
+                                                <p className="text-foreground-alt mb-3">
+                                                    {facility?.general_data.telephone_number}
+                                                </p>
+                                                <p className="text-foreground-alt mb-3">
+                                                    {real_desc}: {facility?.sortby_medicare_scores.score}{outOfDisplay}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                    )}
                                 </div>
+
+                                {/* Compare trigger - themed and positioned top-right when not in comparison mode */}
+                                {!isComparing && (
+                                    <Button
+                                        variant="outline"
+                                        size="lg"
+                                        className="absolute top-4 right-4 border-primary text-primary hover:bg-background-alt hover:border-primary/80 focus-visible:ring-2 focus-visible:ring-primary"
+                                        onClick={(e) => { e.stopPropagation(); setIsComparing(true); }}
+                                    >
+                                        Compare
+                                    </Button>
+                                )}
                             </div>
                         );
                     })}
