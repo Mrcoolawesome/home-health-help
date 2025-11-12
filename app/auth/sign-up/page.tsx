@@ -1,9 +1,9 @@
-import { SignUpFormHomeHealth } from "@/components/signup-forms/sign-up-form-homehealth";
+import { SignUpForm } from "@/components/signup-forms/sign-up-form";
 
 export default function Page() {
-    return (
-        <div>
-            <SignUpFormHomeHealth />
-        </div>
-    );
+  return (
+    <div>
+      <SignUpForm />
+    </div>
+  );
 }

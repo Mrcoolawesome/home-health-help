@@ -51,10 +51,10 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname !== "/" &&
     request.nextUrl.pathname !== "/about" &&
     !user &&
-    !request.nextUrl.pathname.startsWith("/login") &&
     !request.nextUrl.pathname.startsWith("/auth") &&
     !request.nextUrl.pathname.startsWith("/details") &&
-    !request.nextUrl.pathname.startsWith("/compare")
+    !request.nextUrl.pathname.startsWith("/compare") &&
+    !request.nextUrl.pathname.startsWith("/auth/confirm")
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
