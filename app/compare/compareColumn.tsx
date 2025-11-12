@@ -54,7 +54,7 @@ export default function CompareColumn({ ccn }: { ccn: string }) {
         </div>
       </div>
       {data?.measures.map((measure) => (
-        <div key={measure.measureCode} className="w-full border border-foreground p-1">
+        <div key={measure.measureCode} className="w-full border border-foreground p-1 h-[60px]">
           {measure.score}
         </div>
       ))}
