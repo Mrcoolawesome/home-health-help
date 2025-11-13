@@ -1,11 +1,13 @@
 'use client'
+
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { AuthError } from '@supabase/supabase-js';
+import { AuthError, PostgrestError } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 
 const supabase = createClient();
 
@@ -16,7 +18,10 @@ export default function SetPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   // the error that occurs when using supabase auth is of type AuthError so we have to set this to be that type
-  const [error, setError] = useState<AuthError>(); 
+  // allow null because Supabase returns `null` when there is no error
+  const [error, setError] = useState<AuthError | PostgrestError | null>(null);
+
+  const router = useRouter(); // Initialize router
 
   useEffect(() => {
     // 1. Get tokens from URL hash (e.g., #access_token=...)
@@ -49,16 +54,26 @@ export default function SetPasswordPage() {
     setIsLoading(true); // make it so that it shows that it's loading
 
     // Since the session is set, this updates the currently logged-in user
-    const { error: updateUserPasswordError } = await supabase.auth.updateUser({
+    const { data: userData, error: updateUserPasswordError } = await supabase.auth.updateUser({
       password: password,
     });
 
-    if (!updateUserPasswordError) {
-      // Success! Redirect the user to the main app dashboard
-      window.location.href = '/dashboard'; 
+    if (!updateUserPasswordError && userData) {
+      // Insert new user entry into 'users_marketer' table
+      const { error: insertError } = await supabase
+        .from('users_marketer')
+        .insert([{ id: userData.user.id, name: name }]);
+
+      if (insertError) {
+        setError(insertError);
+        console.error("Error inserting user into users_marketer:", insertError);
+      } else {
+        // Success! Redirect the user to the main app dashboard
+        router.push('/'); 
+      }
     } else {
       setError(updateUserPasswordError);
-      console.error("Error updating user password:", error);
+      console.error("Error updating user password:", updateUserPasswordError);
     }
 
     // stop showing the loading icon because at this point we're done

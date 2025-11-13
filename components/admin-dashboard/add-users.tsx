@@ -1,10 +1,9 @@
-"use server"
+"use client"
 
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "@/components/ui/input";
-import { createClient } from "@/lib/supabase/server";
-import { AuthError } from "@supabase/supabase-js";
+import InviteUsers from "../../lib/invite-users/invite-users";
 
 /**
  * I'm gonna make this so that there's a button right below the boxes to add users, where you can click to make a new box to add a new user.
@@ -15,59 +14,28 @@ import { AuthError } from "@supabase/supabase-js";
 export function AddUsers() {
   /* im going to set the id of each input box to be 0-indexed, and then use that id as the location in the array 
   to put in the email for that specific box */
-  const [emails, setEmails] = useState([""]);
+  // This is actually pretty cool because since I'm initalizing 'emails' to have [""] by defualt,
+  // this means that it knows its type is string[] and also gives it a single empty default entry
+  // so there's a blank entry by default which is what I also want. 
+  const [emails, setEmails] = useState([""]); 
 
   const updateEmail = (index: number, value: string) => {
     setEmails(prev => prev.map((email, i) => i === index ? value : email)); // all of this just to replace a specific element at a specific index smh
   }
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // don't want it to submit the form like normal when the submit button is pressed
-    // now we wanna loop through each email and invite them through supabase
-    const supabase = await createClient();
-
-    try{
-      emails.map(async (email) => { // have to mark this map function as async as well otherwise we can't await for stuff in it
-        // invite the specific email and then redirect them to the /auth/set-password/marketer endpoint
-        const { error: inviteUsersError } = await supabase.auth.admin.inviteUserByEmail(
-          email,
-          {
-            redirectTo: `${window.location.origin}/auth/set-password/marketer` // this is so that it works in development AND in production
-          }       
-        );
-
-        // this error is of type AuthError btw
-        if (inviteUsersError) throw inviteUsersError; // throw the error if it exists
-      })
-    } catch(error: unknown) { // apparently typescript catch variables can only be typed as 'unkown' or 'any'
-      if (error instanceof AuthError) {
-        // handle Supabase auth errors
-        console.error('Invite failed:', error.message);
-      } else if (error instanceof Error) {
-        console.error('Unexpected error:', error.message);
-      } else {
-        console.error('Unknown error inviting users');
-      }
-    }
-  }
-
   return (
     <div>
-      <form onSubmit={handleFormSubmit}>
-        {/* We always start with at least one email box, so that's why this one is hardcoded here. */}
-        <Input
-          id="email-0"
-          type="email"
-          placeholder="m@example.com"
-          required
-          value={emails[0]}
-          onChange={(e) => updateEmail(0, e.target.value)}
-        />
+      <form action={InviteUsers}>
+        {/* We always start with at least one email box, so that's why we have 'emails' set to have 
+            one empty string by default.
+        */}
 
         {emails.map((email, index) => (
           <Input
+            key={`${index}`}
             id={`email-${index}`}
             type="email"
+            name="email"
             placeholder="m@example.com"
             required
             value={email}
@@ -87,6 +55,16 @@ export function AddUsers() {
         setEmails(prev => [...prev, ""]);
       }}>
         Add Another Email
+      </Button>
+
+      {/* Button that removes the last email box. */}
+      <Button onClick={() => {
+        setEmails((prev) => {
+          if (prev.length <= 1) return prev; // keep at least one input
+          return prev.slice(0, -1); // otherwise remove the last element
+        });
+      }}>
+        Remove Last Email
       </Button>
     </div>
   )
