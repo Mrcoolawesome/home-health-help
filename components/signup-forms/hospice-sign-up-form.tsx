@@ -16,7 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function SignUpForm({
+export function HospiceSignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
@@ -52,11 +52,11 @@ export function SignUpForm({
         });
 
       // once we have them in the auth table we need to link that to the public table
-      const { error: createUserDoctorError } = await supabase
-        .from("users_hh")
+      const { error: createHospiceUserError } = await supabase
+        .from("users_hospice")
         .insert({ id: userData.user?.id, name, company });
 
-      if (authSignUpError || createUserDoctorError) throw error;
+      if (authSignUpError || createHospiceUserError) throw error;
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
