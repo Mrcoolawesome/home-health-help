@@ -8,17 +8,29 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { ThemeSwitcher } from "../theme-switcher";
 import LoginButton from "../buttons/login-button";
+import { GetUserType } from "@/lib/get-user/get-user-type";
+import { Button } from "./button";
 
 export default function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isHospiceUser, setIsHospiceUser] = useState(false);
+  const [isMarketerUser, setIsMarketerUser] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
   useEffect(() => {
-    // fetch the user on the initial check
+    // fetch the user and their type on the initial check
     const fetchUser = async () => {
+      // Technically we could use the GetUserType function to do this same authentication check,
+      // however this already works and I've had trouble with determining authentication before
+      // so I'm just gonna keep this logic.
       const { isAuthed } = await getUser();
       setIsAuthenticated(isAuthed);
+
+      // Get the user type and make note of it
+      const {isHospice, isMarketer} = await GetUserType(supabase);
+      setIsHospiceUser(isHospice);
+      setIsMarketerUser(isMarketer);
     };
     fetchUser();
 
@@ -55,6 +67,11 @@ export default function Navbar() {
           </Link>
 
           <div className="flex items-center gap-4">
+            {isHospiceUser && (
+              <Button asChild variant="outline" className="border-primary/50 hover:border-primary hover:bg-primary/10">
+                <Link href="/hospice/dashboard">Dashboard</Link>
+              </Button>
+            )}
             <Link
               href="/about"
               className="text-foreground hover:text-foreground-alt transition font-medium"

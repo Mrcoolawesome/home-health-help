@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hasEnvVars } from "../utils";
+import { GetUserType } from "../get-user/get-user-type";
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -44,29 +45,10 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: If you remove getClaims() and you use server-side rendering
   // with the Supabase client, your users may be randomly logged out.
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
-
-  // Determine roles based on presence in tables
-  let isHospice = false;
-  let isMarketer = false;
-  const userId = user?.sub as string | undefined; // it's possible they're not signed in so this can be undefined
-
-  // Determine what kind of user they are
-  if (userId) {
-    const [{ count: hospiceCount }, { count: marketerCount }] = await Promise.all([
-      supabase
-        .from("users_hospice")
-        .select("id", { count: "exact", head: true })
-        .or(`user_id.eq.${userId},id.eq.${userId}`),
-      supabase
-        .from("users_marketer")
-        .select("id", { count: "exact", head: true })
-        .or(`user_id.eq.${userId},id.eq.${userId}`),
-    ]);
-    isHospice = (hospiceCount ?? 0) > 0;
-    isMarketer = (marketerCount ?? 0) > 0;
-  }
+  
+  // Get the user type
+  const {user, isHospice} = await GetUserType(supabase);
+  console.log("bbruhmotos:?", isHospice);
 
   // for regular users
   if (
