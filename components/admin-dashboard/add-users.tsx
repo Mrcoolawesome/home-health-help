@@ -28,7 +28,13 @@ export function AddUsers() {
 
     try{
       emails.map(async (email) => { // have to mark this map function as async as well otherwise we can't await for stuff in it
-        const { error: inviteUsersError } = await supabase.auth.admin.inviteUserByEmail(email);
+        // invite the specific email and then redirect them to the /auth/set-password/marketer endpoint
+        const { error: inviteUsersError } = await supabase.auth.admin.inviteUserByEmail(
+          email,
+          {
+            redirectTo: `${window.location.origin}/auth/set-password/marketer` // this is so that it works in development AND in production
+          }       
+        );
 
         // this error is of type AuthError btw
         if (inviteUsersError) throw inviteUsersError; // throw the error if it exists

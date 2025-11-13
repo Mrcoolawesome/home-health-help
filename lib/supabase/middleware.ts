@@ -47,6 +47,28 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
+  // Determine roles based on presence in tables
+  let isHospice = false;
+  let isMarketer = false;
+  const userId = user?.sub as string | undefined; // it's possible they're not signed in so this can be undefined
+
+  // Determine what kind of user they are
+  if (userId) {
+    const [{ count: hospiceCount }, { count: marketerCount }] = await Promise.all([
+      supabase
+        .from("users_hospice")
+        .select("id", { count: "exact", head: true })
+        .or(`user_id.eq.${userId},id.eq.${userId}`),
+      supabase
+        .from("users_marketer")
+        .select("id", { count: "exact", head: true })
+        .or(`user_id.eq.${userId},id.eq.${userId}`),
+    ]);
+    isHospice = (hospiceCount ?? 0) > 0;
+    isMarketer = (marketerCount ?? 0) > 0;
+  }
+
+  // for regular users
   if (
     request.nextUrl.pathname !== "/" &&
     request.nextUrl.pathname !== "/about" &&
@@ -60,6 +82,18 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
+  }
+
+  // If they're a hospice user then they should be allowed to access the dashboard
+  if (
+    request.nextUrl.pathname.startsWith("/admin-dashboard") ||
+    request.nextUrl.pathname.startsWith("/admin-dasboard")
+  ) {
+    if (!isHospice) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
   }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
