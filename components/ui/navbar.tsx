@@ -14,7 +14,6 @@ import { Button } from "./button";
 export default function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isHospiceUser, setIsHospiceUser] = useState(false);
-  const [isMarketerUser, setIsMarketerUser] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
@@ -28,9 +27,8 @@ export default function Navbar() {
       setIsAuthenticated(isAuthed);
 
       // Get the inital user type and make note of it
-      const {isHospice, isMarketer} = await GetUserType(supabase);
+      const {isHospice} = await GetUserType(supabase);
       setIsHospiceUser(isHospice);
-      setIsMarketerUser(isMarketer);
     };
     fetchUser();
 
@@ -46,13 +44,11 @@ export default function Navbar() {
           // Create a fresh client and add small delay to ensure session is ready
           await new Promise(resolve => setTimeout(resolve, 100));
           const freshClient = createClient();
-          const {isHospice, isMarketer} = await GetUserType(freshClient);
+          const {isHospice} = await GetUserType(freshClient);
           setIsHospiceUser(isHospice);
-          setIsMarketerUser(isMarketer);
         } else {
           // Clear user type state on sign out
           setIsHospiceUser(false);
-          setIsMarketerUser(false);
         }
 
         // refresh data on the current page if they just signed out or in
