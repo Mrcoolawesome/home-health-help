@@ -1,6 +1,6 @@
-import AddColumn from "./addColumn";
-import CompareColumn from "./compareColumn";
-import NameColumn from "./nameColumn";
+import AddColumn from "@/components/compare/addColumn";
+import NameColumn from "@/components/compare/nameColumn";
+import CompareColumn from "@/components/compare/compareColumn";
 
 // This allows Next.js to access searchParams in Server Components
 export default async function ComparePage({
