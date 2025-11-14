@@ -1,8 +1,11 @@
 "use server"
 
-import { defaultUrl } from "@/app/layout";
 import { AuthError } from "@supabase/supabase-js";
 import { CreateAdminClient } from "../create-admin-client";
+
+const defaultUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : "http://localhost:3000";
 
 // now we wanna loop through each email and invite them through supabase
 export default async function InviteUsers(formData: FormData) {
