@@ -3,10 +3,6 @@
 import { AuthError } from "@supabase/supabase-js";
 import { CreateAdminClient } from "../create-admin-client";
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
-
 // now we wanna loop through each email and invite them through supabase
 export default async function InviteUsers(formData: FormData) {
   // This is our own custom createClient function that makes the client an admin client
@@ -18,7 +14,6 @@ export default async function InviteUsers(formData: FormData) {
 
   // this shouldn't ever happen but it's here just in case
   if (emails.length === 0) {
-    console.log("ono");
     return;
   }; 
 
@@ -28,7 +23,7 @@ export default async function InviteUsers(formData: FormData) {
       const { error: inviteUsersError } = await supabase.auth.admin.inviteUserByEmail(
         email,
         {
-          redirectTo: `${defaultUrl}/auth/set-password/marketer` // this is so that it works in development AND in production
+          redirectTo: `https://hospicefind.com/auth/set-password/marketer` // this will only work in production
         }       
       );
 
