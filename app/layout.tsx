@@ -3,6 +3,8 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import Navbar from "@/components/ui/navbar";
+import { Toast } from "@base-ui-components/react";
+import { toastManager } from "@/lib/toast";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -20,6 +22,7 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,8 +37,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
+          <Toast.Provider toastManager={toastManager}>
+            <Navbar />
+            {children}
+          </Toast.Provider>
         </ThemeProvider>
       </body>
     </html>
