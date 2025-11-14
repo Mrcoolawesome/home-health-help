@@ -12,6 +12,9 @@
     --background-alt: #e3e5e9;
     --foreground: #212224;
     --foreground-alt: #9ca3af;
+    /* Popover tokens for dropdowns/menus */
+    --popover: var(--background-alt);
+    --popover-foreground: var(--foreground);
   }.dark {
     --primary: #d3d3ff;
     --good: #4ade80;
@@ -21,6 +24,9 @@
     --background-alt: #424345;
     --foreground: #f2f4f7;
     --foreground-alt: #9ca3af;
+    /* Popover tokens for dropdowns/menus (dark) */
+    --popover: var(--background-alt);
+    --popover-foreground: var(--foreground);
   }
 
   @layer components {

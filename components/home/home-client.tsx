@@ -71,10 +71,10 @@ export default function HomeClient({ initialSearch, initialSort, initialScoreDat
   return (
     <div className="min-h-screen min-w-[500px] bg-background">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-foreground mb-8">Search Hospices</h1>
+        <h1 className="text-4xl font-bold text-foreground mb-8">Search Hospices By Zipcode They Serve</h1>
         <p className="text-foreground ">Search hospices by the zip code they operate in.</p>
         <p className="text-foreground mb-8">You can compare up to 5 hospices.</p>
-        <div className="flex flex-row justify-center max-w-full gap-3 items-center">
+          <div className="flex flex-col sm:flex-row justify-center max-w-full gap-3 items-stretch sm:items-center">
           <SearchBar value={searchQuery} onSearchChange={handleSearchChange} />
           <SortDropdown selectedValue={measureCode} onSortChange={handleSortChange} loading={isLoading} />
         </div>
