@@ -1,3 +1,5 @@
+"use server"
+
 import { ProviderData, RawCMSRecord } from "@/lib/types";
 
 /**
