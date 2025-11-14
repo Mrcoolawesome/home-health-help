@@ -1,5 +1,6 @@
-import { Suspense } from "react";
-import Compare from "./compare";
+import AddColumn from "./addColumn";
+import CompareColumn from "./compareColumn";
+import NameColumn from "./nameColumn";
 
 // This allows Next.js to access searchParams in Server Components
 export default async function ComparePage({
@@ -11,8 +12,14 @@ export default async function ComparePage({
   const ccns = Array.isArray(params.ccn) ? params.ccn : params.ccn ? [params.ccn] : [];
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Compare ccns={ccns} />
-    </Suspense>
+    <div className="flex flex-row">
+      <NameColumn />
+      {ccns.map((ccn) => (
+        <CompareColumn ccn={ccn} key={ccn} />
+      ))}
+      {ccns.length < 5 &&
+        <AddColumn />
+      }
+    </div>
   );
 }
