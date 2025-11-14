@@ -48,7 +48,6 @@ export async function updateSession(request: NextRequest) {
   
   // Get the user type
   const {user, isHospice} = await GetUserType(supabase);
-  console.log("bbruhmotos:?", isHospice);
 
   // for regular users
   if (
@@ -67,13 +66,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   // If they're a hospice user then they should be allowed to access the dashboard
-  if (
-    request.nextUrl.pathname.startsWith("/admin-dashboard") ||
-    request.nextUrl.pathname.startsWith("/admin-dasboard")
-  ) {
+  if (request.nextUrl.pathname.startsWith("/hospice")) {
     if (!isHospice) {
       const url = request.nextUrl.clone();
-      url.pathname = "/dashboard";
+      url.pathname = "/";
       return NextResponse.redirect(url);
     }
   }

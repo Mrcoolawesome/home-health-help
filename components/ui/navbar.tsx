@@ -27,7 +27,7 @@ export default function Navbar() {
       const { isAuthed } = await getUser();
       setIsAuthenticated(isAuthed);
 
-      // Get the user type and make note of it
+      // Get the inital user type and make note of it
       const {isHospice, isMarketer} = await GetUserType(supabase);
       setIsHospiceUser(isHospice);
       setIsMarketerUser(isMarketer);
@@ -37,9 +37,23 @@ export default function Navbar() {
     // then subscribe to listen to authentication changes
     // this listener function stays running in the background,
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
+      async (_event, session) => {
         // set the authenticated state to be the truthy value of the user session (whether they exist or not)
         setIsAuthenticated(!!session?.user);
+
+        // Only fetch user type if user is authenticated
+        if (session?.user) {
+          // Create a fresh client and add small delay to ensure session is ready
+          await new Promise(resolve => setTimeout(resolve, 100));
+          const freshClient = createClient();
+          const {isHospice, isMarketer} = await GetUserType(freshClient);
+          setIsHospiceUser(isHospice);
+          setIsMarketerUser(isMarketer);
+        } else {
+          // Clear user type state on sign out
+          setIsHospiceUser(false);
+          setIsMarketerUser(false);
+        }
 
         // refresh data on the current page if they just signed out or in
         if (_event === "SIGNED_IN" || _event === "SIGNED_OUT") {
@@ -53,7 +67,7 @@ export default function Navbar() {
     return () => {
       listener?.subscription.unsubscribe();
     };
-  }, [router, supabase]); // the router must be a dependency because it is used in the useEffect function
+  }, [router]); // Removed supabase from dependencies to prevent recreation
 
   return (
     <nav className="sticky top-0 z-50 bg-background border-b border-foreground-alt backdrop-blur-md">
