@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 
-export default function LoginButton() {
+export default function AdminDashboardButton() {
   return (
     <Button asChild size="sm" variant={"outline"}>
-      <Link href="/auth/login">Sign in</Link>
+      <Link href="/admin/dashboard">Dashboard</Link>
     </Button>
   );
 }

@@ -1,4 +1,3 @@
-
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse, type NextRequest } from "next/server";
 
@@ -19,6 +18,9 @@ export async function GET(request: NextRequest) {
   // If there's an error or no code, redirect to an error page
   // You can add the error message to the URL if you want
   const errorUrl = new URL("/auth/error", request.url);
-  errorUrl.searchParams.set("error", "Sorry, something went wrong logging you in.");
+  errorUrl.searchParams.set(
+    "error",
+    "Sorry, something went wrong logging you in.",
+  );
   return NextResponse.redirect(errorUrl);
 }
