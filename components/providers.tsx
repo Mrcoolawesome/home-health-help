@@ -1,3 +1,5 @@
+"use client"
+
 import { Toast } from "@base-ui-components/react";
 import { ThemeProvider } from "next-themes";
 import GlobalToast from "./ui/globalToast";

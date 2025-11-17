@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { SunLight, HalfMoon } from "iconoir-react";
+import { createToast } from "@/lib/toast";
 
 const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
@@ -20,14 +21,15 @@ const ThemeSwitcher = () => {
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
+    createToast("Switching theme");
   };
 
   return (
     <Button variant="ghost" size="sm" onClick={toggleTheme}>
       {theme === "dark" ? (
-        <SunLight/>
+        <SunLight />
       ) : (
-        <HalfMoon/>
+        <HalfMoon />
       )}
     </Button>
   );

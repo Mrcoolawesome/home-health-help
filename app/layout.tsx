@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import Navbar from "@/components/ui/navbar";
-import { Toast } from "@base-ui-components/react";
-import { toastManager } from "@/lib/toast";
-import GlobalToast from "@/components/ui/globalToast";
+import Providers from "@/components/providers";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -32,18 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased root`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Toast.Provider toastManager={toastManager}>
-            <Navbar />
-            {children}
-            <GlobalToast />
-          </Toast.Provider>
-        </ThemeProvider>
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
       </body>
     </html>
   );
