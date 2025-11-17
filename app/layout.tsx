@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/ui/navbar";
 import { Toast } from "@base-ui-components/react";
 import { toastManager } from "@/lib/toast";
+import GlobalToast from "@/components/ui/globalToast";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -40,6 +41,7 @@ export default function RootLayout({
           <Toast.Provider toastManager={toastManager}>
             <Navbar />
             {children}
+            <GlobalToast />
           </Toast.Provider>
         </ThemeProvider>
       </body>
