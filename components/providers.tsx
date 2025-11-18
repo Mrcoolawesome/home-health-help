@@ -13,7 +13,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <Toast.Provider toastManager={toastManager}>
+      <Toast.Provider toastManager={toastManager} timeout={2000}>
         {children}
         <GlobalToast />
       </Toast.Provider>

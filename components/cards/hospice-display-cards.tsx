@@ -6,6 +6,7 @@ import { CardData, Code } from "@/lib/types";
 import { fetchHospiceData } from "@/lib/hospice-data/actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { createToast } from "@/lib/toast";
 
 type Props = {
   page: number;
@@ -122,6 +123,9 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
       if (!params.toString().includes(ccn)) {
         params.append('ccn', ccn);
         router.push(`/compare?${params.toString()}`);
+      }
+      else {
+        createToast("You're already comparing this hospice");
       }
     }
   }
