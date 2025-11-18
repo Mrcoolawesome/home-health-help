@@ -9,7 +9,7 @@
  * Types can describe unions which is where you can say an object COULD be multiple different types at a given time (example: <string | undefined>). 
  *      Types can also describe tuples, and 'complex conditional types' which I assume means types that are a certian type dependent on some condition.
  */
-export type HospiceDisplayProps = { params: Promise<{ id: string }> } 
+export type HospiceDisplayProps = { params: Promise<{ id: string }> }
 
 export type PersonalPageDisplayProps = { id: string };
 
@@ -57,7 +57,7 @@ export type Code = {
   is_general_metric: boolean,
 }
 
-type codeOmit = Partial<Omit<Code, 'id'|'measure_code'|'description'|'measure_name'>>;
+type codeOmit = Partial<Omit<Code, 'id' | 'measure_code' | 'description' | 'measure_name'>>;
 
 // Hospice Provider Data Types
 export interface ProviderMeasure {
@@ -141,4 +141,30 @@ export interface RawStateDataRecord {
   "Score": string;
   "Footnote": string;
   "Date": string;
+}
+
+// 1. The individual review object
+export interface PlaceReview {
+  author_name: string;
+  author_url: string;
+  language: string;
+  original_language: string;
+  profile_photo_url: string;
+  rating: number;
+  relative_time_description: string;
+  text: string;
+  time: number; // Unix timestamp
+  translated: boolean;
+}
+
+// 2. The 'result' object containing the list of reviews
+export interface PlaceResult {
+  reviews?: PlaceReview[]; // Optional because a place might not have reviews
+}
+
+// 3. The top-level API response
+export interface GooglePlacesResponse {
+  html_attributions: string[];
+  result: PlaceResult;
+  status: string; // e.g., "OK", "ZERO_RESULTS", "INVALID_REQUEST"
 }
