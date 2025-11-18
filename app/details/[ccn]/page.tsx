@@ -3,6 +3,7 @@ import type { EnrichedProviderData } from "@/lib/types";
 import Overview from "./overview";
 import StateAvg from "./stateAvg";
 import NationalAvg from "./nationalAvg";
+import GoogleReviews from "./reviews";
 import { Tabs } from "@base-ui-components/react";
 
 interface DetailPageProps {
@@ -63,6 +64,12 @@ export default async function DetailPage({ params }: DetailPageProps) {
           >
             National Avg
           </Tabs.Tab>
+          <Tabs.Tab
+            className="flex-1 z-[2] h-full"
+            value="reviews"
+          >
+            Reviews
+          </Tabs.Tab>
           <Tabs.Indicator className="rounded-full z-[1] absolute left-[var(--active-tab-left)] bg-background w-[var(--active-tab-width)] h-[var(--active-tab-height)] transition-all" />
         </Tabs.List>
         <Tabs.Panel value="overview">
@@ -73,6 +80,9 @@ export default async function DetailPage({ params }: DetailPageProps) {
         </Tabs.Panel>
         <Tabs.Panel value="nationalAvg">
           <NationalAvg data={data} />
+        </Tabs.Panel>
+        <Tabs.Panel value="reviews">
+          <GoogleReviews placeID={"ChIJUyIunYKJUocRQZhPC0nfFFk"} />
         </Tabs.Panel>
       </Tabs.Root>
     </div>

@@ -2,6 +2,7 @@
 
 import { GooglePlacesResponse } from "../types";
 
+// Returns 5 latest Google reveiws for given Place ID
 export async function getNewestReviews(placeID: string): Promise<GooglePlacesResponse | null> {
   try {
     const response = await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeID}&fields=reviews&reviews_sort=newest&key=${process.env.GOOGLE_API_KEY}`);
