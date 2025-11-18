@@ -25,9 +25,9 @@ const ThemeSwitcher = () => {
   return (
     <Button variant="ghost" size="sm" onClick={toggleTheme}>
       {theme === "dark" ? (
-        <SunLight/>
+        <SunLight />
       ) : (
-        <HalfMoon/>
+        <HalfMoon />
       )}
     </Button>
   );

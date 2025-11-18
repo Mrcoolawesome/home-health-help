@@ -14,7 +14,7 @@ interface DetailPageProps {
 export default async function DetailPage({ params }: DetailPageProps) {
   const { ccn } = await params;
   const data: EnrichedProviderData | null = await getEnrichedProviderData(ccn);
-  
+
   if (!data) {
     return <div className="container mx-auto max-w-4xl px-4 py-8">Failed to load provider data</div>;
   }
@@ -46,33 +46,33 @@ export default async function DetailPage({ params }: DetailPageProps) {
       <Tabs.Root className="w-full mx-auto py-4" defaultValue="overview">
         <Tabs.List className="sticky top-[65px] flex items-center bg-background-alt text-foreground z-0 p-1 h-[40px] rounded-full">
           <Tabs.Tab
-            className="flex-1 z-[2] h-full" 
+            className="flex-1 z-[2] h-full"
             value="overview"
           >
             Overview
           </Tabs.Tab>
-          <Tabs.Tab 
+          <Tabs.Tab
             className="flex-1 z-[2] h-full"
             value="stateAvg"
           >
             State Avg
           </Tabs.Tab>
-          <Tabs.Tab 
+          <Tabs.Tab
             className="flex-1 z-[2] h-full"
             value="nationalAvg"
           >
             National Avg
           </Tabs.Tab>
-          <Tabs.Indicator className="rounded-full z-[1] absolute left-[var(--active-tab-left)] bg-background w-[var(--active-tab-width)] h-[var(--active-tab-height)] transition-all"/>
+          <Tabs.Indicator className="rounded-full z-[1] absolute left-[var(--active-tab-left)] bg-background w-[var(--active-tab-width)] h-[var(--active-tab-height)] transition-all" />
         </Tabs.List>
         <Tabs.Panel value="overview">
-          <Overview data= { data }/>
+          <Overview data={data} />
         </Tabs.Panel>
         <Tabs.Panel value="stateAvg">
-          <StateAvg data= { data }/>
+          <StateAvg data={data} />
         </Tabs.Panel>
         <Tabs.Panel value="nationalAvg">
-          <NationalAvg data= { data }/>
+          <NationalAvg data={data} />
         </Tabs.Panel>
       </Tabs.Root>
     </div>
