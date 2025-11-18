@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ChooseLocation } from "@/components/hospice-choose-location";
 
 export function HospiceSignUpForm({
   className,
@@ -69,6 +70,7 @@ export function HospiceSignUpForm({
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         <div className={cn("flex flex-col gap-6", className)} {...props}>
+          <ChooseLocation />
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Sign up</CardTitle>
