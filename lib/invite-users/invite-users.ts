@@ -30,7 +30,7 @@ export default async function InviteUsers(formData: FormData) {
       // this error is of type AuthError btw
       if (inviteUsersError) throw inviteUsersError; // throw the error if it exists
     })
-  } catch(error: unknown) { // apparently typescript catch variables can only be typed as 'unkown' or 'any'
+  } catch(error: unknown) { // apparently typescript catch variables can only take types 'unknown' or 'any'
     if (error instanceof AuthError) {
       // handle Supabase auth errors
       console.error('Invite failed:', error.message);
