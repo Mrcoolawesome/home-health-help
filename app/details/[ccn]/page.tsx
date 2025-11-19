@@ -3,7 +3,6 @@ import type { EnrichedProviderData } from "@/lib/types";
 import Overview from "./overview";
 import StateAvg from "./stateAvg";
 import NationalAvg from "./nationalAvg";
-import GoogleReviews from "./reviews";
 import { Tabs } from "@base-ui-components/react";
 
 interface DetailPageProps {
