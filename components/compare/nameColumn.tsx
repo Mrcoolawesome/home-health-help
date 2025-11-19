@@ -8,7 +8,7 @@ export default async function NameColumn() {
   })
 
   return (
-    <div className="min-w-[200px] flex flex-col flex-shrink-0 sticky left-0 z-10 bg-background">
+    <div className="min-w-[200px] flex flex-col left-0 z-10 bg-background">
       <div className="h-[84px]">
       </div>
       {

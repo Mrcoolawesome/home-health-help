@@ -47,7 +47,7 @@ export default function CompareColumn({ ccn }: { ccn: string }) {
 
   return (
     <div className="min-w-[200px] flex flex-col">
-      <div className="sticky top-[40px] flex flex-col bg-background">
+      <div className="sticky top-0 flex flex-col bg-background">
         <button onClick={() => deleteCCN(ccn)} >Delete</button>
         <div className="h-[60px] line-clamp-2 border border-foreground p-1">
           {data?.facilityName}

@@ -21,7 +21,7 @@ export default async function Page({ searchParams }: PageProps) {
   }
 
   return (
-    <Suspense fallback={null}> 
+    <Suspense fallback={null}>
       <HomeClient
         initialSearch={initialSearch}
         initialSort={initialSort}
