@@ -236,7 +236,9 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
 
       {/* Floating Compare Bar */}
       {selectedCCNs.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full shadow-lg px-6 py-3 flex items-center gap-4 z-50">
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground rounded-full shadow-lg px-6 py-3 flex items-center justify-center gap-4 z-50 w-full sm:w-max sm:max-w-[300px]"
+        >
           <span className="font-semibold">
             {selectedCCNs.length} selected
           </span>
