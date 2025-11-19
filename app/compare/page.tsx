@@ -29,7 +29,7 @@ export default async function ComparePage({
         ))}
 
         {ccns.length < 5 && (
-          <div className="w-svw sm:w-full">
+          <div className="w-svw sm:w-min">
             <AddColumn />
           </div>
         )}
