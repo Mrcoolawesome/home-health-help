@@ -222,7 +222,7 @@ export default function HospiceCards({ page, zip, measureCode, scoreData, onLoad
                   <Button
                     variant="outline"
                     size="lg"
-                    className="absolute top-4 right-4 border-2 border-foreground text-foreground hover:bg-background-alt dark:border-primary dark:text-primary dark:hover:bg-primary/10 focus-visible:ring-2 focus-visible:ring-ring dark:focus-visible:ring-primary"
+                    className="absolute top-4 right-4 border-2 border-foreground text-foreground hover:bg-background-alt focus-visible:ring-2 focus-visible:ring-ring dark:focus-visible:ring-primary"
                     onClick={(e) => { e.stopPropagation(); setIsComparing(true); }}
                   >
                     Compare
