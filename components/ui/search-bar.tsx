@@ -5,14 +5,14 @@ type SearchBarProps = {
   onSearchChange: (newQuery: string) => void;
 };
 
-export default function SearchBar({ onSearchChange, value } : SearchBarProps ) {
+export default function SearchBar({ onSearchChange, value }: SearchBarProps) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onSearchChange(event.target.value);
   };
 
   return (
-    <div className="min-w-[100px] max-w-[250px]">
+    <div className="min-w-[150px] sm:max-w-[250px] sm:w-max w-full">
       <input
         type="text"
         value={value}
