@@ -1,8 +1,8 @@
-import { HospiceSignUpForm } from "@/components/signup-forms/hospice-sign-up-form";
+import { ChooseLocation } from "@/components/hospice-choose-location";
 
 
 export default function Page() {
   return (
-    <HospiceSignUpForm />
+    <ChooseLocation />
   );
 }

@@ -6,6 +6,7 @@ import { useLoadScript, Libraries } from "@react-google-maps/api";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { SetPasswordHospice } from "./signup-forms/hospice-sign-up-form";
 
 const libraries: Libraries = ["places"];
 
@@ -15,8 +16,8 @@ type InputData = {
   zipCode: number,
   city: string,
   state: string,
-  latitude: number,
-  longitude: number
+  placeId: string,
+  phoneNum: string
 }
 
 type ComponentMapKey =
@@ -38,8 +39,8 @@ export function ChooseLocation() {
     zipCode: 0,
     city: "",
     state: "",
-    latitude: 0,
-    longitude: 0,
+    placeId: "", // it's not garuenteed that a place will have an id
+    phoneNum: ""
   });
   const inputRef = useRef<HTMLInputElement>(null);
   const { isLoaded, loadError } = useLoadScript({
@@ -53,7 +54,7 @@ export function ChooseLocation() {
 
     const options = {
       componentRestrictions: { country: "us" },
-      fields: ["address_components", "geometry"], // probably need to change this to give us the place isLoaded, we can also leave this blank to give us everything which we might have to do the first time
+      fields: ["address_components", "place_id", "formatted_phone_number"], // probably need to change this to give us the place isLoaded, we can also leave this blank to give us everything which we might have to do the first time
     };
 
     const autocomplete = new google.maps.places.Autocomplete(inputRef.current, options);
@@ -66,7 +67,7 @@ export function ChooseLocation() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setInput((values) => {
-      if (name === "zipCode" || name === "latitude" || name === "longitude") {
+      if (name === "zipCode") {
         return { ...values, [name]: Number(value) };
       }
       return { ...values, [name]: value };
@@ -79,8 +80,9 @@ export function ChooseLocation() {
   const handlePlaceChanged = async (address: google.maps.places.Autocomplete) => {
     if (!isLoaded) return;
     const place = address.getPlace();
+    console.log(place);
 
-    if (!place || !place.geometry) {
+    if (!place) {
       // set everything to the default values again
       setInput({
         streetAddress: "",
@@ -88,8 +90,8 @@ export function ChooseLocation() {
         zipCode: 0,
         city: "",
         state: "",
-        latitude: 0,
-        longitude: 0
+        placeId: "",
+        phoneNum: ""
       });
       return;
     }
@@ -122,8 +124,6 @@ export function ChooseLocation() {
 
     const formattedAddress =
       `${componentMap.subPremise} ${componentMap.premise} ${componentMap.street_number} ${componentMap.route}`.trim();
-    const latitude = data?.geometry?.location?.lat();
-    const longitude = data?.geometry?.location?.lng();
 
     setInput((values) => ({
       ...values,
@@ -132,13 +132,15 @@ export function ChooseLocation() {
       zipCode: Number(componentMap.postal_code) || 0,
       city: componentMap.administrative_area_level_2,
       state: componentMap.administrative_area_level_1,
-      latitude: typeof latitude === "number" ? latitude : 0,
-      longitude: typeof longitude === "number" ? longitude : 0,
+      placeId: data.place_id ?? "", // not gaurenteed to get a place id
+      phoneNum: data.formatted_phone_number ?? "",
     }));
+
   };
 
   return (
-      isLoaded && (
+    isLoaded && (
+      !input.placeId ? (
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader>
@@ -210,10 +212,25 @@ export function ChooseLocation() {
                     required
                   />
                 </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="phoneNum">Phone Number</Label>
+                  <Input
+                    id="phoneNum"
+                    type="text"
+                    name="phoneNum"
+                    value={input.phoneNum}
+                    onChange={handleChange}
+                    placeholder="Phone Number"
+                    required
+                  />
+                </div>
               </form>
             </CardContent>
           </Card>
         </div>
+      ) : (
+        <SetPasswordHospice placeId={input.placeId} phoneNum={input.phoneNum} />
       )
-    );
+    )
+  );
 }

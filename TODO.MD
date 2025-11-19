@@ -9,3 +9,5 @@ Eventually I'm also gonna make it so that we manually have to add the hospice ad
 When we get back we need to test the ability to use the email sending thing for admins, and if they even have access to view that page like if that functionality works.
 
 When we get back we need to make the dashboard button functionality and also do the resend stuff for supabase for sending emails via production.
+
+When we get back I need to have it so that when they input their location it updates their user to have the google place id and their ccn. I think we need to make it so that it's like a two step menu.
