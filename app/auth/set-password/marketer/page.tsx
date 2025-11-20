@@ -9,13 +9,13 @@ import { Input } from '@/components/ui/input';
 import { AuthError, PostgrestError } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 
-const supabase = createClient();
-
 export default function SetPasswordPage() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const supabase = createClient();
+  const [errorMessage, setErrorMessage] = useState("");
 
   // the error that occurs when using supabase auth is of type AuthError so we have to set this to be that type
   // allow null because Supabase returns `null` when there is no error
@@ -46,37 +46,57 @@ export default function SetPasswordPage() {
         }
       });
     }
+
   }, []);
 
   // Inside your form submission handler (Client Component)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true); // make it so that it shows that it's loading
+    setIsLoading(true);
+    setErrorMessage("");
+    setError(null);
 
-    // Since the session is set, this updates the currently logged-in user
-    const { data: userData, error: updateUserPasswordError } = await supabase.auth.updateUser({
-      password: password,
-    });
+    // 5 second timeout for password update
+    let updateResult;
+    try {
+      updateResult = await Promise.race([
+        supabase.auth.updateUser({ password }),
+        new Promise<{ error: unknown }>((resolve) =>
+          setTimeout(() => resolve({ error: "Password update timed out, but may have succeeded." }), 5000)
+        )
+      ]);
+      if (updateResult && updateResult.error && updateResult.error !== "Password update timed out, but may have succeeded.") {
+        throw updateResult.error;
+      }
+      if (updateResult && updateResult.error === "Password update timed out, but may have succeeded.") {
+        setErrorMessage(updateResult.error as string);
+      }
+    } catch (error: unknown) {
+      setErrorMessage(error instanceof Error ? error.message : "An error occurred");
+    }
 
-    if (!updateUserPasswordError && userData) {
-      // Insert new user entry into 'users_marketer' table
+    // Always run insert code after password update attempt
+    let userId;
+    try {
+      const { data } = await supabase.auth.getUser();
+      userId = data?.user?.id;
+    } catch {
+      userId = undefined;
+    }
+    if (userId) {
       const { error: insertError } = await supabase
         .from('users_marketer')
-        .insert([{ id: userData.user.id, name: name }]);
-
+        .insert([{ id: userId, name: name }]);
       if (insertError) {
         setError(insertError);
         console.error("Error inserting user into users_marketer:", insertError);
       } else {
-        // Success! Redirect the user to the main app dashboard
-        router.push('/'); 
+        router.push('/');
       }
     } else {
-      setError(updateUserPasswordError);
-      console.error("Error updating user password:", updateUserPasswordError);
+      setErrorMessage("Could not get user ID for marketer insert.");
     }
-
-    // stop showing the loading icon because at this point we're done
+    setIsLoading(false);
     setIsLoading(false);
   };
 
@@ -84,6 +104,7 @@ export default function SetPasswordPage() {
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-6">
+          {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Sign up</CardTitle>
