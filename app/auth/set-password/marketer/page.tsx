@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,13 +9,13 @@ import { Input } from '@/components/ui/input';
 import { AuthError, PostgrestError } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 
+const supabase = createClient();
+
 export default function SetPasswordPage() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const supabase = createClient();
-  const [errorMessage, setErrorMessage] = useState("");
 
   // the error that occurs when using supabase auth is of type AuthError so we have to set this to be that type
   // allow null because Supabase returns `null` when there is no error
@@ -23,80 +23,35 @@ export default function SetPasswordPage() {
 
   const router = useRouter(); // Initialize router
 
-  useEffect(() => {
-    // 1. Get tokens from URL hash (e.g., #access_token=...)
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-    const accessToken = params.get('access_token');
-    const refreshToken = params.get('refresh_token');
-
-    if (accessToken && refreshToken) {
-      // 2. Use tokens to set the session for the user
-      supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      }).then(({ error }) => {
-        if (!error) {
-          // Session is set! Now show the password form.
-          console.log('Session successfully set.');
-          // You can also clear the hash from the URL here if desired.
-        } else {
-          setError(error);
-          console.error('Error setting session:', error);
-        }
-      });
-    }
-
-  }, []);
-
   // Inside your form submission handler (Client Component)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setErrorMessage("");
-    setError(null);
+    setIsLoading(true); // make it so that it shows that it's loading
 
-    // 5 second timeout for password update
-    let updateResult;
-    try {
-      updateResult = await Promise.race([
-        supabase.auth.updateUser({ password }),
-        new Promise<{ error: unknown }>((resolve) =>
-          setTimeout(() => resolve({ error: "Password update timed out, but may have succeeded." }), 5000)
-        )
-      ]);
-      if (updateResult && updateResult.error && updateResult.error !== "Password update timed out, but may have succeeded.") {
-        throw updateResult.error;
-      }
-      if (updateResult && updateResult.error === "Password update timed out, but may have succeeded.") {
-        setErrorMessage(updateResult.error as string);
-      }
-    } catch (error: unknown) {
-      setErrorMessage(error instanceof Error ? error.message : "An error occurred");
-    }
+    // Since the session is set, this updates the currently logged-in user
+    const { data: userData, error: updateUserPasswordError } = await supabase.auth.updateUser({
+      password: password,
+    });
 
-    // Always run insert code after password update attempt
-    let userId;
-    try {
-      const { data } = await supabase.auth.getUser();
-      userId = data?.user?.id;
-    } catch {
-      userId = undefined;
-    }
-    if (userId) {
+    if (!updateUserPasswordError && userData) {
+      // Insert new user entry into 'users_marketer' table
       const { error: insertError } = await supabase
         .from('users_marketer')
-        .insert([{ id: userId, name: name }]);
+        .insert([{ id: userData.user.id, name: name }]);
+
       if (insertError) {
         setError(insertError);
         console.error("Error inserting user into users_marketer:", insertError);
       } else {
+        // Success! Redirect the user to the main app dashboard
         router.push('/');
       }
     } else {
-      setErrorMessage("Could not get user ID for marketer insert.");
+      setError(updateUserPasswordError);
+      console.error("Error updating user password:", updateUserPasswordError);
     }
-    setIsLoading(false);
+
+    // stop showing the loading icon because at this point we're done
     setIsLoading(false);
   };
 
@@ -104,7 +59,6 @@ export default function SetPasswordPage() {
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-6">
-          {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Sign up</CardTitle>

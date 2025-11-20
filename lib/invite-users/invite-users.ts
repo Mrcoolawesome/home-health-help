@@ -21,10 +21,12 @@ export default async function InviteUsers(formData: FormData, userType: string) 
     emails.map(async (email) => { // have to mark this map function as async as well otherwise we can't await for stuff in it
       // invite the specific email and then redirect them to the /auth/set-password/marketer endpoint
       const baseUrl = process.env.DEV_BASE_URL || 'https://hospicefind.com'; // make sure your env is set to localhost:3000 or whatever it is if it isn't that
+      const redirectURL = new URL(`/auth/confirm-page`, baseUrl);
+      redirectURL.searchParams.set('next', `/auth/setpassword/${userType}`)
       const { error: inviteUsersError } = await supabase.auth.admin.inviteUserByEmail(
         email,
         {
-          redirectTo: `${baseUrl}/auth/set-password/${userType}` // this will only work in production
+          redirectTo: redirectURL.toString() // this will only work in production
         }
       );
 
