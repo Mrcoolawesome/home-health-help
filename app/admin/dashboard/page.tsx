@@ -3,4 +3,11 @@
  * select their correct location from google maps, so it get's their correct google places id, and their correct 
  * ccn from CMS given their exact address.
  */
+import { AddUsers } from "@/components/admin-dashboard/add-users";
 
+// Website admins invite hospices
+export default function Page() {
+  return (
+    <AddUsers invitedUserType="hospice" />
+  );
+}

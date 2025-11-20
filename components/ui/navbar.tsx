@@ -14,6 +14,7 @@ import { Button } from "./button";
 export default function Navbar() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isHospiceUser, setIsHospiceUser] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
@@ -27,8 +28,9 @@ export default function Navbar() {
       setIsAuthenticated(isAuthed);
 
       // Get the inital user type and make note of it
-      const {isHospice} = await GetUserType(supabase);
+      const { isHospice, isAdmin } = await GetUserType(supabase);
       setIsHospiceUser(isHospice);
+      setIsAdminUser(isAdmin);
     };
     fetchUser();
 
@@ -44,11 +46,13 @@ export default function Navbar() {
           // Create a fresh client and add small delay to ensure session is ready
           await new Promise(resolve => setTimeout(resolve, 100));
           const freshClient = createClient();
-          const {isHospice} = await GetUserType(freshClient);
+          const { isHospice, isAdmin } = await GetUserType(freshClient);
           setIsHospiceUser(isHospice);
+          setIsAdminUser(isAdmin);
         } else {
           // Clear user type state on sign out
           setIsHospiceUser(false);
+          setIsAdminUser(false);
         }
 
         // refresh data on the current page if they just signed out or in
@@ -80,6 +84,12 @@ export default function Navbar() {
             {isHospiceUser && (
               <Button asChild variant="outline" className="border-primary/50 hover:border-primary hover:bg-primary/10">
                 <Link href="/hospice/dashboard">Dashboard</Link>
+              </Button>
+            )}
+
+            {isAdminUser && (
+              <Button asChild variant="outline" className="border-primary/50 hover:border-primary hover:bg-primary/10">
+                <Link href="/admin/dashboard">Dashboard</Link>
               </Button>
             )}
             <Link

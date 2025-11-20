@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { AuthError, PostgrestError } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { GetCmsData } from '@/lib/hospice-data/get-cms-data';
 
 const supabase = createClient();
 
@@ -16,8 +17,6 @@ export function SetPasswordHospice({ placeId, phoneNum }: { placeId: string; pho
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log(phoneNum);
 
   // the error that occurs when using supabase auth is of type AuthError so we have to set this to be that type
   // allow null because Supabase returns `null` when there is no error
@@ -62,6 +61,14 @@ export function SetPasswordHospice({ placeId, phoneNum }: { placeId: string; pho
 
     if (!updateUserPasswordError && userData) {
       // get the ccn based on the phone number
+      const GENERAL_PROVIDER_DATA_DATASET_ID = "098c6cc4-7426-5407-aae1-b361fc2072d6";
+      const cmsPhoneQuery = `[SELECT ccn FROM ${GENERAL_PROVIDER_DATA_DATASET_ID}][WHERE telephone_number = "${phoneNum}"]`;
+
+
+      const data = GetCmsData(cmsPhoneQuery);
+
+      console.log(data);
+
 
       // Insert new user entry into 'users_hospice' table
       const { error: insertError } = await supabase

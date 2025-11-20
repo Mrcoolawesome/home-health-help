@@ -127,7 +127,8 @@ additional_redirect_urls = [
     "http://localhost:3000/auth/confirm",
     "http://127.0.0.1:3000/auth/set-password/marketer",
     "http://localhost:3000/auth/set-password/marketer",
-    "https://hospicefind.com/auth/set-password/marketer"
+    "http://127.0.0.1:3000/auth/set-password/hospice",
+    "http://localhost:3000/auth/set-password/hospice",
 ]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600

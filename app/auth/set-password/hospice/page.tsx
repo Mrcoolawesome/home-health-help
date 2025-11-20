@@ -1,3 +1,5 @@
+'use client'
+
 import { ChooseLocation } from "@/components/hospice-choose-location";
 
 
