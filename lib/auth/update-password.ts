@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { GetCmsData } from '../hospice-data/get-cms-data';
+import { GENERAL_DATA, PROVIDER_DATA } from '../globals';
 
 export async function SetMarketerPassword(formData: FormData) {
   const name = formData.get('name') as string;
@@ -64,8 +65,7 @@ export async function SetHospicePassword(formData: FormData) {
   // 3. Fetch CMS Data (Done on server now)
   // Note: Ensure GetCmsData can run server-side (uses fetch/axios, not window)
   try {
-    const GENERAL_PROVIDER_DATA_DATASET_ID = "098c6cc4-7426-5407-aae1-b361fc2072d6";
-    const cmsPhoneQuery = `[SELECT ccn FROM ${GENERAL_PROVIDER_DATA_DATASET_ID}][WHERE telephone_number = "${phoneNum}"]`;
+    const cmsPhoneQuery = `[SELECT ccn FROM ${GENERAL_DATA}][WHERE telephone_number = "${phoneNum}"]`;
 
     // Assuming GetCmsData is synchronous or you might need to await it if it returns a promise
     const cmsData = GetCmsData(cmsPhoneQuery);

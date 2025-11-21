@@ -48,9 +48,7 @@ export async function updateSession(request: NextRequest) {
 
   // Get the user type
 
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
-
+  const { user, isHospice, isAdmin } = await GetUserType(supabase);
   // for regular users
   if (
     request.nextUrl.pathname !== "/" &&
@@ -76,7 +74,7 @@ export async function updateSession(request: NextRequest) {
     }
   }
 
-  /*
+
   // Function for restricting access to certain paths
   const RedirectIfNotExpectedUser = (pathnameStart: string, isUser: boolean) => {
     if (request.nextUrl.pathname.startsWith(`${pathnameStart}`)) {
@@ -93,7 +91,7 @@ export async function updateSession(request: NextRequest) {
 
   // If they're an admin user then they should be allowed to access the admin dashboard
   RedirectIfNotExpectedUser("/admin", isAdmin);
-  */
+
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:
   // 1. Pass the request in it, like so:
