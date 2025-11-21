@@ -45,10 +45,10 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: If you remove getClaims() and you use server-side rendering
   // with the Supabase client, your users may be randomly logged out.
-  
-  // Get the user type
-  const {user, isHospice} = await GetUserType(supabase);
 
+  // Get the user type
+
+  const { user, isHospice, isAdmin } = await GetUserType(supabase);
   // for regular users
   if (
     request.nextUrl.pathname !== "/" &&
@@ -67,12 +67,30 @@ export async function updateSession(request: NextRequest) {
 
   // If they're a hospice user then they should be allowed to access the dashboard
   if (request.nextUrl.pathname.startsWith("/hospice")) {
-    if (!isHospice) {
+    if (!user) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
       return NextResponse.redirect(url);
     }
   }
+
+
+  // Function for restricting access to certain paths
+  const RedirectIfNotExpectedUser = (pathnameStart: string, isUser: boolean) => {
+    if (request.nextUrl.pathname.startsWith(`${pathnameStart}`)) {
+      if (!isUser) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/"
+
+      }
+    }
+  }
+
+  // If they're a hospice user then they should be allowed to access the dashboard
+  RedirectIfNotExpectedUser("/hospice", isHospice);
+
+  // If they're an admin user then they should be allowed to access the admin dashboard
+  RedirectIfNotExpectedUser("/admin", isAdmin);
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:

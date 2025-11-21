@@ -3,6 +3,7 @@ import { GetProviderData, GetProviderScoreData } from "./get-provider-data";
 import { GeneralData, SortbyMedicareScores, CardData, Code } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
 import { GetCodeDesc } from "../get-code-details";
+import { GENERAL_DATA } from "../globals";
 
 type HospiceProvider = {
     // Since the key is a string with spaces, it must be in quotes
@@ -10,10 +11,9 @@ type HospiceProvider = {
 };
 
 type CmsApiResponse = {
-  providers: HospiceProvider[];
+    providers: HospiceProvider[];
 };
 
-const GENERAL_DATA_DATASET_ID = '25a385ec-f668-500d-8509-550a8af86eff'; // Hospice - General Data
 /**
  * HOW TO ADD MORE THINGS TO SORT BY:
  * * You first need to add a new parameter to the type SortbyMedicareScores preferribly named the same code that they name it by.
@@ -27,7 +27,7 @@ export async function DisplayCardData(zip: string, measureCode: string, scoreDat
     // Fetch all details in parallel
     // Assumes getProviderDetailsByCcn(ccn) fetches the detailed data for one provider
     const desiredGeneralData = "cms_certification_number_ccn,facility_name,address_line_1,citytown,countyparish,state,telephone_number,ownership_type";
-    const detailedPromisesGeneralData = cmsNumberList.map(ccn => GetProviderData(desiredGeneralData, ccn, GENERAL_DATA_DATASET_ID));
+    const detailedPromisesGeneralData = cmsNumberList.map(ccn => GetProviderData(desiredGeneralData, ccn, GENERAL_DATA));
     const rawGeneralDetailsArrays = await Promise.all(detailedPromisesGeneralData);
 
     // SIMPLIFIED STEP: Just extract the provider object from each API response
@@ -53,7 +53,7 @@ export async function DisplayCardData(zip: string, measureCode: string, scoreDat
     const rawProviderDetailsArray = await Promise.all(detailedPromisesProviderData);
     const providerData: SortbyMedicareScores[] = await Promise.all( // 2. Await Promise.all()
         rawProviderDetailsArray.map(async (item) => { // 3. Make the .map() callback 'async'
-            
+
             const rawData = item.providers[0];
 
             // 7. Return the final object. This is now correct.

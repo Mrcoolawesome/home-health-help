@@ -15,9 +15,11 @@ import { UserPlus, X, Mail, Check, CheckCircle2 } from "lucide-react";
  * - Dynamic email input fields with animations
  * - Themed to match the website design
  * - Confirmation screen after submission
+ * 
+ * Parameter 'userType' can be any of the following: "marketer", "hospice" 
  */
-export function AddUsers() {
-  const [emails, setEmails] = useState([""]); 
+export function AddUsers({ invitedUserType }: { invitedUserType: string }) {
+  const [emails, setEmails] = useState([""]);
   const [isInviteMode, setIsInviteMode] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -30,7 +32,7 @@ export function AddUsers() {
   const handleSubmit = async (formData: FormData) => {
     setIsSubmitting(true);
     const count = emails.length;
-    await InviteUsers(formData);
+    await InviteUsers(formData, invitedUserType);
     setIsSubmitting(false);
     // Show confirmation screen
     setInvitedCount(count);
@@ -57,7 +59,7 @@ export function AddUsers() {
             <p className="text-foreground-alt">
               The invited users will receive an email with instructions to set up their accounts.
             </p>
-            <Button 
+            <Button
               onClick={() => setShowConfirmation(false)}
               className="bg-primary hover:bg-primary/90 text-foreground font-semibold px-8 py-6 text-base"
             >
@@ -77,7 +79,7 @@ export function AddUsers() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center pb-6">
-            <Button 
+            <Button
               onClick={() => setIsInviteMode(true)}
               className="bg-primary hover:bg-primary/90 text-foreground font-semibold px-8 py-6 text-lg"
             >
@@ -116,7 +118,7 @@ export function AddUsers() {
             <form action={handleSubmit} className="space-y-6">
               <div className="space-y-3">
                 <Label className="text-base font-semibold">Email Addresses</Label>
-                
+
                 {emails.map((email, index) => (
                   <div
                     key={`email-${index}`}

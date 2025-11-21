@@ -1,6 +1,7 @@
 "use server"
 
 import { ProviderData, RawCMSRecord } from "@/lib/types";
+import { PROVIDER_CAHPS_DATA, PROVIDER_DATA } from "../globals";
 
 /**
  * Fetches raw provider data by CCN
@@ -8,7 +9,7 @@ import { ProviderData, RawCMSRecord } from "@/lib/types";
  */
 export async function getProviderData(ccn: string): Promise<RawCMSRecord[] | null> {
   try {
-    const response = await fetch(`https://data.cms.gov/provider-data/api/1/datastore/sql?query=%5BSELECT%20%2A%20FROM%20098c6cc4-7426-5407-aae1-b361fc2072d6%5D%5BWHERE%20cms_certification_number_ccn%20%3D%20%22${ccn}%22%5D`);
+    const response = await fetch(`https://data.cms.gov/provider-data/api/1/datastore/sql?query=%5BSELECT%20%2A%20FROM%20${PROVIDER_DATA}%5D%5BWHERE%20cms_certification_number_ccn%20%3D%20%22${ccn}%22%5D`);
 
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);
@@ -31,7 +32,7 @@ export async function getProviderData(ccn: string): Promise<RawCMSRecord[] | nul
  */
 export async function getProviderCahps(ccn: string): Promise<RawCMSRecord[] | null> {
   try {
-    const response = await fetch(`https://data.cms.gov/provider-data/api/1/datastore/sql?query=%5BSELECT%20%2A%20FROM%20af93e008-23b4-563d-bacc-0be0708a8861%5D%5BWHERE%20cms_certification_number_ccn%20%3D%20%22${ccn}%22%5D`);
+    const response = await fetch(`https://data.cms.gov/provider-data/api/1/datastore/sql?query=%5BSELECT%20%2A%20FROM%20${PROVIDER_CAHPS_DATA}%5D%5BWHERE%20cms_certification_number_ccn%20%3D%20%22${ccn}%22%5D`);
 
     if (!response.ok) {
       console.error(`HTTP error! status: ${response.status}`);

@@ -1,66 +1,38 @@
-"use client";
+'use client'
 
-import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { SetHospicePassword } from '@/lib/auth/update-password'; // Import the new action
 
-export function HospiceSignUpForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("");
+export function SetPasswordHospice({ placeId, phoneNum }: { placeId: string; phoneNum: string }) {
   const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const supabase = createClient();
+  const clientAction = async (formData: FormData) => {
     setIsLoading(true);
-    setError(null);
+    setErrorMessage("");
 
+    // 1. Client-side Validation
     if (password !== repeatPassword) {
-      setError("Passwords do not match");
+      setErrorMessage("Passwords do not match");
       setIsLoading(false);
       return;
     }
 
-    try {
-      const { data: userData, error: authSignUpError } =
-        await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/auth/confirm`,
-          },
-        });
+    // 2. Call the Server Action
+    // We don't need to manually append name/password because <form action={...}> 
+    // automatically grabs inputs with 'name' attributes.
+    const result = await SetHospicePassword(formData);
 
-      // once we have them in the auth table we need to link that to the public table
-      const { error: createHospiceUserError } = await supabase
-        .from("users_hospice")
-        .insert({ id: userData.user?.id, name, company });
-
-      if (authSignUpError || createHospiceUserError) throw error;
-      router.push("/auth/sign-up-success");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
+    // 3. Handle Result (Only happens on error, success redirects)
+    if (result?.error) {
+      setErrorMessage(result.error);
       setIsLoading(false);
     }
   };
@@ -68,46 +40,30 @@ export function HospiceSignUpForm({
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <div className={cn("flex flex-col gap-6", className)} {...props}>
+        <div className="flex flex-col gap-6">
           <Card>
             <CardHeader>
               <CardTitle className="text-2xl">Sign up</CardTitle>
               <CardDescription>Create a new account</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSignUp}>
+              {/* Point the form to the client wrapper which calls the server action */}
+              <form action={clientAction}>
+                {/* HIDDEN INPUTS: This passes the props to the Server Action */}
+                <input type="hidden" name="placeId" value={placeId} />
+                <input type="hidden" name="phoneNum" value={phoneNum} />
+
                 <div className="flex flex-col gap-6">
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="m@example.com"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
                   <div>
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="company_name">Name</Label>
                     <Input
-                      id="name"
-                      type="name"
-                      placeholder="Dr. Jane Doe"
+                      id="company_name"
+                      name="company_name" // Needed for FormData
+                      type="text"
+                      placeholder="Tanner Clinic"
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="company">Company</Label>
-                    <Input
-                      id="company"
-                      type="company"
-                      placeholder="Tanner clinic"
-                      required
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
                     />
                   </div>
                   <div className="grid gap-2">
@@ -116,6 +72,7 @@ export function HospiceSignUpForm({
                     </div>
                     <Input
                       id="password"
+                      name="password" // Needed for FormData
                       type="password"
                       required
                       value={password}
@@ -128,25 +85,17 @@ export function HospiceSignUpForm({
                     </div>
                     <Input
                       id="repeat-password"
+                      // No 'name' needed, we don't send this to server, just validate locally
                       type="password"
                       required
                       value={repeatPassword}
                       onChange={(e) => setRepeatPassword(e.target.value)}
                     />
                   </div>
-                  {error && <p className="text-sm text-red-500">{error}</p>}
+                  {errorMessage && <p className="text-sm text-red-500">{errorMessage}</p>}
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Creating an account..." : "Sign up"}
                   </Button>
-                </div>
-                <div className="mt-4 text-center text-sm">
-                  Already have an account?{" "}
-                  <Link
-                    href="/auth/login"
-                    className="underline underline-offset-4"
-                  >
-                    Login
-                  </Link>
                 </div>
               </form>
             </CardContent>
