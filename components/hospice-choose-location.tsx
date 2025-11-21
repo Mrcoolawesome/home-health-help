@@ -39,9 +39,10 @@ export function ChooseLocation() {
     zipCode: 0,
     city: "",
     state: "",
-    placeId: "", // it's not garuenteed that a place will have an id
+    placeId: "", // it's not guaranteed that a place will have an id
     phoneNum: ""
   });
+  const [confirmed, setConfirmed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY ?? "",
@@ -140,93 +141,110 @@ export function ChooseLocation() {
 
   return (
     isLoaded && (
-      !input.placeId ? (
-        <div className="flex flex-col gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl">Choose Location</CardTitle>
-              <CardDescription>
-                Enter your address details to find hospice providers near you
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="streetAddress">Street Address</Label>
-                  <Input
-                    id="streetAddress"
-                    type="text"
-                    name="streetAddress"
-                    ref={inputRef}
-                    value={input.streetAddress}
-                    onChange={handleChange}
-                    placeholder="Enter Street Address"
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="city">City</Label>
-                  <Input
-                    id="city"
-                    type="text"
-                    name="city"
-                    value={input.city}
-                    onChange={handleChange}
-                    placeholder="City"
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="state">State</Label>
-                  <Input
-                    id="state"
-                    type="text"
-                    name="state"
-                    value={input.state}
-                    onChange={handleChange}
-                    placeholder="State"
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="country">Country</Label>
-                  <Input
-                    id="country"
-                    type="text"
-                    name="country"
-                    value={input.country}
-                    onChange={handleChange}
-                    placeholder="Country"
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="zipCode">Zip Code</Label>
-                  <Input
-                    id="zipCode"
-                    type="text"
-                    name="zipCode"
-                    value={input.zipCode === 0 ? "" : input.zipCode.toString()}
-                    onChange={handleChange}
-                    placeholder="Zip Code"
-                    required
-                  />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="phoneNum">Phone Number</Label>
-                  <Input
-                    id="phoneNum"
-                    type="text"
-                    name="phoneNum"
-                    value={input.phoneNum}
-                    onChange={handleChange}
-                    placeholder="Phone Number"
-                    required
-                  />
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+      (!input.placeId || !confirmed) ? (
+        <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+          <div className="w-full max-w-sm">
+            <div className="flex flex-col gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-2xl">Choose Location</CardTitle>
+                  <CardDescription>
+                    Enter your address details to find hospice providers near you
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form className="flex flex-col gap-6" onSubmit={e => {
+                    e.preventDefault();
+                    // Only allow confirmation if placeId is set
+                    if (input.placeId) {
+                      setConfirmed(true);
+                    }
+                  }}>
+                    <div className="grid gap-2">
+                      <Label htmlFor="streetAddress">Street Address</Label>
+                      <Input
+                        id="streetAddress"
+                        type="text"
+                        name="streetAddress"
+                        ref={inputRef}
+                        value={input.streetAddress}
+                        onChange={handleChange}
+                        placeholder="Enter Street Address"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="city">City</Label>
+                      <Input
+                        id="city"
+                        type="text"
+                        name="city"
+                        value={input.city}
+                        onChange={handleChange}
+                        placeholder="City"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="state">State</Label>
+                      <Input
+                        id="state"
+                        type="text"
+                        name="state"
+                        value={input.state}
+                        onChange={handleChange}
+                        placeholder="State"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="country">Country</Label>
+                      <Input
+                        id="country"
+                        type="text"
+                        name="country"
+                        value={input.country}
+                        onChange={handleChange}
+                        placeholder="Country"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="zipCode">Zip Code</Label>
+                      <Input
+                        id="zipCode"
+                        type="text"
+                        name="zipCode"
+                        value={input.zipCode === 0 ? "" : input.zipCode.toString()}
+                        onChange={handleChange}
+                        placeholder="Zip Code"
+                        required
+                      />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="phoneNum">Phone Number</Label>
+                      <Input
+                        id="phoneNum"
+                        type="text"
+                        name="phoneNum"
+                        value={input.phoneNum}
+                        onChange={handleChange}
+                        placeholder="Phone Number"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="w-full bg-primary text-primary-foreground py-2 px-4 rounded mt-2 disabled:opacity-50"
+                      disabled={!input.placeId}
+                    >
+                      Next
+                    </button>
+                  </form>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
         </div>
       ) : (
         <SetPasswordHospice placeId={input.placeId} phoneNum={input.phoneNum} />
