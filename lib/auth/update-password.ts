@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { GetCmsData } from '../hospice-data/get-cms-data';
-import { GENERAL_DATA, PROVIDER_DATA } from '../globals';
+import { PROVIDER_DATA } from '../globals';
 
 export async function SetMarketerPassword(formData: FormData) {
   const name = formData.get('name') as string;
@@ -64,18 +64,31 @@ export async function SetHospicePassword(formData: FormData) {
 
   // 3. Fetch CMS Data (Done on server now)
   // Note: Ensure GetCmsData can run server-side (uses fetch/axios, not window)
-  try {
-    const cmsPhoneQuery = `[SELECT ccn FROM ${GENERAL_DATA}][WHERE telephone_number = "${phoneNum}"]`;
+  const cmsPhoneQuery = `[SELECT cms_certification_number_ccn FROM ${PROVIDER_DATA}][WHERE telephone_number = "${phoneNum}"][LIMIT 1]`;
 
-    // Assuming GetCmsData is synchronous or you might need to await it if it returns a promise
-    const cmsData = GetCmsData(cmsPhoneQuery);
-    console.log("CMS Data Found:", cmsData);
+  // Get the CMS data
+  const cmsResponse = await GetCmsData(cmsPhoneQuery);
 
-    // If you need to use the 'ccn' from cmsData, extract it here.
-    // For now, I am proceeding with the insert as per your original code.
-  } catch (err) {
-    console.error("Error fetching CMS data:", err);
-    // Decide if you want to stop here or continue. I'm letting it continue.
+  // STEP A: Unwrap the NextResponse
+  // Since GetCmsData returns NextResponse.json(...), we must parse it back
+  const wrapper = await cmsResponse.json();
+
+  // STEP B: Access the array inside the wrapper
+  // The wrapper looks like { providers: [ ... ] }
+  const providers = wrapper.providers;
+
+  if (!providers || providers.length === 0) {
+    return { error: "Could not find a hospice matching that phone number." };
+  }
+
+  // STEP C: Get the CCN
+  // Important: Since your query was "SELECT ccn", Socrata usually returns the key as "ccn", 
+  // not "cms_certification_number_ccn". We check both just in case.
+  const firstMatch = providers[0];
+  const ccn = firstMatch.ccn || firstMatch.cms_certification_number_ccn;
+
+  if (!ccn) {
+    return { error: "Found the hospice, but the CCN was missing." };
   }
 
   // 4. Insert into users_hospice
@@ -83,9 +96,10 @@ export async function SetHospicePassword(formData: FormData) {
     .from('users_hospice')
     .insert([{
       id: user.id,
-      company_name: name,
-      placeId: placeId
-      // Add 'ccn' here if you extracted it from cmsData
+      company: name,
+      place_id: placeId,
+      phone_num: phoneNum,
+      ccn
     }]);
 
   if (insertError) {
