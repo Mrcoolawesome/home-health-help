@@ -10,7 +10,7 @@ type PageProps = {
   }>;
 };
 
-export default async function Page({ searchParams }: PageProps) {
+export default async function AddColumn({ searchParams }: PageProps) {
   const initialSearch = (await searchParams)?.search ?? "";
   const initialSort = (await searchParams)?.sort ?? "";
 
@@ -26,6 +26,7 @@ export default async function Page({ searchParams }: PageProps) {
         initialSearch={initialSearch}
         initialSort={initialSort}
         initialScoreData={initialScoreData}
+        forComparePage={true}
       />
     </Suspense>
   );
