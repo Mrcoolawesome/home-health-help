@@ -1,5 +1,5 @@
 import { GetCmsData } from "@/lib/hospice-data/get-cms-data";
-
+import { PROVIDER_CAHPS_DATA, PROVIDER_DATA } from "../globals";
 export async function GetProviderData(desiredStuff: string, ccn: string, datasetId: string) {
   const query = `[SELECT ${desiredStuff} FROM ${datasetId}][WHERE cms_certification_number_ccn = "${ccn}"]`;
 
@@ -11,13 +11,11 @@ export async function GetProviderData(desiredStuff: string, ccn: string, dataset
 // get's the score data from both cahps and the general medicare datatset
 export async function GetProviderScoreData(ccn: string, measureCode: string) {
   // try the basic provider dataset first
-  const GENERAL_PROVIDER_DATA_DATASET_ID = "098c6cc4-7426-5407-aae1-b361fc2072d6"; // Hospice - Provider Data
-  const basicDataQuery = `[SELECT score FROM ${GENERAL_PROVIDER_DATA_DATASET_ID}][WHERE cms_certification_number_ccn = "${ccn}"][WHERE measure_code = "${measureCode}"]`;
+  const basicDataQuery = `[SELECT score FROM ${PROVIDER_DATA}][WHERE cms_certification_number_ccn = "${ccn}"][WHERE measure_code = "${measureCode}"]`;
 
   // get the response
   const basicDataResponse = await GetCmsData(basicDataQuery);
   const basicData = await basicDataResponse.json();
-  console.log(basicData);
 
   // need to determine if it found it or not.
   // the api won't just error if it can't find it, it'll just return an empty array.
@@ -33,8 +31,7 @@ export async function GetProviderScoreData(ccn: string, measureCode: string) {
   }
 
   // if fetching the basicData didn't work, then fetch the cahps provider data
-  const CAHPS_PROVIDER_DATA_DATASET_ID = "af93e008-23b4-563d-bacc-0be0708a8861"; // Hospice - Provider CAHPS
-  const cahpsDataQuery = `[SELECT score FROM ${CAHPS_PROVIDER_DATA_DATASET_ID}][WHERE cms_certification_number_ccn = "${ccn}"][WHERE measure_code = "${measureCode}"]`;
+  const cahpsDataQuery = `[SELECT score FROM ${PROVIDER_CAHPS_DATA}][WHERE cms_certification_number_ccn = "${ccn}"][WHERE measure_code = "${measureCode}"]`;
 
   // get the cahps response
   const cahpsDataResponse = await GetCmsData(cahpsDataQuery);

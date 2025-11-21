@@ -14,8 +14,6 @@ export async function GetCmsData(query: string) {
       next: { revalidate: 3600 } // Cache for 1 hour
     });
 
-    console.log(response);
-
     // Handle non-200 HTTP statuses from the CMS API
     if (!response.ok) {
       console.error(`CMS API Error: ${response.statusText}`);
