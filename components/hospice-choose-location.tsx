@@ -81,7 +81,6 @@ export function ChooseLocation() {
   const handlePlaceChanged = async (address: google.maps.places.Autocomplete) => {
     if (!isLoaded) return;
     const place = address.getPlace();
-    console.log(place);
 
     if (!place) {
       // set everything to the default values again
