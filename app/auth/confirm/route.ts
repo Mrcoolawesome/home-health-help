@@ -1,42 +1,26 @@
-import { type EmailOtpType } from "@supabase/supabase-js";
-import { type NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-
-  // Check for the standard PKCE code
   const code = searchParams.get("code");
+  const next = searchParams.get("next") ?? "/"; // Where to redirect after success
 
-  // Check for Invite/Magic Link specific parameters
-  const token_hash = searchParams.get("access_token");
-  console.log(token_hash);
-  const type = searchParams.get("type") as EmailOtpType | null;
-
-  const next = searchParams.get("next") ?? "/";
-
-  // Scenario 1: Standard OAuth Code (Login, sometimes Sign up)
   if (code) {
     const supabase = createClient();
     const { error } = await (await supabase).auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(new URL(next, request.url));
-    }
-  }
-  // Scenario 2: Invite or Magic Link (This is what you are missing!)
-  else if (token_hash && type) {
-    const supabase = createClient();
-    const { error } = await (await supabase).auth.verifyOtp({
-      type,
-      token_hash,
-    });
-    if (!error) {
+      // On success, redirect to the user's dashboard or home page
       return NextResponse.redirect(new URL(next, request.url));
     }
   }
 
-  // Error handling
+  // If there's an error or no code, redirect to an error page
+  // You can add the error message to the URL if you want
   const errorUrl = new URL("/auth/error", request.url);
-  errorUrl.searchParams.set("error", "Invalid link or link expired.");
+  errorUrl.searchParams.set(
+    "error",
+    "Sorry, something went wrong logging you in.",
+  );
   return NextResponse.redirect(errorUrl);
 }
