@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="#overview"><strong>Overview</strong></a> ·
+  <a href="#overview"><strong>Overview</strong></a> · 
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#getting-started"><strong>Getting Started</strong></a> ·
   <a href="#development-workflow"><strong>Development</strong></a> ·
