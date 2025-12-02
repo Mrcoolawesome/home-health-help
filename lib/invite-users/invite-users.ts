@@ -18,21 +18,24 @@ export default async function InviteUsers(formData: FormData, userType: string) 
   };
 
   try {
-    emails.map(async (email) => { // have to mark this map function as async as well otherwise we can't await for stuff in it
-      // invite the specific email and then redirect them to the /auth/set-password/marketer endpoint
-      const baseUrl = process.env.DEV_BASE_URL || 'https://hospicefind.com'; // make sure your env is set to localhost:3000 or whatever it is if it isn't that
-      const redirectURL = new URL(`/auth/confirm-page`, baseUrl);
-      redirectURL.searchParams.set('next', `/auth/set-password/${userType}`)
-      const { error: inviteUsersError } = await supabase.auth.admin.inviteUserByEmail(
-        email,
-        {
-          redirectTo: redirectURL.toString() // this will only work in production
-        }
-      );
+    // need to await each invite call so that it actually sends them.
+    await Promise.all(
+      emails.map(async (email) => { // have to mark this map function as async as well otherwise we can't await for stuff in it
+        // invite the specific email and then redirect them to the /auth/set-password/marketer endpoint
+        const baseUrl = process.env.DEV_BASE_URL || 'https://hospicefind.com'; // make sure your env is set to localhost:3000 or whatever it is if it isn't that
+        const redirectURL = new URL(`/auth/confirm-page`, baseUrl);
+        redirectURL.searchParams.set('next', `/auth/set-password/${userType}`)
+        const { error: inviteUsersError } = await supabase.auth.admin.inviteUserByEmail(
+          email,
+          {
+            redirectTo: redirectURL.toString() // this will only work in production
+          }
+        );
 
-      // this error is of type AuthError btw
-      if (inviteUsersError) throw inviteUsersError; // throw the error if it exists
-    })
+        // this error is of type AuthError btw
+        if (inviteUsersError) throw inviteUsersError; // throw the error if it exists
+      })
+    );
   } catch (error: unknown) { // apparently typescript catch variables can only take types 'unknown' or 'any'
     if (error instanceof AuthError) {
       // handle Supabase auth errors
