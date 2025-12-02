@@ -106,6 +106,9 @@ export async function SetHospicePassword(formData: FormData) {
     return { error: "Error creating hospice profile: " + insertError.message }
   }
 
-  // 5. Redirect
-  redirect('/')
+  // This clears the session on the server side immediately
+  await supabase.auth.signOut();
+
+  // Redirect to Login
+  redirect("/auth/login?message=Password updated. Please log in.");
 }
