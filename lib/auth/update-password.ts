@@ -35,6 +35,10 @@ export async function SetMarketerPassword(formData: FormData) {
     return { error: "Error creating user profile: " + insertError.message };
   }
 
+  // This clears the session on the server side immediately
+  // Remove their local session (cookie) only
+  await supabase.auth.signOut({ scope: 'local' });
+
   // 5. Success - Redirect
   // We redirect here because Server Actions must redirect or return data
   redirect('/');
@@ -107,7 +111,8 @@ export async function SetHospicePassword(formData: FormData) {
   }
 
   // This clears the session on the server side immediately
-  await supabase.auth.signOut();
+  // Remove their local session (cookie) only
+  await supabase.auth.signOut({ scope: 'local' });
 
   // Redirect to Login
   redirect("/auth/login?message=Password updated. Please log in.");
