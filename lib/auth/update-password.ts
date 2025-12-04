@@ -52,20 +52,7 @@ export async function SetHospicePassword(formData: FormData) {
 
   const supabase = await createClient()
 
-  // 1. Verify Session
-  const { data: { user }, error: userError } = await supabase.auth.getUser()
-
-  if (userError || !user) {
-    return { error: "Session expired. Please click the invite link again." }
-  }
-
-  // 2. Update Password (Server Side - No Deadlock)
-  const { error: updateError } = await supabase.auth.updateUser({ password })
-
-  if (updateError) {
-    return { error: updateError.message }
-  }
-
+  // Fetch the CMS data first before we do anything with password stuff
   // 3. Fetch CMS Data (Done on server now)
   // Note: Ensure GetCmsData can run server-side (uses fetch/axios, not window)
   const cmsPhoneQuery = `[SELECT cms_certification_number_ccn FROM ${PROVIDER_DATA}][WHERE telephone_number = "${phoneNum}"][LIMIT 1]`;
@@ -95,6 +82,13 @@ export async function SetHospicePassword(formData: FormData) {
     return { error: "Found the hospice, but the CCN was missing." };
   }
 
+  // 1. Verify Session
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+  if (userError || !user) {
+    return { error: "Session expired. Please click the invite link again." }
+  }
+
   // 4. Insert into users_hospice
   const { error: insertError } = await supabase
     .from('users_hospice')
@@ -109,6 +103,15 @@ export async function SetHospicePassword(formData: FormData) {
   if (insertError) {
     return { error: "Error creating hospice profile: " + insertError.message }
   }
+
+  // 2. Update Password (Server Side - No Deadlock)
+  const { error: updateError } = await supabase.auth.updateUser({ password })
+
+  if (updateError) {
+    return { error: updateError.message }
+  }
+
+
 
   // This clears the session on the server side immediately
   // Remove their local session (cookie) only

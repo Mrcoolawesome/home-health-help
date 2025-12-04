@@ -1,6 +1,5 @@
 "use client"
 
-
 import React, { useEffect, useState, useRef } from "react";
 import { useLoadScript, Libraries } from "@react-google-maps/api";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -62,7 +61,7 @@ export function ChooseLocation() {
     autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
 
     // return () => autocomplete.removeListener("place_changed", handlePlaceChanged);
-  }, [isLoaded, loadError]);
+  }, [isLoaded, loadError, confirmed]);
 
   // this is just the onChange handler for the inputs
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,7 +245,10 @@ export function ChooseLocation() {
           </div>
         </div>
       ) : (
-        <SetPasswordHospice placeId={input.placeId} phoneNum={input.phoneNum} />
+        <SetPasswordHospice placeId={input.placeId} phoneNum={input.phoneNum} onBack={() => {
+          setConfirmed(false);
+
+        }} />
       )
     )
   );
