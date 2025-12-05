@@ -15,7 +15,6 @@ export function SetPasswordHospice({ placeId, phoneNum, onBack }: { placeId: str
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [addressWrong, setAddressWrong] = useState(false);
   const router = useRouter();
 
   const clientAction = async (formData: FormData) => {
