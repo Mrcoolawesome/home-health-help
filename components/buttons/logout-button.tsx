@@ -9,7 +9,9 @@ export function LogoutButton() {
 
   const logout = async () => {
     const supabase = createClient();
-    await supabase.auth.signOut();
+    // Local scope so that their cookie is removed from their browser
+    await supabase.auth.signOut({ scope: 'local' });
+    router.refresh();
     router.push("/auth/login");
   };
 
