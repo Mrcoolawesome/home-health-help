@@ -147,7 +147,7 @@ export function ChooseLocation() {
                 <CardHeader>
                   <CardTitle className="text-2xl">Choose Location</CardTitle>
                   <CardDescription>
-                    Enter your address details to find hospice providers near you
+                    Enter your hospice&apos;s main office address so we know who you are.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -159,7 +159,7 @@ export function ChooseLocation() {
                     }
                   }}>
                     <div className="grid gap-2">
-                      <Label htmlFor="streetAddress">Street Address</Label>
+                      <Label htmlFor="streetAddress">Address</Label>
                       <Input
                         id="streetAddress"
                         type="text"
@@ -167,7 +167,7 @@ export function ChooseLocation() {
                         ref={inputRef}
                         value={input.streetAddress}
                         onChange={handleChange}
-                        placeholder="Enter Street Address"
+                        placeholder="Enter hospice name from Google Maps"
                         required
                       />
                     </div>
