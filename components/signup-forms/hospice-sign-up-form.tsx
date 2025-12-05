@@ -6,13 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { SetHospicePassword } from '@/lib/auth/update-password'; // Import the new action
+import { useRouter } from 'next/navigation';
 
-export function SetPasswordHospice({ placeId, phoneNum }: { placeId: string; phoneNum: string }) {
+
+export function SetPasswordHospice({ placeId, phoneNum, onBack }: { placeId: string; phoneNum: string; onBack: () => void; }) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
 
   const clientAction = async (formData: FormData) => {
     setIsLoading(true);
@@ -31,7 +34,14 @@ export function SetPasswordHospice({ placeId, phoneNum }: { placeId: string; pho
     const result = await SetHospicePassword(formData);
 
     // 3. Handle Result (Only happens on error, success redirects)
-    if (result?.error) {
+    // Handle the error where a matching phone number wasn't found
+    const phoneError = result?.error === "Could not find a hospice matching that phone number.";
+    if (phoneError) {
+      setErrorMessage("The address you chose wasn't found in medicare's data.");
+      const message = "We couldn't find that hospice in the medicare database. If you're a corporate business, please choose your regional office.";
+      router.push(`/auth/set-password/hospice?error=${encodeURIComponent(message)}`);
+      onBack(); // this goes back to the original page
+    } else if (result?.error) {
       setErrorMessage(result.error);
       setIsLoading(false);
     }

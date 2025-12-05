@@ -11,6 +11,7 @@ export default function Page() {
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         {message && (<div className="mb-4 text-center font-medium text-green-600">{message}</div>)}
+        <div className="mb-6 text-center text-lg font-semibold"> Please close all other HospiceFind tabs before logging in </div>
         <LoginForm />
       </div>
     </div>
