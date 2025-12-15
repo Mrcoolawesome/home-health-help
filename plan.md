@@ -35,6 +35,36 @@
    - `state-data.ts` - Has the functions to get basic and chaps state data.
    - `get-sortby-data.ts` - This has one function that get's the provider based on everything + their measure code
       - the function `GetSortByData` is literally just like the other Get functions and it's just a wrapper for `GetCmsData` so that it's easy to just put in the parameters the ccn, desired stuff, and datasetId.
-   - 
-
-
+### Improvements that could be made
+## Understanding the components folder
+### The flow
+ - `admin-dashboard`
+   - `add-users.tsx` - This is the file that does the user invite based on a given user type.
+ - `buttons`
+   - `admin-dash-button.tsx` - This is the button that is used to access the admin-dashboard
+   - `hospice-signup-button.tsx` - This is unused now and should be removed
+   - `login-button.tsx` - Yep that's what it is 
+   - `logout-button.tsx` - Ype that's what it is too
+ - `cards`
+   - `hospice-display-cards.tsx` - Given a zip, the sortby measure code, the score data for each provider, and if it's for the compare page or the homepage, it loops through and displays all the hospices in their cards. **It also takes in what page the homepage is on, but it doesn't do anything with that and we should do something about that.**
+ - `home`
+   - `home-client.tsx` - This takes in the user search and finds the hospices that serve their area, and it also handles the sorting stuff
+      - **This should have the feature to search by name of the hospice**
+   - `signup-forms`
+      - `hospice-sign-up-form.tsx` 
+         - This holds the function `SetPasswordHospice`
+            - This function uses `SetHospicePassword` to set that hospice users password given the form data.
+      - `marketer-sign-up-form.tsx`
+         - Does the same thing as the hospice sign up form except it sets the password for them in the function itself because that's the only way i could get it to work. This is where all the **authentication bugs likely stem from**, however I really don't know how to fix that. 
+   - ui
+      - The only two that I know about that aren't really basic are the following:
+      - `navbar.tsx` This is the main thing that gets the user to check if their authenticated and then determine what it should display based off the user's type.
+      - `sort-by-options.tsx` - This is the component that holds all the dropdown menu items to sort by. It has all the code to change how each of the cards are setup.
+   - Those without a folder to be put in:
+      - `auth-button.tsx` - Should be put into the button folder
+      - `forgot-password-form.tsx` - Should be put into form folder
+      - `hospice-choose-location.tsx` - Should be put into form folder
+      - `login-form` - form folder
+      - `providers.tsx` - not really sure what this is and where it should go
+      - `theme-switcher.tsx` - Probably the ui folder but I'm honestly not sure
+      - `update-password-form.tsx` - not really sure if we still need this should figure that out
