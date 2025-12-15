@@ -68,3 +68,25 @@
       - `providers.tsx` - not really sure what this is and where it should go
       - `theme-switcher.tsx` - Probably the ui folder but I'm honestly not sure
       - `update-password-form.tsx` - not really sure if we still need this should figure that out
+## My stupid endpoints
+### How to eat the spaghetti
+ - `set-password`
+   - `hospice`
+      - `page.tsx` 
+         - Uses `ChooseLocation` to basically do everything. Page.tsx exists to return an error but it doesn't even have to do that.
+            - This does everything for fetching google maps stuff and doing address autocomplete
+            - This then has `SetPasswordHospice` as a component that replaces everything when they've put in their adress.
+               - This is what sets their password and everything
+   - `marketer`
+      - `page.tsx` - This does all the password setting directly in the file rather than calling on other functions 
+
+## What do we do about all this
+ - The biggest thing I wanna do is get all the stuff in the `hospice-data` folder sorted out so that there's not redundant code anymore. 
+ - Then I wanna organize the lib and components folder so that things are in places they should be. 
+ - I also wanna make it so that the warning in the console that appears like a thousand times goes away.
+ - If we can also host on a different service that'd be pretty epic I think. 
+ - We also really should get all the CSS stuff working properly with like darkmode and everything, and so that it uses Zanes constants he setup in the globals.css file. 
+ - It would also be cool if we made the about page look really epic instead of like not.
+ - Another thing I could do is setup a form where they can submit feedback
+ - We should also set it up so that when they put in their address and everything it actually displays their stuff on their specific page.
+
