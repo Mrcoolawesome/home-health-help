@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CardData, Code } from "@/lib/types";
-import { fetchHospiceData } from "@/lib/hospice-data/actions";
+import { fetchHospiceData } from "@/lib/hospice-data/fetch-hospice-data";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { createToast } from "@/lib/toast";
