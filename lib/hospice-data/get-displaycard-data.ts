@@ -1,9 +1,8 @@
-import { GetCmsByZip } from "./get-cms-by-zip";
 import { GeneralData, SortbyMedicareScores, CardData, Code } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
 import { GetCodeDesc } from "../get-code-details";
 import { GetCmsData } from "@/lib/hospice-data/get-cms-data";
-import { PROVIDER_CAHPS_DATA, PROVIDER_DATA, GENERAL_DATA } from "../globals";
+import { PROVIDER_CAHPS_DATA, PROVIDER_DATA, GENERAL_DATA, ZIP_DATA } from "../globals";
 
 type HospiceProvider = {
     // Since the key is a string with spaces, it must be in quotes
@@ -19,7 +18,8 @@ type HospiceProvider = {
 export async function DisplayCardData(zip: string, measureCode: string, scoreData?: Code) {
 
     // 1. Directly await the data from the data fetching function
-    const providerList: HospiceProvider[] = await GetCmsByZip(zip);
+    const zipQuery = `[SELECT cms_certification_number_ccn FROM ${ZIP_DATA}][WHERE zip_code = "${zip}"]`;
+    const providerList: HospiceProvider[] = await GetCmsData(zipQuery);
 
     // Fetch all details in parallel
     // Assumes getProviderDetailsByCcn(ccn) fetches the detailed data for one provider
