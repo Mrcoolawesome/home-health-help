@@ -67,7 +67,7 @@ export default function Navbar() {
     return () => {
       listener?.subscription.unsubscribe();
     };
-  }, [router]); // Removed supabase from dependencies to prevent recreation
+  }, [router, supabase]); // Removed supabase from dependencies to prevent recreation
 
   return (
     <nav className="sticky top-0 z-50 bg-background border-b border-foreground-alt backdrop-blur-md">
