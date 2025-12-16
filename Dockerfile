@@ -17,12 +17,12 @@ ENV NODE_ENV="production"
 FROM base AS build
 
 ARG NEXT_PUBLIC_SUPABASE_URL
-ARG NEXT_PUBLIC_SUPABASE_ANON_KEY 
+ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY 
 
 # 2. Convert ARGs into ENV variables so Next.js build can use them
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 # Use the anon key as the publishable key when a separate publishable arg is not provided
-ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
