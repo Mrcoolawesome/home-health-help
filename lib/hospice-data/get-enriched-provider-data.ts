@@ -1,9 +1,11 @@
-import { EnrichedProviderData } from "@/lib/types";
+import { EnrichedProviderData, RawStateDataRecord } from "@/lib/types";
 import { getCombinedProviderData } from "./provider-data";
-import { getNationalCahps, getNationalData } from "./national-data";
-import { getStateCahps, getStateData } from "./state-data";
 import { enrichProviderData } from "./enrich-provider-data";
 import { getAllCodes } from "../get-code-details";
+import { RawNationalDataRecord } from "@/lib/types";
+import { RawNationalCahpsRecord } from "@/lib/types";
+import { NATIONAL_CAHPS_DATA, NATIONAL_DATA, STATE_CAHPS_DATA, STATE_DATA } from "../globals";
+import { GetCmsData } from "./get-cms-data";
 
 /**
  * Fetches provider data along with national and state comparison data
@@ -19,17 +21,22 @@ export async function getEnrichedProviderData(ccn: string): Promise<EnrichedProv
   try {
     // Fetch provider data first to get the state
     const providerData = await getCombinedProviderData(ccn);
-    
+
     if (!providerData) {
       return null;
     }
 
+    const rawNationalData: RawNationalDataRecord[] = await GetCmsData(`[SELECT * FROM ${NATIONAL_DATA}]`);
+    const rawNationalCahps: RawNationalCahpsRecord[] = await GetCmsData(`[SELECT * FROM ${NATIONAL_CAHPS_DATA}]`);
+    const rawStateData: RawStateDataRecord[] = await GetCmsData(`[SELECT * FROM ${STATE_DATA}][WHERE state = "${providerData.state.toUpperCase()}"]`);
+    const rawStateCahps: RawStateDataRecord[] = await GetCmsData(`[SELECT * FROM ${STATE_CAHPS_DATA}][WHERE state = "${providerData.state.toUpperCase()}"]`);
+
     // Fetch comparison data in parallel for better performance
     const [nationalData, nationalCahps, stateData, stateCahps, customData] = await Promise.all([
-      getNationalData(),
-      getNationalCahps(),
-      getStateData(providerData.state.toUpperCase()),
-      getStateCahps(providerData.state.toUpperCase()),
+      rawNationalData,
+      rawNationalCahps,
+      rawStateData,
+      rawStateCahps,
       getAllCodes(),
     ]);
 

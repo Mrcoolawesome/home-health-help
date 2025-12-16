@@ -12,8 +12,5 @@ export async function GetCmsByZip(zip: string) {
     const query = `[SELECT cms_certification_number_ccn FROM ${ZIP_DATA}][WHERE zip_code = "${zip}"]`;
 
     // this does error handling so we don't have to do it here (yeah i think that's how that works)
-    const response = await GetCmsData(query);
-
-    return response.json();
-
+    return await GetCmsData(query);
 }
