@@ -1,7 +1,7 @@
 "use server"
 
 import { AuthError } from "@supabase/supabase-js";
-import { CreateAdminClient } from "../create-admin-client";
+import { createClient } from "@supabase/supabase-js";
 
 // now we wanna loop through each email and invite them through supabase
 export default async function InviteUsers(formData: FormData, userType: string) {
@@ -46,4 +46,19 @@ export default async function InviteUsers(formData: FormData, userType: string) 
       console.error('Unknown error inviting users');
     }
   }
+}
+
+function CreateAdminClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  if (!url || !serviceRoleKey) {
+    throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+  }
+
+  return createClient(url, serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  });
 }
