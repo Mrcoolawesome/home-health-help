@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { Button } from "../base-ui/button";
+import { Input } from "@/components/base-ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/base-ui/card";
+import { Label } from "@/components/base-ui/label";
 import InviteUsers from "../../lib/invite-users/invite-users";
 import { UserPlus, X, Mail, Check, CheckCircle2 } from "lucide-react";
 

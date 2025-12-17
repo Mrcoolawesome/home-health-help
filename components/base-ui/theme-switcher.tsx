@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/button";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { SunLight, HalfMoon } from "iconoir-react";

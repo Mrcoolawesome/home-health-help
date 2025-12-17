@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useLoadScript, Libraries } from "@react-google-maps/api";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { SetPasswordHospice } from "./signup-forms/hospice-sign-up-form";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/base-ui/card";
+import { Input } from "@/components/base-ui/input";
+import { Label } from "@/components/base-ui/label";
+import { SetPasswordHospice } from "./hospice-sign-up-form";
 
 const libraries: Libraries = ["places"];
 
@@ -47,32 +47,6 @@ export function ChooseLocation() {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY ?? "",
     libraries,
   });  // need to load the maps api
-
-  // using this useEffect to append the autocomplete things to the input field
-  useEffect(() => {
-    if (!isLoaded || loadError || !inputRef.current) return;
-
-    const options = {
-      componentRestrictions: { country: "us" },
-      fields: ["address_components", "place_id", "formatted_phone_number"], // probably need to change this to give us the place isLoaded, we can also leave this blank to give us everything which we might have to do the first time
-    };
-
-    const autocomplete = new google.maps.places.Autocomplete(inputRef.current, options);
-    autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
-
-    // return () => autocomplete.removeListener("place_changed", handlePlaceChanged);
-  }, [isLoaded, loadError, confirmed]);
-
-  // this is just the onChange handler for the inputs
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setInput((values) => {
-      if (name === "zipCode") {
-        return { ...values, [name]: Number(value) };
-      }
-      return { ...values, [name]: value };
-    });
-  };
 
   // This is just the handler for when the user selects a prediction.
   // It both ensures the prediction is valid, and then passes the data to another function that does the 
@@ -136,6 +110,33 @@ export function ChooseLocation() {
     }));
 
   };
+
+  // using this useEffect to append the autocomplete things to the input field
+  useEffect(() => {
+    if (!isLoaded || loadError || !inputRef.current) return;
+
+    const options = {
+      componentRestrictions: { country: "us" },
+      fields: ["address_components", "place_id", "formatted_phone_number"], // probably need to change this to give us the place isLoaded, we can also leave this blank to give us everything which we might have to do the first time
+    };
+
+    const autocomplete = new google.maps.places.Autocomplete(inputRef.current, options);
+    autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
+
+    // return () => autocomplete.removeListener("place_changed", handlePlaceChanged);
+  }, [isLoaded, loadError, confirmed, handlePlaceChanged]);
+
+  // this is just the onChange handler for the inputs
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setInput((values) => {
+      if (name === "zipCode") {
+        return { ...values, [name]: Number(value) };
+      }
+      return { ...values, [name]: value };
+    });
+  };
+
 
   return (
     isLoaded && (

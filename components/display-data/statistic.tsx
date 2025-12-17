@@ -1,8 +1,8 @@
 import { EnrichedProviderMeasure } from "@/lib/types";
 import { Meter } from "@base-ui-components/react";
 import { InfoCircle } from "iconoir-react";
-import Popout from "./popout";
-import { getFootnote } from "./footnote";
+import Popout from "../base-ui/popout";
+import { getFootnote } from "../../lib/footnote";
 
 
 interface StatisticProps {

@@ -1,8 +1,8 @@
 "use client"
 
-import SearchBar from "@/components/ui/search-bar";
+import SearchBar from "@/components/base-ui/search-bar";
 import HospiceCards from "@/components/cards/hospice-display-cards";
-import SortDropdown from "@/components/ui/sort-by-options";
+import SortDropdown from "@/components/base-ui/sort-by-options";
 import { Code } from "@/lib/types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

@@ -6,7 +6,7 @@ import { LogoutButton } from "../buttons/logout-button";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { ThemeSwitcher } from "../theme-switcher";
+import { ThemeSwitcher } from "./theme-switcher";
 import LoginButton from "../buttons/login-button";
 import { GetUserType } from "@/lib/get-user/get-user-type";
 import { Button } from "./button";
@@ -67,7 +67,7 @@ export default function Navbar() {
     return () => {
       listener?.subscription.unsubscribe();
     };
-  }, [router]); // Removed supabase from dependencies to prevent recreation
+  }, [router, supabase]); // Removed supabase from dependencies to prevent recreation
 
   return (
     <nav className="sticky top-0 z-50 bg-background border-b border-foreground-alt backdrop-blur-md">
