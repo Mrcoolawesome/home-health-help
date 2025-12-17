@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import HomeClient from "@/components/home/home-client";
+import HomeClient from "@/app/home-client";
 import { GetCodeDetails } from "@/lib/get-code-details";
 import { Code } from "@/lib/types";
 

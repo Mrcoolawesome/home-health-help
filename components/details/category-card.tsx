@@ -1,5 +1,5 @@
 import { EnrichedProviderMeasure } from "@/lib/types";
-import Statistic from "./statistic";
+import Statistic from "../display-data/statistic";
 
 interface CategoryCardProps {
   title: string,

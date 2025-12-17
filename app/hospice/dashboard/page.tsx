@@ -1,4 +1,4 @@
-import { AddUsers } from "@/components/admin-dashboard/add-users";
+import { AddUsers } from "@/components/forms/add-users-form";
 
 // Hospice admin's invite marketers
 export default function Page() {

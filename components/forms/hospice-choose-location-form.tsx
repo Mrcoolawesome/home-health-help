@@ -2,10 +2,10 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useLoadScript, Libraries } from "@react-google-maps/api";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { SetPasswordHospice } from "./signup-forms/hospice-sign-up-form";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/base-ui/card";
+import { Input } from "@/components/base-ui/input";
+import { Label } from "@/components/base-ui/label";
+import { SetPasswordHospice } from "./hospice-sign-up-form";
 
 const libraries: Libraries = ["places"];
 

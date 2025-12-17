@@ -1,4 +1,4 @@
-import SingleReview from "@/components/details/singleReview";
+import SingleReview from "@/components/display-data/singleReview";
 import { getNewestReviews } from "@/lib/google/get-reviews";
 import { PlaceReview } from "@/lib/types";
 import { StarSolid } from "iconoir-react";

@@ -6,7 +6,7 @@ import { LogoutButton } from "../buttons/logout-button";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { ThemeSwitcher } from "../theme-switcher";
+import { ThemeSwitcher } from "./theme-switcher";
 import LoginButton from "../buttons/login-button";
 import { GetUserType } from "@/lib/get-user/get-user-type";
 import { Button } from "./button";

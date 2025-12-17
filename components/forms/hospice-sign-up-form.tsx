@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/base-ui/card';
+import { Button } from '@/components/base-ui/button';
+import { Label } from '@/components/base-ui/label';
+import { Input } from '@/components/base-ui/input';
 import { SetHospicePassword } from '@/lib/auth/update-password'; // Import the new action
 import { useRouter } from 'next/navigation';
 
