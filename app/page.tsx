@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import HomeClient from "@/app/home-client";
-import { GetCodeDetails } from "@/lib/get-code-details";
+import { GetCodeDetails } from "@/lib/hospice-data/get-code-details";
 import { Code } from "@/lib/types";
 
 type PageProps = {

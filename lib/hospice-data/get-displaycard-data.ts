@@ -1,6 +1,6 @@
 import { GeneralData, SortbyMedicareScores, CardData, Code } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
-import { GetCodeDesc } from "../get-code-details";
+import { GetCodeDesc } from "./get-code-details";
 import { GetCmsData } from "@/lib/hospice-data/get-cms-data";
 import { PROVIDER_CAHPS_DATA, PROVIDER_DATA, GENERAL_DATA, ZIP_DATA } from "../globals";
 

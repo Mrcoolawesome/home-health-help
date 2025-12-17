@@ -1,7 +1,7 @@
 import { EnrichedProviderData, RawStateDataRecord } from "@/lib/types";
 import { getCombinedProviderData } from "./provider-data";
 import { enrichProviderData } from "./enrich-provider-data";
-import { getAllCodes } from "../get-code-details";
+import { getAllCodes } from "./get-code-details";
 import { RawNationalDataRecord } from "@/lib/types";
 import { RawNationalCahpsRecord } from "@/lib/types";
 import { NATIONAL_CAHPS_DATA, NATIONAL_DATA, STATE_CAHPS_DATA, STATE_DATA } from "../globals";

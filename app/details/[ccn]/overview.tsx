@@ -1,4 +1,4 @@
-import CategoryCard from "@/components/details/category-card";
+import CategoryCard from "@/components/cards/category-card";
 import { EnrichedProviderData, EnrichedProviderMeasure } from "@/lib/types";
 import { sortByScoreGeneric } from "@/lib/sortby-functions/sortby-functions";
 
