@@ -1,7 +1,7 @@
 "use server"
 
-import { Code } from "./types";
-import { createClient } from "./supabase/server";
+import { Code } from "../types";
+import { createClient } from "../supabase/server";
 
 /**
  * 

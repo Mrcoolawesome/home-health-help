@@ -27,10 +27,7 @@ export async function GetCmsData(query: string) {
     // Parse the JSON response
     const providerData = await response.json();
 
-    // Return the data to the front-end
-    return NextResponse.json({
-      providers: providerData
-    });
+    return providerData;
 
   } catch (error) {
     console.error('API Route Error:', error);

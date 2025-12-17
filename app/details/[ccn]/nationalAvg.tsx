@@ -1,4 +1,4 @@
-import CategoryCard from "@/components/details/category-card";
+import CategoryCard from "@/components/cards/category-card";
 import { EnrichedProviderData } from "@/lib/types";
 
 export default function NationalAvg({ data } : { data: EnrichedProviderData }) {

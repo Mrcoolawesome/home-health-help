@@ -29,7 +29,7 @@ export default function CompareColumn({ ccn }: { ccn: string }) {
     }
 
     getMeasures();
-  }, [])
+  }, [ccn])
 
   function deleteCCN(ccn: string) {
     const newParams = new URLSearchParams(searchParams.toString());

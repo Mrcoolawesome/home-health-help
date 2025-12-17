@@ -1,17 +1,12 @@
-import { GetCmsByZip } from "./get-cms-by-zip";
-import { GetProviderData, GetProviderScoreData } from "./get-provider-data";
 import { GeneralData, SortbyMedicareScores, CardData, Code } from "../types";
 import { Sort } from "../sortby-functions/sortby-functions";
-import { GetCodeDesc } from "../get-code-details";
-import { GENERAL_DATA } from "../globals";
+import { GetCodeDesc } from "./get-code-details";
+import { GetCmsData } from "@/lib/hospice-data/get-cms-data";
+import { PROVIDER_CAHPS_DATA, PROVIDER_DATA, GENERAL_DATA, ZIP_DATA } from "../globals";
 
 type HospiceProvider = {
     // Since the key is a string with spaces, it must be in quotes
     "cms_certification_number_ccn": string;
-};
-
-type CmsApiResponse = {
-    providers: HospiceProvider[];
 };
 
 /**
@@ -21,13 +16,19 @@ type CmsApiResponse = {
  */
 // takes in the given zipcode, then the thing to sort by
 export async function DisplayCardData(zip: string, measureCode: string, scoreData?: Code) {
-    const hospicesData: CmsApiResponse = await GetCmsByZip(zip);
-    const cmsNumberList = hospicesData.providers.map(provider => provider['cms_certification_number_ccn']);
+
+    // 1. Directly await the data from the data fetching function
+    const zipQuery = `[SELECT cms_certification_number_ccn FROM ${ZIP_DATA}][WHERE zip_code = "${zip}"]`;
+    const providerList: HospiceProvider[] = await GetCmsData(zipQuery);
 
     // Fetch all details in parallel
     // Assumes getProviderDetailsByCcn(ccn) fetches the detailed data for one provider
     const desiredGeneralData = "cms_certification_number_ccn,facility_name,address_line_1,citytown,countyparish,state,telephone_number,ownership_type";
-    const detailedPromisesGeneralData = cmsNumberList.map(ccn => GetProviderData(desiredGeneralData, ccn, GENERAL_DATA));
+    const detailedPromisesGeneralData = providerList.map(provider =>
+        // The variable name is changed to 'provider' for clarity, 
+        // and we access the string property 'cms_certification_number_ccn'
+        GetProviderData(desiredGeneralData, provider['cms_certification_number_ccn'], GENERAL_DATA)
+    );
     const rawGeneralDetailsArrays = await Promise.all(detailedPromisesGeneralData);
 
     // SIMPLIFIED STEP: Just extract the provider object from each API response
@@ -36,7 +37,7 @@ export async function DisplayCardData(zip: string, measureCode: string, scoreDat
         // 1. Access the .providers property to get the inner array.
         // 2. Access the first element [0] to get the final object.
         // 3. The arrow function implicitly returns this object.
-        (item) => item.providers[0]
+        (item) => item[0]
     );
 
     // the sortBy string will be the specific code you wanna compare to OR it's the others that are just sorting from the general dataset
@@ -49,12 +50,14 @@ export async function DisplayCardData(zip: string, measureCode: string, scoreDat
     const descriptionString = await GetCodeDesc(measureCode, "Facility observed rate");
 
     // this GetProviderScoreData gets score data from both the regular and cahps dataset
-    const detailedPromisesProviderData = cmsNumberList.map(ccn => GetProviderScoreData(ccn, measureCode));
+    const detailedPromisesProviderData = providerList.map(provider =>
+        GetProviderScoreData(provider['cms_certification_number_ccn'], measureCode)
+    );
     const rawProviderDetailsArray = await Promise.all(detailedPromisesProviderData);
     const providerData: SortbyMedicareScores[] = await Promise.all( // 2. Await Promise.all()
         rawProviderDetailsArray.map(async (item) => { // 3. Make the .map() callback 'async'
 
-            const rawData = item.providers[0];
+            const rawData = item[0];
 
             // 7. Return the final object. This is now correct.
             return {
@@ -87,4 +90,39 @@ export async function DisplayCardData(zip: string, measureCode: string, scoreDat
     Sort(combinedCardData, out_of, lower_is_better);
 
     return combinedCardData;
+}
+
+// get's the score data from both cahps and the general medicare datatset
+export async function GetProviderScoreData(ccn: string, measureCode: string) {
+    // try the basic provider dataset first
+    const basicDataQuery = `[SELECT score FROM ${PROVIDER_DATA}][WHERE cms_certification_number_ccn = "${ccn}"][WHERE measure_code = "${measureCode}"]`;
+
+    // get the response
+    const basicData = await GetCmsData(basicDataQuery);
+
+    // need to determine if it found it or not.
+    // the api won't just error if it can't find it, it'll just return an empty array.
+    // hence GetCmsData will return an object with an array called 'providers' that will be empty
+    let isInBasicData = false;
+    if (basicData.length > 0) {
+        isInBasicData = true;
+    }
+
+    // if fetching the basic data didn't error, then return it
+    if (isInBasicData) {
+        return basicData;
+    }
+
+    // if fetching the basicData didn't work, then fetch the cahps provider data
+    const cahpsDataQuery = `[SELECT score FROM ${PROVIDER_CAHPS_DATA}][WHERE cms_certification_number_ccn = "${ccn}"][WHERE measure_code = "${measureCode}"]`;
+
+    // get the cahps response
+    return await GetCmsData(cahpsDataQuery);
+}
+
+
+export async function GetProviderData(desiredStuff: string, ccn: string, datasetId: string) {
+    const query = `[SELECT ${desiredStuff} FROM ${datasetId}][WHERE cms_certification_number_ccn = "${ccn}"]`;
+
+    return await GetCmsData(query);
 }

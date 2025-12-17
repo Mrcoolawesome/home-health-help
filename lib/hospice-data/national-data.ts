@@ -1,4 +1,7 @@
 import { RawNationalDataRecord } from "@/lib/types";
+import { RawNationalCahpsRecord } from "@/lib/types";
+import { NATIONAL_CAHPS_DATA, NATIONAL_DATA } from "../globals";
+import { GetCmsData } from "./get-cms-data";
 
 export async function getNationalData(): Promise<RawNationalDataRecord[] | null> {
   try {
@@ -9,7 +12,7 @@ export async function getNationalData(): Promise<RawNationalDataRecord[] | null>
       return null;
     }
 
-    const data: RawNationalDataRecord[] = await response.json();
+    const data: RawNationalDataRecord[] = await GetCmsData(`[SELECT * FROM ${NATIONAL_DATA}]`);
     return data;
 
   } catch (error) {
@@ -18,9 +21,6 @@ export async function getNationalData(): Promise<RawNationalDataRecord[] | null>
     return null;
   }
 }
-
-import { RawNationalCahpsRecord } from "@/lib/types";
-import { NATIONAL_CAHPS_DATA, NATIONAL_DATA } from "../globals";
 
 export async function getNationalCahps(): Promise<RawNationalCahpsRecord[] | null> {
   try {

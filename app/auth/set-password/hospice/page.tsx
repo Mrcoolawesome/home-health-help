@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense } from "react";
-import { ChooseLocation } from "@/components/hospice-choose-location";
+import { ChooseLocation } from "@/components/forms/hospice-choose-location-form";
 import { useSearchParams } from "next/navigation";
 
 // 1. Extract the logic that uses search params into a small sub-component

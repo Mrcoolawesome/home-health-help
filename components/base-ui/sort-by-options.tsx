@@ -1,9 +1,9 @@
 "use client"
 
-import { GetCodeDetails } from "@/lib/get-code-details";
+import { GetCodeDetails } from "@/lib/hospice-data/get-code-details";
 import { Code } from "@/lib/types";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/base-ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/base-ui/dropdown-menu";
 import { ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
